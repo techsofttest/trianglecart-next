@@ -61,7 +61,10 @@ export default function AddressBook() {
         try {
             const res = await fetch(apiUrl('/api/customer/addresses'), {
                 method: 'GET',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 credentials: 'include'
             });
 
@@ -242,7 +245,10 @@ export default function AddressBook() {
 
             const res = await fetch(url, {
                 method,
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify(formData),
                 credentials: 'include'
             });
@@ -289,6 +295,7 @@ export default function AddressBook() {
         try {
             const res = await fetch(apiUrl(`/api/customer/addresses/${id}`), {
                 method: 'DELETE',
+                headers: { 'Accept': 'application/json' },
                 credentials: 'include'
             });
 
@@ -311,6 +318,7 @@ export default function AddressBook() {
         try {
             const res = await fetch(apiUrl(`/api/customer/addresses/${id}/default-shipping`), {
                 method: 'POST',
+                headers: { 'Accept': 'application/json' },
                 credentials: 'include'
             });
 
@@ -334,6 +342,7 @@ export default function AddressBook() {
         try {
             const res = await fetch(apiUrl(`/api/customer/addresses/${id}/default-billing`), {
                 method: 'POST',
+                headers: { 'Accept': 'application/json' },
                 credentials: 'include'
             });
 
