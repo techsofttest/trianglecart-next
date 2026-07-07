@@ -106,6 +106,9 @@ export default function AddressBook() {
             );
 
             autocompleteRef.current.addListener('place_changed', () => {
+                const inputValue = (autocompleteInputRef.current?.value || '').trim();
+                if (inputValue.replace(/\s/g, '').length < 3) return;
+
                 const place = autocompleteRef.current.getPlace();
                 if (!place || !place.address_components) return;
 
@@ -447,9 +450,9 @@ export default function AddressBook() {
                         <input 
                             type="text" 
                             value={formData.address_line_1}
-                            onChange={(e) => setFormData({ ...formData, address_line_1: e.target.value })}
-                            placeholder="123 Main Street"
-                            className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all"
+                            readOnly={true}
+                            placeholder="Auto-filled via search"
+                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none"
                         />
                     </div>
 
@@ -469,9 +472,9 @@ export default function AddressBook() {
                         <input 
                             type="text" 
                             value={formData.suburb}
-                            onChange={(e) => setFormData({ ...formData, suburb: e.target.value })}
-                            placeholder="Suburb Name"
-                            className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all"
+                            readOnly={true}
+                            placeholder="Auto-filled via search"
+                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none"
                         />
                     </div>
 
@@ -480,9 +483,9 @@ export default function AddressBook() {
                         <input 
                             type="text" 
                             value={formData.city}
-                            onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                            placeholder="Sydney"
-                            className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all"
+                            readOnly={true}
+                            placeholder="Auto-filled via search"
+                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none"
                         />
                     </div>
 
@@ -491,9 +494,9 @@ export default function AddressBook() {
                         <input 
                             type="text" 
                             value={formData.state}
-                            onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                            placeholder="NSW"
-                            className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all"
+                            readOnly={true}
+                            placeholder="Auto-filled via search"
+                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none"
                         />
                     </div>
 
@@ -502,9 +505,9 @@ export default function AddressBook() {
                         <input 
                             type="text" 
                             value={formData.postcode}
-                            onChange={(e) => setFormData({ ...formData, postcode: e.target.value })}
-                            placeholder="2000"
-                            className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all"
+                            readOnly={true}
+                            placeholder="Auto-filled via search"
+                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none"
                         />
                     </div>
 
@@ -513,9 +516,9 @@ export default function AddressBook() {
                         <input 
                             type="text" 
                             value={formData.country}
-                            onChange={(e) => setFormData({ ...formData, country: e.target.value })}
-                            placeholder="Australia"
-                            className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all"
+                            readOnly={true}
+                            placeholder="Auto-filled via search"
+                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none"
                         />
                     </div>
 

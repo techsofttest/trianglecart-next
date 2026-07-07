@@ -77,8 +77,8 @@ export default function CartPage() {
 
     const subtotal = cartTotal;
     const discount = appliedCoupon === 'SAVE10' ? subtotal * 0.1 : 0;
-    const shipping = subtotal > 50 ? 0 : 9.99;
-    const total = subtotal - discount + shipping;
+    const shipping = 0; // Shipping is calculated at checkout based on postcode
+    const total = subtotal - discount;
 
     if (!isMounted) return null;
 
@@ -96,10 +96,11 @@ export default function CartPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div className="lg:col-span-2 space-y-3">
 
-                    <LocationBanner
+                    {/* Temporarily hidden location banner */}
+                    {/* <LocationBanner
                         selectedLocation={selectedLocation}
                         onOpenDrawer={() => setIsLocationOpen(true)}
-                    />
+                    /> */}
 
                     <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm">
                         {cartItems.map((item, idx) => (

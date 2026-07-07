@@ -49,6 +49,37 @@ export default async function Home() {
       banner_url: string | null;
       url: string;
     } | null;
+    featured_categories?: Array<{
+      id: number;
+      name: string;
+      slug: string;
+      products: Array<{
+        id: number;
+        name: string;
+        slug: string;
+        featured_image: string | null;
+        price: number;
+        max_price: number;
+        rating: number;
+        review_count: number;
+        brand: { name: string } | null;
+        category: { slug: string } | null;
+        variants: Array<{
+          id: number;
+          sku: string | null;
+          size: string | null;
+          unit: string | null;
+          price: number;
+          stock: number;
+        }>;
+      }>;
+    }>;
+    banners?: Array<{
+      id: number;
+      name: string;
+      image_url: string | null;
+      url: string | null;
+    }>;
   }>('/api/storefront/home');
 
   const categoriesData = await fetchStorefront<Array<{
@@ -114,13 +145,39 @@ export default async function Home() {
     { label1: "Halwa Gifting", label2: "Buy 1 Get 1", imageUrl: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=400&q=80", linkUrl: "/category/sweets/halwa" },
   ];
 
+  const featuredCategories = homeData?.featured_categories || [];
+
+  const featuredSpicesItems: SubCategoryItem[] = featuredCategories[0]
+    ? featuredCategories[0].products.map((p) => ({
+        label1: p.brand?.name || "Triangle Choice",
+        label2: p.name,
+        imageUrl: p.featured_image || "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80",
+        linkUrl: `/product/${p.slug}`
+      }))
+    : premiumSpicesItems;
+
+  const spicesTitle = featuredCategories[0]?.name || "Aromatic Spices & Masalas";
+  const spicesLink = featuredCategories[0] ? `/category/${featuredCategories[0].slug}` : "/category/spices";
+
+  const featuredSweetsItems: SubCategoryItem[] = featuredCategories[1]
+    ? featuredCategories[1].products.map((p) => ({
+        label1: p.brand?.name || "Triangle Choice",
+        label2: p.name,
+        imageUrl: p.featured_image || "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=400&q=80",
+        linkUrl: `/product/${p.slug}`
+      }))
+    : sweetsItems;
+
+  const sweetsTitle = featuredCategories[1]?.name || "Festival Sweet Packs";
+  const sweetsLink = featuredCategories[1] ? `/category/${featuredCategories[1].slug}` : "/category/sweets";
+
   const buyItAgainProducts: Product[] = suggestedProducts.slice(0, 6);
   const homeAdvertisement = homeData?.home_advertisement;
 
   return (
     <div className="flex flex-col gap-10 md:gap-16 pb-12 pt-2 bg-[#fff]">
       <section className="w-full">
-        <PromoSlider />
+        <PromoSlider banners={homeData?.banners} />
       </section>
 
       <section className="w-full">
@@ -192,9 +249,9 @@ export default async function Home() {
 
       <section className="w-full">
         <SubCategories
-          sectionTitle="Aromatic Spices & Masalas"
-          mainLink="/category/spices"
-          items={premiumSpicesItems}
+          sectionTitle={spicesTitle}
+          mainLink={spicesLink}
+          items={featuredSpicesItems}
           sectionBgColor="bg-[#bf360c]"
         />
       </section>
@@ -209,9 +266,9 @@ export default async function Home() {
 
       <section className="w-full">
         <SubCategories
-          sectionTitle="Festival Sweet Packs"
-          mainLink="/category/sweets"
-          items={sweetsItems}
+          sectionTitle={sweetsTitle}
+          mainLink={sweetsLink}
+          items={featuredSweetsItems}
           sectionBgColor="bg-green-700"
         />
       </section>

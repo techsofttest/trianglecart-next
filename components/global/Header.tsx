@@ -145,7 +145,7 @@ export default function Header() {
                         />
                     </Link>
                     <div
-                        className="hidden lg:flex items-center gap-3 cursor-pointer group hover:bg-gray-50/80 px-3 py-1.5 rounded-xl transition-all"
+                        className="hidden items-center gap-3 cursor-pointer group hover:bg-gray-50/80 px-3 py-1.5 rounded-xl transition-all"
                         onClick={() => setIsLocationOpen(true)}
                     >
                         <div className="flex items-center gap-2.5">

@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { fetchStorefront } from '@/lib/storefront';
 
 const mockSlides = [
     {
@@ -33,31 +32,36 @@ const mockSlides = [
     }
 ];
 
-export default function PromoSlider() {
+interface BannerItem {
+    id: number;
+    image_url: string | null;
+    url: string | null;
+}
+
+interface PromoSliderProps {
+    banners?: BannerItem[];
+}
+
+export default function PromoSlider({ banners }: PromoSliderProps) {
     const [slides, setSlides] = useState<{ id: number; image_url: string; url: string }[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isHovered, setIsHovered] = useState(false);
 
     useEffect(() => {
-        const fetchBanners = async () => {
-            const data = await fetchStorefront<{ banners?: { id: number; image_url: string | null; url: string | null }[] }>('/api/storefront/home');
-            if (data?.banners && data.banners.length > 0) {
-                setSlides(data.banners.map((b) => ({
-                    id: b.id,
-                    image_url: b.image_url || '/promo-banner/pr1.jpg',
-                    url: b.url || '#'
-                })));
-                return;
-            }
-            // Fallback to mock slides
+        if (banners && banners.length > 0) {
+            setSlides(banners.map((b) => ({
+                id: b.id,
+                image_url: b.image_url || '/promo-banner/pr1.jpg',
+                url: b.url || '#'
+            })));
+        } else {
             setSlides(mockSlides.map(s => ({
                 id: s.id,
                 image_url: s.image,
                 url: s.link
             })));
-        };
-        fetchBanners();
-    }, []);
+        }
+    }, [banners]);
 
     const nextSlide = useCallback(() => {
         if (slides.length === 0) return;

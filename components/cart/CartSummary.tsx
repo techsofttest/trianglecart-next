@@ -29,14 +29,13 @@ export default function CartSummary({ subtotal, discount, shipping, total }: Car
                     )}
                     <div className="flex justify-between text-gray-700 font-medium text-sm">
                         <span>Shipping</span>
-                        <span className={shipping === 0 ? "text-blue-700 font-bold" : "text-gray-900"}>
-                            {shipping === 0 ? "FREE" : `$${shipping.toFixed(2)}`}
+                        <span className="text-gray-500 font-medium text-[13px] italic">
+                            Calculated at checkout
                         </span>
                     </div>
                     <div className="pt-3 border-t border-gray-100 flex justify-between items-end">
                         <div>
                             <p className="text-lg font-bold text-gray-900">Order Total</p>
-
                         </div>
                         <span className="text-3xl font-bold text-[#0c4a9e] tracking-tight">${total.toFixed(2)}</span>
                     </div>

@@ -96,6 +96,7 @@ export default function AddressSection({
                     setSelectedAddressId(selected.id);
                     selectAddressFields(selected);
                     setShowNewAddressForm(false);
+                    setIsConfirmed(true);
                 } else {
                     setShowNewAddressForm(true);
                 }
@@ -113,6 +114,7 @@ export default function AddressSection({
                 setSelectedAddressId(selected.id);
                 selectAddressFields(selected);
                 setShowNewAddressForm(false);
+                setIsConfirmed(true);
             } else {
                 setShowNewAddressForm(true);
             }
