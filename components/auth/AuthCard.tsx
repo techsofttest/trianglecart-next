@@ -44,8 +44,12 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
         try {
             const res = await fetch(apiUrl('/api/customer/login'), {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify({ email, password }),
+                credentials: 'include'
             });
 
             if (res.ok) {
@@ -98,8 +102,12 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
         try {
             const res = await fetch(apiUrl('/api/customer/register'), {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify({ name, email, password }),
+                credentials: 'include'
             });
 
             if (res.ok) {
