@@ -278,7 +278,10 @@ export default function AddressSection({
         try {
             const res = await fetch(apiUrl('/api/customer/addresses'), {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
                 body: JSON.stringify(newAddress),
                 credentials: 'include'
             });
@@ -289,12 +292,30 @@ export default function AddressSection({
                 await loadAddresses();
                 setSelectedAddressId(savedAddr.id);
                 selectAddressFields(savedAddr);
+            } else if (res.status === 401) {
+                throw new Error('Unauthenticated');
             } else {
                 const errorData = await res.json().catch(() => ({}));
                 setErrorMsg(errorData.message || 'Failed to save address.');
             }
         } catch {
-            setErrorMsg('Failed to save address details.');
+            // Local storage fallback
+            const saved = localStorage.getItem('triangle-saved-addresses');
+            const cached: Address[] = saved ? JSON.parse(saved) : [];
+            const mockId = Date.now();
+            const newAddrWithId = {
+                ...newAddress,
+                id: mockId,
+                is_default_shipping: cached.length === 0,
+                is_default_billing: cached.length === 0
+            };
+            const updated = [...cached, newAddrWithId];
+            localStorage.setItem('triangle-saved-addresses', JSON.stringify(updated));
+            window.dispatchEvent(new Event('addressUpdate'));
+            
+            setShowNewAddressForm(false);
+            setSelectedAddressId(mockId);
+            selectAddressFields(newAddrWithId);
         } finally {
             setIsSavingNewAddress(false);
         }

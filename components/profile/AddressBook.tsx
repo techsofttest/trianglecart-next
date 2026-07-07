@@ -261,6 +261,8 @@ export default function AddressBook() {
             if (res.ok) {
                 setIsEditing(false);
                 loadAddresses();
+            } else if (res.status === 401) {
+                throw new Error('Unauthenticated');
             } else {
                 const data = await res.json().catch(() => ({}));
                 setErrorMsg(data.message || 'Failed to save address details.');
@@ -308,6 +310,8 @@ export default function AddressBook() {
 
             if (res.ok) {
                 loadAddresses();
+            } else if (res.status === 401) {
+                throw new Error('Unauthenticated');
             } else {
                 const data = await res.json().catch(() => ({}));
                 alert(data.message || 'Failed to delete address.');
@@ -333,6 +337,8 @@ export default function AddressBook() {
 
             if (res.ok) {
                 loadAddresses();
+            } else if (res.status === 401) {
+                throw new Error('Unauthenticated');
             } else {
                 alert('Failed to set default shipping');
             }
@@ -359,6 +365,8 @@ export default function AddressBook() {
 
             if (res.ok) {
                 loadAddresses();
+            } else if (res.status === 401) {
+                throw new Error('Unauthenticated');
             } else {
                 alert('Failed to set default billing');
             }
