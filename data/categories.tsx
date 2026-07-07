@@ -1,0 +1,41 @@
+import React from 'react';
+import {
+    Utensils, Leaf, Mountain, Carrot, Croissant, Cookie, CupSoda, Cake,
+    Snowflake, Milk, Sparkle, Popcorn, UtensilsCrossed, ChefHat, Zap,
+    Sparkles, Flame, Wheat, Candy, Soup, Droplets, Coffee, Package, Bath, Home, FlameKindling, Briefcase
+} from 'lucide-react';
+
+export const ALL_CATEGORIES = [
+    { name: "Fresh Indian Street Food", icon: <Utensils className="w-5 h-5 mb-1" /> },
+    { name: "Organic Products", icon: <Leaf className="w-5 h-5 mb-1" /> },
+    { name: "Nepali Items", icon: <Mountain className="w-5 h-5 mb-1" /> },
+    { name: "Fruits & Vegetables", icon: <Carrot className="w-5 h-5 mb-1" /> },
+    { name: "Bread & Fresh Chapati", icon: <Croissant className="w-5 h-5 mb-1" /> },
+    { name: "Biscuits", icon: <Cookie className="w-5 h-5 mb-1" /> },
+    { name: "Drinks", icon: <CupSoda className="w-5 h-5 mb-1" /> },
+    { name: "Sweets", icon: <Cake className="w-5 h-5 mb-1" /> },
+    { name: "Frozen", icon: <Snowflake className="w-5 h-5 mb-1" /> },
+    { name: "Dairy", icon: <Milk className="w-5 h-5 mb-1" /> },
+    { name: "Mukhavas", icon: <Sparkle className="w-5 h-5 mb-1" /> },
+    { name: "Snacks & Chips", icon: <Popcorn className="w-5 h-5 mb-1" /> },
+    { name: "Ready To Eat", icon: <UtensilsCrossed className="w-5 h-5 mb-1" /> },
+    { name: "Ready To Cook", icon: <ChefHat className="w-5 h-5 mb-1" /> },
+    { name: "Instant Mix", icon: <Zap className="w-5 h-5 mb-1" /> },
+    { name: "Spice Mixes/Masala", icon: <Sparkles className="w-5 h-5 mb-1" /> },
+    { name: "Spices", icon: <Flame className="w-5 h-5 mb-1" /> },
+    { name: "Flours", icon: <Wheat className="w-5 h-5 mb-1" /> },
+    { name: "Jaggery", icon: <Candy className="w-5 h-5 mb-1" /> },
+    { name: "Poha & Mamra", icon: <Wheat className="w-5 h-5 mb-1" /> },
+    { name: "Pickles", icon: <Carrot className="w-5 h-5 mb-1" /> },
+    { name: "Chutney, Paste & Sauces", icon: <UtensilsCrossed className="w-5 h-5 mb-1" /> },
+    { name: "Khakhara, Papad & Fryums", icon: <Cookie className="w-5 h-5 mb-1" /> },
+    { name: "Noodles", icon: <Soup className="w-5 h-5 mb-1" /> },
+    { name: "Oil & Ghee", icon: <Droplets className="w-5 h-5 mb-1" /> },
+    { name: "Dry Fruits & Nuts", icon: <Wheat className="w-5 h-5 mb-1" /> },
+    { name: "Tea & Drink Mixes", icon: <Coffee className="w-5 h-5 mb-1" /> },
+    { name: "Rice & Atta", icon: <Wheat className="w-5 h-5 mb-1" /> },
+    { name: "Lentils", icon: <Wheat className="w-5 h-5 mb-1" /> },
+    { name: "Fasting Items", icon: <FlameKindling className="w-5 h-5 mb-1" /> },
+    { name: "Other Food Items", icon: <Package className="w-5 h-5 mb-1" /> },
+    { name: "Cosmetic", icon: <Bath className="w-5 h-5 mb-1" /> },
+];
