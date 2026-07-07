@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Plus, Edit2, Trash2, ArrowLeft, Save, MapPin, Check, Star, ShieldAlert, Loader2 } from 'lucide-react';
 import { apiUrl } from '@/lib/api';
+import { useCustomerAuth } from '@/context/CustomerAuthContext';
 
 interface Address {
     id: number;
@@ -25,6 +26,7 @@ interface Address {
 }
 
 export default function AddressBook() {
+    const { logout } = useCustomerAuth();
     // 1. Core State
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
@@ -67,6 +69,11 @@ export default function AddressBook() {
                 },
                 credentials: 'include'
             });
+
+            if (res.status === 401) {
+                logout();
+                return;
+            }
 
             if (res.ok) {
                 const data = await res.json();
@@ -253,6 +260,11 @@ export default function AddressBook() {
                 credentials: 'include'
             });
 
+            if (res.status === 401) {
+                logout();
+                return;
+            }
+
             if (res.ok) {
                 setIsEditing(false);
                 loadAddresses();
@@ -299,6 +311,11 @@ export default function AddressBook() {
                 credentials: 'include'
             });
 
+            if (res.status === 401) {
+                logout();
+                return;
+            }
+
             if (res.ok) {
                 loadAddresses();
             } else {
@@ -321,6 +338,11 @@ export default function AddressBook() {
                 headers: { 'Accept': 'application/json' },
                 credentials: 'include'
             });
+
+            if (res.status === 401) {
+                logout();
+                return;
+            }
 
             if (res.ok) {
                 loadAddresses();
@@ -345,6 +367,11 @@ export default function AddressBook() {
                 headers: { 'Accept': 'application/json' },
                 credentials: 'include'
             });
+
+            if (res.status === 401) {
+                logout();
+                return;
+            }
 
             if (res.ok) {
                 loadAddresses();
