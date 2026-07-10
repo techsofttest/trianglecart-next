@@ -226,24 +226,7 @@ function CheckoutContent() {
     const subtotal = checkoutItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
     const discount = appliedCoupon === 'SAVE10' ? subtotal * 0.1 : 0;
 
-    // Per-product tax %
-    // `item.tax_percentage` is expected to be provided by backend.
-    // Fallback to 10% to keep backwards compatibility with mock/test data.
-    const taxableBase = subtotal - discount;
-    const totalTax = checkoutItems.reduce((acc, item) => {
-        const taxPct = typeof item.tax_percentage === 'number'
-            ? item.tax_percentage
-            : (typeof item.taxPercentage === 'number' ? item.taxPercentage : 10);
-
-        const itemLine = (item.price * item.quantity);
-        // Allocate discount proportionally across items by their share of subtotal.
-        const discountShare = taxableBase > 0 ? (discount * (itemLine / subtotal)) : 0;
-        const itemTaxable = itemLine - discountShare;
-
-        return acc + itemTaxable * (taxPct / 100);
-    }, 0);
-
-    const tax = totalTax;
+    const tax = 0;
     const total = subtotal - discount + shipping + tax;
 
     const isAddressComplete = !!(

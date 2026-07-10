@@ -59,11 +59,10 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                                 e.stopPropagation();
                                 toggleWishlist(product);
                             }}
-                            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-md transition-all duration-300 active:scale-90 ${
-                                isWishlisted 
-                                ? 'bg-rose-500 text-white' 
-                                : 'bg-white/90 backdrop-blur-sm text-gray-400 hover:text-rose-500 hover:bg-white'
-                            }`}
+                            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-md transition-all duration-300 active:scale-90 ${isWishlisted
+                                    ? 'bg-rose-500 text-white'
+                                    : 'bg-white/90 backdrop-blur-sm text-gray-400 hover:text-rose-500 hover:bg-white'
+                                }`}
                         >
                             <Heart className={`w-4.5 h-4.5 sm:w-5 sm:h-5 ${isWishlisted ? 'fill-current' : ''}`} />
                         </button>
@@ -83,8 +82,8 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                     </div>
                 </div>
 
-                <Link 
-                    href={href} 
+                <Link
+                    href={href}
                     className="relative w-full aspect-square bg-gray-50 rounded-xl mb-2 overflow-hidden p-0"
                 >
                     <img
@@ -108,12 +107,6 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                             <span className="text-sm sm:text-sm font-medium text-gray-700">
                                 {product.weight}
                             </span>
-                            {product.rating && (
-                                <span className="flex items-center gap-0.5 text-sm sm:text-sm font-medium text-amber-700 bg-amber-50 border border-amber-100 px-1.5 py-0.5 rounded">
-                                    <Star className="w-2.5 h-2.5 fill-amber-500 text-amber-500" />
-                                    {product.rating}
-                                </span>
-                            )}
                         </div>
                     </Link>
 
@@ -135,7 +128,7 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                             </span>
                         </div>
 
-                        <button 
+                        <button
                             onClick={(e) => {
                                 e.preventDefault();
                                 setIsQuickAddOpen(true);
@@ -149,7 +142,7 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                 </div>
             </div>
 
-            <ProductQuickAddModal 
+            <ProductQuickAddModal
                 product={product}
                 isOpen={isQuickAddOpen}
                 onClose={() => setIsQuickAddOpen(false)}
