@@ -31,6 +31,7 @@ export default function AddressBook() {
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
 
     // Form State
     const [formData, setFormData] = useState({
@@ -235,7 +236,15 @@ export default function AddressBook() {
     };
 
     const handleSave = async () => {
-        if (!formData.contact_name || !formData.phone || !formData.address_line_1 || !formData.city || !formData.state || !formData.postcode) {
+        const errors: Record<string, boolean> = {};
+        if (!formData.contact_name) errors.contact_name = true;
+        if (!formData.phone) errors.phone = true;
+        if (!formData.address_line_1) errors.address_line_1 = true;
+        if (!formData.city) errors.city = true;
+        if (!formData.state) errors.state = true;
+        if (!formData.postcode) errors.postcode = true;
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
             setErrorMsg('Please fill in all mandatory fields (*)');
             return;
         }
@@ -410,12 +419,7 @@ export default function AddressBook() {
                     <p className="text-sm text-gray-500 mt-2 font-medium">Please provide the delivery details below.</p>
                 </div>
 
-                {errorMsg && (
-                    <div className="bg-red-50 text-red-600 text-sm font-semibold p-4 rounded-xl border border-red-100 flex items-center gap-2 mb-6 max-w-4xl">
-                        <ShieldAlert className="w-5 h-5" />
-                        <span>{errorMsg}</span>
-                    </div>
-                )}
+
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6 max-w-4xl">
                     {/* Google Autocomplete search */}
@@ -449,8 +453,9 @@ export default function AddressBook() {
                             type="text" 
                             value={formData.contact_name}
                             onChange={(e) => setFormData({ ...formData, contact_name: e.target.value })}
+                            onFocus={() => setFieldErrors(prev => ({ ...prev, contact_name: false }))}
                             placeholder="John Smith"
-                            className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all"
+                            className={`w-full bg-gray-50 border rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all ${fieldErrors.contact_name ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                         />
                     </div>
 
@@ -466,9 +471,10 @@ export default function AddressBook() {
                                     const digitsOnly = raw.replace(/\D/g, '');
                                     setFormData({ ...formData, phone: `+61${digitsOnly}` });
                                 }}
+                                onFocus={() => setFieldErrors(prev => ({ ...prev, phone: false }))}
                                 placeholder="4XX XXX XXX"
                                 inputMode="numeric"
-                                className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 pl-[3.5rem] pr-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all"
+                                className={`w-full bg-gray-50 border rounded-2xl py-3.5 pl-[3.5rem] pr-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all ${fieldErrors.phone ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                             />
                         </div>
                     </div>
@@ -480,7 +486,7 @@ export default function AddressBook() {
                             value={formData.address_line_1}
                             readOnly={true}
                             placeholder="Auto-filled via search"
-                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none"
+                            className={`w-full bg-gray-100 border rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none ${fieldErrors.address_line_1 ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                         />
                     </div>
 
@@ -513,7 +519,7 @@ export default function AddressBook() {
                             value={formData.city}
                             readOnly={true}
                             placeholder="Auto-filled via search"
-                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none"
+                            className={`w-full bg-gray-100 border rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none ${fieldErrors.city ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                         />
                     </div>
 
@@ -524,7 +530,7 @@ export default function AddressBook() {
                             value={formData.state}
                             readOnly={true}
                             placeholder="Auto-filled via search"
-                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none"
+                            className={`w-full bg-gray-100 border rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none ${fieldErrors.state ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                         />
                     </div>
 
@@ -535,7 +541,7 @@ export default function AddressBook() {
                             value={formData.postcode}
                             readOnly={true}
                             placeholder="Auto-filled via search"
-                            className="w-full bg-gray-100 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none"
+                            className={`w-full bg-gray-100 border rounded-2xl py-3.5 px-6 text-sm font-medium text-gray-500 cursor-not-allowed outline-none focus:outline-none ${fieldErrors.postcode ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                         />
                     </div>
 
@@ -560,6 +566,13 @@ export default function AddressBook() {
                             className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all resize-none"
                         />
                     </div>
+
+                    {errorMsg && (
+                        <div className="md:col-span-2 bg-red-50 text-red-600 text-sm font-semibold p-4 rounded-xl border border-red-100 flex items-center gap-2">
+                            <ShieldAlert className="w-5 h-5" />
+                            <span>{errorMsg}</span>
+                        </div>
+                    )}
 
                     <div className="md:col-span-2 pt-4">
                         <button 

@@ -54,6 +54,7 @@ export default function AddressSection({
     const [showNewAddressForm, setShowNewAddressForm] = useState(false);
     const [isSavingNewAddress, setIsSavingNewAddress] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
+    const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
 
     // New Address Form State
     const [newAddress, setNewAddress] = useState({
@@ -268,7 +269,15 @@ export default function AddressSection({
 
     // Save new address from checkout
     const handleSaveNewAddress = async () => {
-        if (!newAddress.contact_name || !newAddress.phone || !newAddress.address_line_1 || !newAddress.city || !newAddress.state || !newAddress.postcode) {
+        const errors: Record<string, boolean> = {};
+        if (!newAddress.contact_name) errors.contact_name = true;
+        if (!newAddress.phone) errors.phone = true;
+        if (!newAddress.address_line_1) errors.address_line_1 = true;
+        if (!newAddress.city) errors.city = true;
+        if (!newAddress.state) errors.state = true;
+        if (!newAddress.postcode) errors.postcode = true;
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
             setErrorMsg('Please fill in all mandatory fields (*)');
             return;
         }
@@ -322,7 +331,15 @@ export default function AddressSection({
     };
 
     const handleConfirmTemporaryAddress = () => {
-        if (!newAddress.contact_name || !newAddress.phone || !newAddress.address_line_1 || !newAddress.city || !newAddress.state || !newAddress.postcode) {
+        const errors: Record<string, boolean> = {};
+        if (!newAddress.contact_name) errors.contact_name = true;
+        if (!newAddress.phone) errors.phone = true;
+        if (!newAddress.address_line_1) errors.address_line_1 = true;
+        if (!newAddress.city) errors.city = true;
+        if (!newAddress.state) errors.state = true;
+        if (!newAddress.postcode) errors.postcode = true;
+        if (Object.keys(errors).length > 0) {
+            setFieldErrors(errors);
             setErrorMsg('Please fill in all mandatory fields (*)');
             return;
         }
@@ -502,11 +519,7 @@ export default function AddressSection({
                                 )}
                             </div>
 
-                            {errorMsg && (
-                                <div className="bg-red-50 text-red-600 text-xs font-bold p-3.5 rounded-xl border border-red-100">
-                                    {errorMsg}
-                                </div>
-                            )}
+
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div className="md:col-span-2 space-y-1.5">
@@ -522,16 +535,18 @@ export default function AddressSection({
                                     </div>
                                 </div>
 
-                                <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Label (e.g. Home, Work)*</label>
-                                    <input
-                                        type="text"
-                                        value={newAddress.label}
-                                        onChange={(e) => setNewAddress({ ...newAddress, label: e.target.value })}
-                                        placeholder="Home / Work / Parents"
-                                        className="w-full bg-gray-50 border border-gray-300 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all"
-                                    />
-                                </div>
+                                {isAuthenticated && (
+                                    <div className="space-y-1.5">
+                                        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Label (e.g. Home, Work)*</label>
+                                        <input
+                                            type="text"
+                                            value={newAddress.label}
+                                            onChange={(e) => setNewAddress({ ...newAddress, label: e.target.value })}
+                                            placeholder="Home / Work / Parents"
+                                            className="w-full bg-gray-50 border border-gray-300 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all"
+                                        />
+                                    </div>
+                                )}
 
                                 <div className="space-y-1.5">
                                     <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Receiver Name*</label>
@@ -539,8 +554,9 @@ export default function AddressSection({
                                         type="text"
                                         value={newAddress.contact_name}
                                         onChange={(e) => setNewAddress({ ...newAddress, contact_name: e.target.value })}
+                                        onFocus={() => setFieldErrors(prev => ({ ...prev, contact_name: false }))}
                                         placeholder="Receiver Name"
-                                        className="w-full bg-gray-50 border border-gray-300 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all"
+                                        className={`w-full bg-gray-50 border rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all ${fieldErrors.contact_name ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
                                     />
                                 </div>
 
@@ -556,9 +572,10 @@ export default function AddressSection({
                                                 const digitsOnly = raw.replace(/\D/g, '');
                                                 setNewAddress({ ...newAddress, phone: `+61${digitsOnly}` });
                                             }}
+                                            onFocus={() => setFieldErrors(prev => ({ ...prev, phone: false }))}
                                             placeholder="4XX XXX XXX"
                                             inputMode="numeric"
-                                            className="w-full bg-gray-50 border border-gray-300 rounded-2xl pl-14 pr-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all"
+                                            className={`w-full bg-gray-50 border rounded-2xl pl-14 pr-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all ${fieldErrors.phone ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
                                         />
                                     </div>
                                 </div>
@@ -570,7 +587,7 @@ export default function AddressSection({
                                         value={newAddress.address_line_1}
                                         readOnly={true}
                                         placeholder="Auto-filled via search"
-                                        className="w-full bg-gray-100 border border-gray-300 rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500"
+                                        className={`w-full bg-gray-100 border rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500 ${fieldErrors.address_line_1 ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
                                     />
                                 </div>
 
@@ -603,7 +620,7 @@ export default function AddressSection({
                                         value={newAddress.city}
                                         readOnly={true}
                                         placeholder="Auto-filled via search"
-                                        className="w-full bg-gray-100 border border-gray-300 rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500"
+                                        className={`w-full bg-gray-100 border rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500 ${fieldErrors.city ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
                                     />
                                 </div>
 
@@ -614,7 +631,7 @@ export default function AddressSection({
                                         value={newAddress.state}
                                         readOnly={true}
                                         placeholder="Auto-filled via search"
-                                        className="w-full bg-gray-100 border border-gray-300 rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500"
+                                        className={`w-full bg-gray-100 border rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500 ${fieldErrors.state ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
                                     />
                                 </div>
 
@@ -625,7 +642,7 @@ export default function AddressSection({
                                         value={newAddress.postcode}
                                         readOnly={true}
                                         placeholder="Auto-filled via search"
-                                        className="w-full bg-gray-100 border border-gray-300 rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500"
+                                        className={`w-full bg-gray-100 border rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500 ${fieldErrors.postcode ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
                                     />
                                 </div>
 
@@ -651,6 +668,12 @@ export default function AddressSection({
                                     />
                                 </div>
                             </div>
+
+                            {errorMsg && (
+                                <div className="bg-red-50 text-red-600 text-xs font-bold p-3.5 rounded-xl border border-red-100">
+                                    {errorMsg}
+                                </div>
+                            )}
 
                             {isAuthenticated ? (
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">

@@ -9,7 +9,6 @@ import { MOCK_CART_ITEMS, MOCK_PRODUCTS, LARGE_MOCK_PRODUCTS } from '@/data/mock
 import OrderSuccess from '@/components/checkout/OrderSuccess';
 import AddressSection from '@/components/checkout/AddressSection';
 import CheckoutItemsList from '@/components/checkout/CheckoutItemsList';
-import PaymentMethodSection from '@/components/checkout/PaymentMethodSection';
 import OrderSummarySidebar from '@/components/checkout/OrderSummarySidebar';
 import { useCart } from '@/context/CartContext';
 import { apiUrl } from '@/lib/api';
@@ -512,11 +511,6 @@ function CheckoutContent() {
                     <CheckoutItemsList
                         items={checkoutItems}
                         onUpdateQuantity={updateQuantity}
-                    />
-
-                    <PaymentMethodSection
-                        paymentMethod={paymentMethod}
-                        setPaymentMethod={setPaymentMethod}
                     />
                 </div>
 

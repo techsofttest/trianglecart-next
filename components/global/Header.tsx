@@ -238,9 +238,6 @@ export default function Header() {
                                 <User className="w-5 h-5" />
                                 <span>Login</span>
                             </Link>
-                            <Link href="/register" className="hidden sm:flex items-center gap-1.5 text-gray-800 hover:text-[#0c4a9e] px-4 py-2 rounded-md transition font-semibold text-sm">
-                                Register
-                            </Link>
                         </div>
                     )}
 
@@ -286,9 +283,9 @@ export default function Header() {
             {/* Bottom Row: Categories Carousel */}
             <div className="border-t border-gray-100 bg-white hidden md:block relative group/carousel">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 relative flex items-center">
-                    
+
                     {/* Left Scroll Button */}
-                    <button 
+                    <button
                         onClick={() => scrollCategories('left')}
                         className="absolute left-2 z-10 p-1.5 bg-white border border-gray-200 rounded-full shadow-md text-gray-600 hover:text-[#0c4a9e] opacity-0 group-hover/carousel:opacity-100 transition-opacity"
                     >
@@ -296,7 +293,7 @@ export default function Header() {
                     </button>
 
                     {/* Draggable Carousel Container */}
-                    <div 
+                    <div
                         ref={categoryNavRef}
                         onMouseDown={handleMouseDown}
                         onMouseMove={handleMouseMove}
@@ -306,29 +303,26 @@ export default function Header() {
                     >
                         {categories.map((cat) => {
                             const isActive = params?.slug === cat.slug;
-                            
+
                             return (
                                 <Link
                                     key={cat.id}
                                     href={`/category/${cat.slug}`}
-                                    className={`flex flex-col items-center justify-center transition group px-4 border-b-2 pb-1 min-w-[100px] flex-shrink-0 ${
-                                        isActive 
-                                        ? 'border-[#0c4a9e] text-[#0c4a9e]' 
+                                    className={`flex flex-col items-center justify-center transition group px-4 border-b-2 pb-1 min-w-[100px] flex-shrink-0 ${isActive
+                                        ? 'border-[#0c4a9e] text-[#0c4a9e]'
                                         : 'border-transparent text-gray-600 hover:text-[#0c4a9e] hover:border-[#0c4a9e]'
-                                    }`}
+                                        }`}
                                 >
-                                    <div className={`transition p-1.5 rounded-xl ${
-                                        isActive ? 'bg-blue-50 text-[#0c4a9e]' : 'text-orange-300 group-hover:text-[#0c4a9e] group-hover:bg-blue-50/50'
-                                    }`}>
-                                    {cat.icon_url ? (
+                                    <div className={`transition p-1.5 rounded-xl ${isActive ? 'bg-blue-50 text-[#0c4a9e]' : 'text-orange-300 group-hover:text-[#0c4a9e] group-hover:bg-blue-50/50'
+                                        }`}>
+                                        {cat.icon_url ? (
                                             <img src={cat.icon_url} alt={cat.name} className="w-5 h-5 mb-1 object-contain" />
                                         ) : (
                                             <Package className="w-5 h-5 mb-1" />
                                         )}
                                     </div>
-                                    <span className={`text-[11px] tracking-tight transition whitespace-nowrap ${
-                                        isActive ? 'font-extrabold text-[#0c4a9e]' : 'font-semibold text-gray-700 group-hover:text-[#0c4a9e]'
-                                    }`}>
+                                    <span className={`text-[11px] tracking-tight transition whitespace-nowrap ${isActive ? 'font-extrabold text-[#0c4a9e]' : 'font-semibold text-gray-700 group-hover:text-[#0c4a9e]'
+                                        }`}>
                                         {cat.name}
                                     </span>
                                 </Link>
@@ -337,7 +331,7 @@ export default function Header() {
                     </div>
 
                     {/* Right Scroll Button */}
-                    <button 
+                    <button
                         onClick={() => scrollCategories('right')}
                         className="absolute right-2 z-10 p-1.5 bg-white border border-gray-200 rounded-full shadow-md text-gray-600 hover:text-[#0c4a9e] opacity-0 group-hover/carousel:opacity-100 transition-opacity"
                     >
