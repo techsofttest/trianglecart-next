@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ShoppingCart, Zap } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { useRouter } from 'next/navigation';
+import { useWishlist } from '@/context/WishlistContext';
 
 interface ProductActionsProps {
     product: {
@@ -13,15 +13,21 @@ interface ProductActionsProps {
         stock?: number;
         selectedVariantId?: number | null;
         selectedVariant?: { id: number; stock: number } | null;
+        image?: string;
+        brand?: string;
+        weight?: string;
+        originalPrice?: number;
     };
     quantity: number;
 }
 
 export default function ProductActions({ product, quantity }: ProductActionsProps) {
     const { addToCart } = useCart();
-    const router = useRouter();
+    const { toggleWishlist, isInWishlist } = useWishlist();
     const [isSticky, setIsSticky] = useState(false);
     const triggerRef = useRef<HTMLDivElement>(null);
+
+    const isWishlisted = isInWishlist(product.id);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -40,10 +46,16 @@ export default function ProductActions({ product, quantity }: ProductActionsProp
         return () => observer.disconnect();
     }, []);
 
-    const handleBuyNow = () => {
-        if ((product.selectedVariant?.stock ?? product.stock ?? 1) <= 0) return;
-        const variantQuery = product.selectedVariantId ? `&variantId=${product.selectedVariantId}` : '';
-        router.push(`/checkout?type=buynow&productId=${product.id}&qty=${quantity}${variantQuery}`);
+    const handleToggleWishlist = () => {
+        toggleWishlist({
+            id: String(product.id),
+            title: product.title,
+            price: product.price,
+            image: product.image || '',
+            weight: product.weight || '1 unit',
+            brand: product.brand || 'General',
+            originalPrice: product.originalPrice ?? product.price,
+        });
     };
 
     const handleAddToCart = () => {
@@ -61,18 +73,16 @@ export default function ProductActions({ product, quantity }: ProductActionsProp
                 <button 
                     onClick={handleAddToCart}
                     disabled={isOutOfStock}
-                    className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-[#0c4a9e] text-[#0c4a9e] font-bold py-3.5 px-6 rounded-xl hover:bg-[#0c4a9e]/5 transition-all active:scale-95 text-[14px]"
+                    className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-[#008446] text-[#008446] font-bold py-3.5 px-6 rounded-xl hover:bg-[#008446]/5 transition-all active:scale-95 text-[14px]"
                 >
                     <ShoppingCart className="w-4 h-4" />
                     {isOutOfStock ? 'OUT OF STOCK' : 'ADD TO CART'}
                 </button>
                 <button 
-                    onClick={handleBuyNow}
-                    disabled={isOutOfStock}
-                    className="flex-1 flex items-center justify-center gap-2 bg-[#0c4a9e] text-white font-bold py-3.5 px-6 rounded-xl hover:bg-[#0a3d82] transition-all shadow-lg shadow-[#0c4a9e]/15 active:scale-95 text-[14px]"
+                    onClick={handleToggleWishlist}
+                    className="flex-1 flex items-center justify-center gap-2 bg-[#008446] text-white font-bold py-3.5 px-6 rounded-xl hover:bg-[#008446]/90 transition-all shadow-lg shadow-[#008446]/15 active:scale-95 text-[14px]"
                 >
-                    <Zap className="w-4 h-4 fill-current" />
-                    ${(product.price * quantity).toFixed(2)} - BUY NOW
+                    {isWishlisted ? 'REMOVE FROM WISHLIST' : 'ADD TO WISHLIST'}
                 </button>
             </div>
 
@@ -88,19 +98,17 @@ export default function ProductActions({ product, quantity }: ProductActionsProp
                             <button 
                                 onClick={handleAddToCart}
                                 disabled={isOutOfStock}
-                                className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-[#0c4a9e] text-[#0c4a9e] font-bold py-3.5 rounded-xl text-[14px] hover:bg-[#0c4a9e]/5 transition-all"
+                                className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-[#008446] text-[#008446] font-bold py-3.5 rounded-xl text-[14px] hover:bg-[#008446]/5 transition-all"
                             >
                                 <ShoppingCart className="w-4 h-4" />
                                 <span className="hidden sm:inline">{isOutOfStock ? 'OUT OF STOCK' : 'ADD TO CART'}</span>
                                 <span className="sm:hidden">{isOutOfStock ? 'OUT' : 'ADD'}</span>
                             </button>
                             <button 
-                                onClick={handleBuyNow}
-                                disabled={isOutOfStock}
-                                className="flex-1 flex items-center justify-center gap-2 bg-[#0c4a9e] text-white font-bold py-3.5 rounded-xl shadow-xl shadow-[#0c4a9e]/20 text-[14px] hover:bg-[#0a3d82] transition-all"
+                                onClick={handleToggleWishlist}
+                                className="flex-1 flex items-center justify-center gap-2 bg-[#008446] text-white font-bold py-3.5 rounded-xl shadow-xl shadow-[#008446]/20 text-[14px] hover:bg-[#008446]/90 transition-all"
                             >
-                                <Zap className="w-4 h-4 fill-current" />
-                                ${(product.price * quantity).toFixed(2)} - BUY NOW
+                                {isWishlisted ? 'REMOVE FROM WISHLIST' : 'ADD TO WISHLIST'}
                             </button>
                         </div>
                     </div>

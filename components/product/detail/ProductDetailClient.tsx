@@ -46,7 +46,9 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
         selectedVariantId: selectedVariant?.id,
         selectedVariant,
         stock: selectedStock,
-    }), [product.id, product.slug, product.title, selectedPrice, selectedWeight, selectedVariant, selectedStock]);
+        image: product.images?.[0] || '',
+        brand: product.brand,
+    }), [product.id, product.slug, product.title, selectedPrice, selectedWeight, selectedVariant, selectedStock, product.images, product.brand]);
 
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">

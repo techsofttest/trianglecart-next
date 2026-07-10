@@ -1,9 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import { X, ShoppingCart, Zap } from 'lucide-react';
+import { X, ShoppingCart } from 'lucide-react';
 import { Product } from './ProductCard';
 import { useCart } from '@/context/CartContext';
+import { useWishlist } from '@/context/WishlistContext';
 import { useRouter } from 'next/navigation';
 import VariantSelector, { ProductVariant } from './VariantSelector';
 
@@ -17,6 +18,7 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
     const [quantity, setQuantity] = useState(1);
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(product.variants?.[0] ?? null);
     const { addToCart, openCartDrawer } = useCart();
+    const { toggleWishlist, isInWishlist } = useWishlist();
     const router = useRouter();
 
     if (!isOpen) return null;
@@ -26,6 +28,7 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
         ? [selectedVariant.size, selectedVariant.unit].filter(Boolean).join(' ')
         : product.weight;
     const isOutOfStock = selectedVariant ? selectedVariant.stock <= 0 : false;
+    const isWishlisted = isInWishlist(product.id);
 
     const handleAddToCart = () => {
         if (isOutOfStock) return;
@@ -114,12 +117,10 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
 
                     <div className="space-y-3 pt-2">
                         <button
-                            onClick={handleBuyNow}
-                            disabled={isOutOfStock}
-                            className="w-full bg-[#008446] disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold py-4 rounded-2xl hover:bg-[#008446] transition-all shadow-lg shadow-[#008446]/15 flex items-center justify-center gap-2 text-sm"
+                            onClick={() => toggleWishlist(product)}
+                            className="w-full bg-[#008446] text-white font-bold py-4 rounded-2xl hover:bg-[#008446]/90 transition-all shadow-lg shadow-[#008446]/15 flex items-center justify-center gap-2 text-sm"
                         >
-                            <Zap className="w-4 h-4 fill-current" />
-                            BUY THIS NOW — ${(selectedPrice * quantity).toFixed(2)}
+                            {isWishlisted ? 'REMOVE FROM WISHLIST' : 'ADD TO WISHLIST'}
                         </button>
                         <button
                             onClick={handleAddToCart}

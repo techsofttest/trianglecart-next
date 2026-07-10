@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Heart, Star, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { useWishlist } from '@/context/WishlistContext';
 import ProductQuickAddModal from './ProductQuickAddModal';
 import { slugify } from '@/utils/slugify';
@@ -54,20 +54,6 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                      */}
 
                     <div className="flex flex-col gap-2 pointer-events-auto">
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                toggleWishlist(product);
-                            }}
-                            className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-md transition-all duration-300 active:scale-90 ${isWishlisted
-                                ? 'bg-rose-500 text-white'
-                                : 'bg-white/90 backdrop-blur-sm text-gray-400 hover:text-rose-500 hover:bg-white'
-                                }`}
-                        >
-                            <Heart className={`w-4.5 h-4.5 sm:w-5 sm:h-5 ${isWishlisted ? 'fill-current' : ''}`} />
-                        </button>
-
                         {showRemoveButton && (
                             <button
                                 onClick={(e) => {

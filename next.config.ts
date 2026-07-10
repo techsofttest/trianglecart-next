@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-	
+
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
@@ -11,9 +11,8 @@ const nextConfig: NextConfig = {
       {
         protocol: 'http',
         hostname: 'trianglecart.test',
-        port: '90',
       },
-	  {
+      {
         protocol: 'https',
         hostname: 'tc.janamithrasociety.com'
       },
