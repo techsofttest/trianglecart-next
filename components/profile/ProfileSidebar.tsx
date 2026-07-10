@@ -66,12 +66,6 @@ export default function ProfileSidebar({
 
   const menuItems = [
     {
-      id: 'dashboard',
-      label: 'Dashboard',
-      href: '/profile',
-      icon: <LayoutDashboard className="w-[18px] h-[18px]" />,
-    },
-    {
       id: 'personal',
       label: 'Personal Information',
       href: '/profile/personal',
