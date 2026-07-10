@@ -17,8 +17,8 @@ interface Address {
     state: string;
     postcode: string;
     country: string;
-    latitude?: number;
-    longitude?: number;
+    latitude?: number | null;
+    longitude?: number | null;
     google_place_id?: string;
     delivery_notes?: string;
     is_default_shipping: boolean;
