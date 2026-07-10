@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import React from 'react';
 import ProductCard, { Product } from './ProductCard';
 import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
@@ -12,44 +12,6 @@ interface ProductRowProps {
 }
 
 export default function ProductRow({ title, products, viewAllLink }: ProductRowProps) {
-    const scrollRef = useRef<HTMLDivElement>(null);
-    const rafRef = useRef<number | null>(null);
-    const pausedRef = useRef(false);
-    const normalizedProducts = useMemo(() => products ?? [], [products]);
-
-    const loopedProducts = useMemo(() => {
-        if (normalizedProducts.length === 0) return [];
-        return [...normalizedProducts, ...normalizedProducts];
-    }, [normalizedProducts]);
-
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el || normalizedProducts.length === 0) return;
-
-        const speed = 0.45;
-
-        const tick = () => {
-            if (!pausedRef.current) {
-                el.scrollLeft += speed;
-
-                const halfWidth = el.scrollWidth / 2;
-                if (el.scrollLeft >= halfWidth) {
-                    el.scrollLeft -= halfWidth;
-                }
-            }
-
-            rafRef.current = window.requestAnimationFrame(tick);
-        };
-
-        rafRef.current = window.requestAnimationFrame(tick);
-
-        return () => {
-            if (rafRef.current !== null) {
-                window.cancelAnimationFrame(rafRef.current);
-            }
-        };
-    }, [normalizedProducts.length]);
-
     if (!products || products.length === 0) return null;
 
     return (
@@ -60,7 +22,7 @@ export default function ProductRow({ title, products, viewAllLink }: ProductRowP
                 {viewAllLink && (
                     <Link 
                         href={viewAllLink} 
-                        className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-gray-50 rounded-full text-gray-700 group hover:bg-[#0c4a9e] hover:text-white transition-all duration-300 border border-gray-100 shadow-sm"
+                        className="flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 bg-gray-50 rounded-full text-gray-700 group hover:bg-[#008446] hover:text-white transition-all duration-300 border border-gray-100 shadow-sm"
                         aria-label={`View all in ${title}`}
                     >
                         <ChevronRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
@@ -68,25 +30,11 @@ export default function ProductRow({ title, products, viewAllLink }: ProductRowP
                 )}
             </div>
 
-            {/* Infinite auto-scrolling track */}
+            {/* Horizontal scrollable track */}
             <div
-                ref={scrollRef}
-                className="flex gap-3 sm:gap-4 overflow-x-auto no-scrollbar scroll-smooth pb-2 px-1"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                onMouseEnter={() => {
-                    pausedRef.current = true;
-                }}
-                onMouseLeave={() => {
-                    pausedRef.current = false;
-                }}
+                className="flex gap-3 sm:gap-4 overflow-x-auto custom-scrollbar pb-3 px-1"
             >
-                <style jsx global>{`
-                    .no-scrollbar::-webkit-scrollbar {
-                        display: none;
-                    }
-                `}</style>
-
-                {loopedProducts.map((product, index) => (
+                {products.map((product, index) => (
                     <div
                         key={`${product.id}-${index}`}
                         className="shrink-0 w-[78%] sm:w-[48%] md:w-[32%] lg:w-[20%] xl:w-[20%]"
@@ -95,6 +43,24 @@ export default function ProductRow({ title, products, viewAllLink }: ProductRowP
                     </div>
                 ))}
             </div>
+
+            <style jsx global>{`
+                .custom-scrollbar::-webkit-scrollbar {
+                    height: 6px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-track {
+                    background: #f8f9fa;
+                    border-radius: 10px;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb {
+                    background: #cbd5e1;
+                    border-radius: 10px;
+                    transition: background 0.2s;
+                }
+                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+                    background: #008446;
+                }
+            `}</style>
         </section>
     );
 }

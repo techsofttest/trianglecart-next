@@ -232,9 +232,11 @@ export default async function Home() {
         <ProductRow title="20+ Trending Everyday Deals" products={suggestedProducts.slice(0, 12)} viewAllLink="/products" />
       </section>
 
-      <section className="w-full">
-        <OurBrands title="Top Brands" brands={featuredBrands} />
-      </section>
+      {false && (
+        <section className="w-full">
+          <OurBrands title="Top Brands" brands={featuredBrands} />
+        </section>
+      )}
 
       <section className="w-full">
         <SubCategories
