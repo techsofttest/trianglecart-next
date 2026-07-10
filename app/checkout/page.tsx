@@ -32,7 +32,7 @@ function CheckoutContent() {
         email?: string;
         name?: string
     } | null>(null);
-    const { cartItems } = useCart();
+    const { cartItems, clearCart } = useCart();
     const [checkoutItems, setCheckoutItems] = useState<any[]>([]);
     const [paymentMethod, setPaymentMethod] = useState('card');
     const [isOrderPlaced, setIsOrderPlaced] = useState(false);
@@ -64,8 +64,11 @@ function CheckoutContent() {
         if (status === 'success' && orderNumber) {
             setPlacedOrderNumber(orderNumber);
             setIsOrderPlaced(true);
+            clearCart();
+            // Clear URL search params immediately to prevent reload loop on subsequent navigations
+            window.history.replaceState({}, '', window.location.pathname);
         }
-    }, [searchParams]);
+    }, [searchParams, clearCart]);
 
 
     // Form state for address completion

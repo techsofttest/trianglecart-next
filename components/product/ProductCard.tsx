@@ -46,11 +46,12 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
             <div className="group relative flex flex-col bg-white rounded-2xl p-2.5 sm:p-3 border border-gray-100 hover:border-[#0c4a9e]/30 hover:shadow-lg transition-all duration-300">
                 {/* Top Actions/Badges */}
                 <div className="absolute top-2.5 left-2.5 right-2.5 flex justify-between items-start z-10 pointer-events-none">
-                    {product.discount ? (
+                    {/* {product.discount ? (
                         <div className="bg-red-500 text-white text-[10px] sm:text-[11px] font-bold px-2 py-1 rounded-lg shadow-sm uppercase tracking-wider animate-in fade-in zoom-in duration-300">
                             {product.discount} OFF
                         </div>
                     ) : <div />}
+                     */}
 
                     <div className="flex flex-col gap-2 pointer-events-auto">
                         <button
@@ -60,8 +61,8 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                                 toggleWishlist(product);
                             }}
                             className={`w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-md transition-all duration-300 active:scale-90 ${isWishlisted
-                                    ? 'bg-rose-500 text-white'
-                                    : 'bg-white/90 backdrop-blur-sm text-gray-400 hover:text-rose-500 hover:bg-white'
+                                ? 'bg-rose-500 text-white'
+                                : 'bg-white/90 backdrop-blur-sm text-gray-400 hover:text-rose-500 hover:bg-white'
                                 }`}
                         >
                             <Heart className={`w-4.5 h-4.5 sm:w-5 sm:h-5 ${isWishlisted ? 'fill-current' : ''}`} />

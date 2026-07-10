@@ -1,4 +1,3 @@
-import { MapPin } from "lucide-react";
 import PromoSlider from "@/components/ui/PromoSlider";
 import CategoryGrid, { CategoryItem } from "@/components/product/CategoryGrid";
 import SubCategories, { SubCategoryItem } from "@/components/product/SubCategories";
@@ -8,7 +7,6 @@ import OurBrands, { BrandItem } from "@/components/product/OurBrands";
 import TopOffersCarousel, { OfferItem } from "@/components/product/TopOffersCarousel";
 import BuyItAgainRow from "@/components/product/BuyItAgainRow";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
 import { fetchStorefront } from "@/lib/storefront";
 import { toProductCardModel } from "@/lib/product";
 
@@ -202,43 +200,17 @@ export default async function Home() {
             rel="noopener noreferrer"
             className="group block overflow-hidden rounded-3xl border border-gray-100 shadow-sm transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-lg"
           >
-            <div className="relative min-h-[180px] md:min-h-[220px] bg-gradient-to-r from-[#0c4a9e] via-[#0f65c7] to-[#0f7bd7]">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(255,255,255,0.2),_transparent_40%)]" />
-              <div className="grid h-full md:grid-cols-[1.1fr_0.9fr]">
-                <div className="flex items-center p-6 md:p-8 lg:p-10">
-                  <div className="max-w-xl text-white">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-white/90">
-                      <MapPin className="h-4 w-4" />
-                      Local Partner Ad
-                    </div>
-                    <h3 className="mt-4 text-2xl md:text-3xl lg:text-4xl font-black leading-tight">
-                      {homeAdvertisement.title || homeAdvertisement.name}
-                    </h3>
-                    <p className="mt-3 max-w-xl text-sm md:text-base text-white/85">
-                      Tap the banner to explore this partner offer in a new tab.
-                    </p>
-                    <div className="mt-5 inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2 text-sm font-bold text-[#0c4a9e] transition-transform group-hover:translate-x-0.5">
-                      Open offer
-                      <ArrowUpRight className="h-4 w-4" />
-                    </div>
-                  </div>
-                </div>
-                <div className="relative min-h-[180px] md:min-h-full">
-                  {homeAdvertisement.banner_url ? (
-                    <img
-                      src={homeAdvertisement.banner_url}
-                      alt={homeAdvertisement.title || homeAdvertisement.name}
-                      className="absolute inset-0 h-full w-full object-cover"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 flex items-center justify-center bg-white/10 text-white/80">
-                      Banner unavailable
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-l from-black/10 via-transparent to-transparent" />
-                </div>
+            {homeAdvertisement.banner_url ? (
+              <img
+                src={homeAdvertisement.banner_url}
+                alt={homeAdvertisement.title || homeAdvertisement.name}
+                className="w-full h-auto object-cover block"
+              />
+            ) : (
+              <div className="relative min-h-[120px] bg-gradient-to-r from-[#0c4a9e] to-[#0f7bd7] flex items-center justify-center p-6 text-center text-white font-bold text-lg md:text-xl">
+                {homeAdvertisement.title || homeAdvertisement.name}
               </div>
-            </div>
+            )}
           </Link>
         </section>
       )}

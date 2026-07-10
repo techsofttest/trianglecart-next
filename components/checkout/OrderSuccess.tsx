@@ -16,7 +16,7 @@ export default function OrderSuccess({ orderNumber }: { orderNumber?: string }) 
                 Thank you for your purchase. Your order {displayOrder} has been placed and payment has been confirmed.
             </p>
             <p className="text-sm text-gray-400 max-w-md mb-8">
-                You will receive a confirmation email shortly. Your order status will be updated once payment is fully processed.
+                You will receive a confirmation email shortly
             </p>
             <div className="flex gap-4">
                 <Link
@@ -25,13 +25,6 @@ export default function OrderSuccess({ orderNumber }: { orderNumber?: string }) 
                 >
                     <ShoppingBag className="w-4 h-4" />
                     Continue Shopping
-                </Link>
-                <Link
-                    href="/profile?tab=orders"
-                    className="border border-gray-200 text-gray-700 px-8 py-3 rounded-xl font-medium hover:bg-gray-50 transition-all flex items-center gap-2"
-                >
-                    <ClipboardList className="w-4 h-4" />
-                    View Orders
                 </Link>
             </div>
         </div>
