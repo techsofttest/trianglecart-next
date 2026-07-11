@@ -4,11 +4,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { fetchStorefront } from '@/lib/storefront';
-import { hasInStockVariant } from '@/lib/product';
+import { hasInStockVariant, StorefrontProduct } from '@/lib/product';
 
 type SearchCategory = { id: number; name: string; slug: string; };
 type SearchBrand = { id: number; name: string; slug: string; };
-type SearchProduct = { id: number; slug: string; name: string; brand: { name: string; slug: string } | null; category: { slug: string; name: string } | null; featured_image: string | null; };
+type SearchProduct = StorefrontProduct & {
+    brand: { name: string; slug: string } | null;
+    category: { slug: string; name: string } | null;
+};
 
 type SearchResult =
     | { type: 'product'; id: string; title: string; subtitle?: string; href: string }

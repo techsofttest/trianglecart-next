@@ -530,7 +530,7 @@ function CheckoutContent() {
                         appliedCoupon={appliedCoupon}
                         onApplyCoupon={(code, discount) => {
                             setAppliedCoupon(code);
-                            setCouponDiscount(discount);
+                            setCouponDiscount(discount ?? 0);
                         }}
                         onRemoveCoupon={() => {
                             setAppliedCoupon(null);

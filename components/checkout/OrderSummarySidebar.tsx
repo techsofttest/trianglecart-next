@@ -12,7 +12,7 @@ interface OrderSummarySidebarProps {
     total: number;
     isAddressComplete: boolean;
     appliedCoupon: string | null;
-    onApplyCoupon: (code: string) => void;
+    onApplyCoupon: (code: string, discount: number) => void;
     onRemoveCoupon: () => void;
     onPlaceOrder: () => void;
 }
