@@ -3,7 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import Breadcrumbs, { BreadcrumbItem } from '@/components/ui/Breadcrumbs';
 import ProductCard from '@/components/product/ProductCard';
 import { fetchStorefront } from '@/lib/storefront';
-import { StorefrontProduct, toProductCardModel } from '@/lib/product';
+import { StorefrontProduct, hasInStockVariant, toProductCardModel } from '@/lib/product';
 
 type BrandResponse = {
     id: number;
@@ -28,7 +28,9 @@ export default async function BrandPage({ params }: { params: Promise<{ slug: st
 
     const brand = homeData?.brands?.find((item) => item.slug === slug);
     const brandTitle = brand?.name || titleFromSlug(slug);
-    const products = productsPayload?.data?.map((item) => toProductCardModel(item)) ?? [];
+    const products = (productsPayload?.data ?? [])
+        .filter((item) => hasInStockVariant(item))
+        .map((item) => toProductCardModel(item));
 
     const breadcrumbItems: BreadcrumbItem[] = [
         { label: 'Home', href: '/' },

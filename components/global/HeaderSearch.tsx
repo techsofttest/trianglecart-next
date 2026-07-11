@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { fetchStorefront } from '@/lib/storefront';
+import { hasInStockVariant } from '@/lib/product';
 
 type SearchCategory = { id: number; name: string; slug: string; };
 type SearchBrand = { id: number; name: string; slug: string; };
@@ -39,7 +40,9 @@ export default function HeaderSearch() {
 
             if (cancelled) return;
 
-            const productResults: SearchResult[] = (productsPayload?.data ?? []).map((product) => ({
+            const productResults: SearchResult[] = (productsPayload?.data ?? [])
+                .filter((product) => hasInStockVariant(product))
+                .map((product) => ({
                 type: 'product',
                 id: `product-${product.id}`,
                 title: product.name,

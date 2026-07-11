@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { apiUrl } from '@/lib/api';
 import {
     MapPin, User, ChevronDown, ShoppingCart, ChevronLeft, ChevronRight,
     Package, Heart, Store, Gift, CreditCard, Bell,
@@ -77,7 +77,7 @@ export default function Header() {
     }, []);
 
     const [categories, setCategories] = useState<HeaderCategory[]>([]);
-    const [brandLogo, setBrandLogo] = useState('/logo/mock-logo.png');
+    const [brandLogo, setBrandLogo] = useState<string>(apiUrl('/images/logo/brand-logo-nobg.png?v1'));
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -135,13 +135,10 @@ export default function Header() {
                 {/* Logo & Location */}
                 <div className="flex items-center gap-6 flex-shrink-0">
                     <Link href="/" className="flex items-center">
-                        <Image
+                        <img
                             src={brandLogo}
                             alt="Triangle Cart Logo"
-                            width={210}
-                            height={56}
-                            priority
-                            className="h-12 w-auto object-contain"
+                            className="h-8 w-auto object-contain"
                         />
                     </Link>
                     <div
@@ -190,6 +187,11 @@ export default function Header() {
 
                 {/* Right: Actions (Login, More, Cart) */}
                 <div className="flex items-center gap-2 md:gap-6 flex-shrink-0">
+
+                    <Link href="/" className="flex items-center gap-1.5 text-gray-800 hover:text-[#0c4a9e] px-4 py-2 rounded-md transition font-semibold text-sm">
+                        <Home className="w-5 h-5" />
+                        <span>Home</span>
+                    </Link>
 
                     {/* Login / Profile Dropdown */}
                     {isAuthenticated ? (

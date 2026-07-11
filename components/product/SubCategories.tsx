@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { ChevronRight } from 'lucide-react';
 
 // 1. Define the TypeScript interface for a single subcategory item
@@ -66,12 +65,10 @@ export default function SubCategories({
 
                         {/* Product Card: Full-bleed image wrapper */}
                         <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-gray-50 relative">
-                            <Image
+                            <img
                                 src={item.imageUrl}
                                 alt={item.label1}
-                                fill
-                                className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 25vw, 20vw"
+                                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             />
                         </div>
 

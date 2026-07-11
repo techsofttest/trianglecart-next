@@ -80,11 +80,6 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                     onSelectVariant={setSelectedVariant}
                 />
 
-                <div className="flex items-center justify-between text-sm">
-
-                    <span className="text-gray-500">{selectedWeight}</span>
-                </div>
-
                 <ProductFeatures
                     highlights={product.highlights}
                     description={product.description}

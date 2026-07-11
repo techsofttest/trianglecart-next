@@ -1,9 +1,11 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { ShoppingCart } from 'lucide-react';
+import { ShoppingCart, Share2 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+
+
 
 interface ProductActionsProps {
     product: {
@@ -64,26 +66,50 @@ export default function ProductActions({ product, quantity }: ProductActionsProp
         addToCart({ ...product, name: product.title }, quantity);
     };
 
+
+    const [copied, setCopied] = useState(false);
+
+    const handleShare = async () => {
+        const url = window.location.href;
+
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: product.title,
+                    url,
+                });
+                return;
+            }
+
+            await navigator.clipboard.writeText(url);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch { }
+    };
+
     const isOutOfStock = (product.selectedVariant?.stock ?? product.stock ?? 1) <= 0;
 
     return (
         <div className="space-y-6">
             {/* Main Action Section (Reference for Sticky) */}
             <div ref={triggerRef} className="flex flex-col sm:flex-row gap-3 pt-2">
-                <button 
+                <button
                     onClick={handleAddToCart}
                     disabled={isOutOfStock}
-                    className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-[#008446] text-[#008446] font-bold py-3.5 px-6 rounded-xl hover:bg-[#008446]/5 transition-all active:scale-95 text-[14px]"
+                    className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-[#008446] text-[#008446] font-bold py-3.5 px-6 rounded-xl hover:bg-[#008446]/5 transition-all active:scale-95 text-[14px] animate-pulse"
                 >
                     <ShoppingCart className="w-4 h-4" />
                     {isOutOfStock ? 'OUT OF STOCK' : 'ADD TO CART'}
                 </button>
-                <button 
-                    onClick={handleToggleWishlist}
-                    className="flex-1 flex items-center justify-center gap-2 bg-[#008446] text-white font-bold py-3.5 px-6 rounded-xl hover:bg-[#008446]/90 transition-all shadow-lg shadow-[#008446]/15 active:scale-95 text-[14px]"
+
+                <button
+                    onClick={handleShare}
+                    className="flex h-[54px] w-[54px] items-center justify-center rounded-xl border-2 border-gray-200 bg-white transition hover:border-[#008446] hover:text-[#008446]"
+                    aria-label="Share product"
                 >
-                    {isWishlisted ? 'REMOVE FROM WISHLIST' : 'ADD TO WISHLIST'}
+                    <Share2 className="h-5 w-5" />
                 </button>
+
             </div>
 
             {/* Sticky Bottom Bar (Visible until original buttons are reached) */}
@@ -95,21 +121,33 @@ export default function ProductActions({ product, quantity }: ProductActionsProp
                         <div className="hidden lg:block lg:col-span-6" />
 
                         <div className="lg:col-span-6 bg-white p-3 sm:p-4 lg:rounded-t-2xl border-t lg:border-x lg:border-t border-gray-100 pointer-events-auto flex gap-3 shadow-[0_-10px_25px_-5px_rgba(0,0,0,0.1)]">
-                            <button 
+                            <button
                                 onClick={handleAddToCart}
                                 disabled={isOutOfStock}
-                                className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-[#008446] text-[#008446] font-bold py-3.5 rounded-xl text-[14px] hover:bg-[#008446]/5 transition-all"
+                                className="flex-1 flex items-center justify-center gap-2 bg-white border-2 border-[#008446] text-[#008446] font-bold py-3.5 rounded-xl text-[14px] hover:bg-[#008446]/5 transition-all animate-pulse"
                             >
                                 <ShoppingCart className="w-4 h-4" />
                                 <span className="hidden sm:inline">{isOutOfStock ? 'OUT OF STOCK' : 'ADD TO CART'}</span>
                                 <span className="sm:hidden">{isOutOfStock ? 'OUT' : 'ADD'}</span>
                             </button>
-                            <button 
-                                onClick={handleToggleWishlist}
-                                className="flex-1 flex items-center justify-center gap-2 bg-[#008446] text-white font-bold py-3.5 rounded-xl shadow-xl shadow-[#008446]/20 text-[14px] hover:bg-[#008446]/90 transition-all"
+
+
+                            <button
+                                onClick={handleShare}
+                                className="flex h-[54px] w-[54px] shrink-0 items-center justify-center rounded-xl bg-[#008446] text-white shadow-xl shadow-[#008446]/20 transition hover:bg-[#008446]/90"
+                                aria-label="Share product"
                             >
-                                {isWishlisted ? 'REMOVE FROM WISHLIST' : 'ADD TO WISHLIST'}
+                                <Share2 className="h-5 w-5" />
                             </button>
+
+
+                            {copied && (
+                                <div className="fixed bottom-24 left-1/2 -translate-x-1/2 bg-black text-white px-4 py-2 rounded-lg text-sm shadow-lg z-[9999]">
+                                    Link copied!
+                                </div>
+                            )}
+
+
                         </div>
                     </div>
                 </div>

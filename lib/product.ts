@@ -1,3 +1,5 @@
+import { apiBaseUrl } from '@/lib/api';
+
 export interface StorefrontProduct {
     id: number;
     slug: string;
@@ -53,6 +55,47 @@ export interface ProductCardModel {
     }>;
 }
 
+export const DEFAULT_PRODUCT_IMAGE = '/logo/mock-logo.png';
+
+export function resolveProductImageUrl(image?: string | null, fallback = DEFAULT_PRODUCT_IMAGE): string {
+    if (!image) return fallback;
+
+    const trimmed = image.trim();
+    if (!trimmed) return fallback;
+
+    if (/^https?:\/\//i.test(trimmed)) {
+        return trimmed;
+    }
+
+    const baseUrl = apiBaseUrl.replace(/\/+$/, '');
+
+    if (!baseUrl) {
+        if (trimmed.startsWith('/')) return trimmed;
+        return `/${trimmed}`;
+    }
+
+    if (trimmed.startsWith('/')) {
+        if (trimmed.startsWith('/storage/') || trimmed.startsWith('/uploads/') || trimmed.startsWith('/media/')) {
+            return `${baseUrl}${trimmed}`;
+        }
+        return trimmed;
+    }
+
+    if (trimmed.startsWith('storage/') || trimmed.startsWith('uploads/') || trimmed.startsWith('media/') || trimmed.startsWith('api/')) {
+        return `${baseUrl}/${trimmed}`;
+    }
+
+    return `${baseUrl}/${trimmed}`;
+}
+
+export function hasInStockVariant(product: StorefrontProduct): boolean {
+    if (!product.variants || product.variants.length === 0) {
+        return false;
+    }
+
+    return product.variants.some((variant) => (variant.stock ?? 0) > 0);
+}
+
 export function toProductCardModel(product: StorefrontProduct): ProductCardModel {
     const variant = product.variants?.[0];
     const activePrice = variant?.price ?? product.price ?? 0;
@@ -66,7 +109,7 @@ export function toProductCardModel(product: StorefrontProduct): ProductCardModel
         slug: product.slug,
         brand: product.brand?.name,
         title: product.name,
-        image: product.featured_image || '/logo/mock-logo.png',
+        image: resolveProductImageUrl(product.featured_image),
         weight: weight || '1 unit',
         price: activePrice,
         originalPrice,

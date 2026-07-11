@@ -14,7 +14,7 @@ import { Product } from '@/components/product/ProductCard';
 
 // API Imports
 import { fetchStorefront } from '@/lib/storefront';
-import { StorefrontProduct, toProductCardModel } from '@/lib/product';
+import { StorefrontProduct, hasInStockVariant, toProductCardModel } from '@/lib/product';
 
 interface CategoryApiResponse {
     id: number;
@@ -106,7 +106,8 @@ export default function ProductsPageClient() {
 
             const response = await fetchStorefront<ProductApiResponse>(url);
             if (response && response.data) {
-                const mapped: Product[] = response.data.map(toProductCardModel);
+                const inStockProducts = response.data.filter((product) => hasInStockVariant(product));
+                const mapped: Product[] = inStockProducts.map(toProductCardModel);
                 if (append) {
                     setProducts(prev => {
                         const existingIds = new Set(prev.map(p => p.id));

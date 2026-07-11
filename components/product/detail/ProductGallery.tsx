@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useWishlist } from '@/context/WishlistContext';
+import { resolveProductImageUrl } from '@/lib/product';
 
 interface ProductGalleryProps {
     images: string[];
@@ -28,34 +29,19 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
     };
 
     return (
-        <div className="flex flex-col md:flex-row gap-4">
-            {/* Thumbnails */}
-            <div className="flex md:flex-col gap-2 order-2 md:order-1 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
-                {images.map((img, idx) => (
-                    <button 
-                        key={idx}
-                        onClick={() => setSelectedImage(idx)}
-                        className={`w-14 h-14 md:w-16 md:h-16 rounded-xl border-2 overflow-hidden transition-all flex-shrink-0 ${
-                            selectedImage === idx ? 'border-[#0c4a9e]' : 'border-gray-100 hover:border-gray-200'
-                        }`}
-                    >
-                        <img src={img} alt="" className="w-full h-full object-cover" />
-                    </button>
-                ))}
-            </div>
-
+        <div className="flex flex-col gap-4">
             {/* Main Image */}
-            <div className="flex-1 order-1 md:order-2">
+            <div className="w-full">
                 <div 
-                    className="relative aspect-[4/3] bg-gray-50 rounded-2xl overflow-hidden group border border-gray-100 cursor-zoom-in"
+                    className="relative aspect-[5/4] md:aspect-[4/3] lg:aspect-[5/4] bg-gray-50 rounded-2xl overflow-hidden group border border-gray-100 cursor-zoom-in"
                     onMouseEnter={() => setIsZooming(true)}
                     onMouseLeave={() => setIsZooming(false)}
                     onMouseMove={handleMouseMove}
                 >
                     <img 
-                        src={images[selectedImage]} 
+                        src={resolveProductImageUrl(images[selectedImage])} 
                         alt={title} 
-                        className={`w-full h-full object-contain p-4 transition-transform duration-200 ease-out`}
+                        className={`w-full h-full object-contain p-4 md:p-6 transition-transform duration-200 ease-out`}
                         style={{
                             transformOrigin: `${zoomPos.x}% ${zoomPos.y}%`,
                             transform: isZooming ? 'scale(2.5)' : 'scale(1)'
@@ -70,6 +56,21 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
                         <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
                     </button>
                 </div>
+            </div>
+
+            {/* Thumbnails */}
+            <div className="flex gap-2 overflow-x-auto pb-1">
+                {images.map((img, idx) => (
+                    <button 
+                        key={idx}
+                        onClick={() => setSelectedImage(idx)}
+                        className={`w-16 h-16 sm:w-20 sm:h-20 rounded-xl border-2 overflow-hidden transition-all flex-shrink-0 ${
+                            selectedImage === idx ? 'border-[#0c4a9e]' : 'border-gray-100 hover:border-gray-200'
+                        }`}
+                    >
+                        <img src={resolveProductImageUrl(img)} alt="" className="w-full h-full object-cover" />
+                    </button>
+                ))}
             </div>
         </div>
     );

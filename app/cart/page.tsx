@@ -28,6 +28,7 @@ export default function CartPage() {
     } | null>(null);
     const [isLocationOpen, setIsLocationOpen] = useState(false);
     const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+    const [couponDiscount, setCouponDiscount] = useState(0);
     const router = useRouter();
 
     useEffect(() => {
@@ -76,7 +77,7 @@ export default function CartPage() {
     };
 
     const subtotal = cartTotal;
-    const discount = appliedCoupon === 'SAVE10' ? subtotal * 0.1 : 0;
+    const discount = couponDiscount;
     const shipping = 0; // Shipping is calculated at checkout based on postcode
     const total = subtotal - discount;
 
@@ -127,8 +128,14 @@ export default function CartPage() {
                 <div className="space-y-4 sticky top-24 self-start">
                     <CouponSection
                         appliedCoupon={appliedCoupon}
-                        onApply={(code) => setAppliedCoupon(code)}
-                        onRemove={() => setAppliedCoupon(null)}
+                        onApply={(code, discount) => {
+                            setAppliedCoupon(code);
+                            setCouponDiscount(discount);
+                        }}
+                        onRemove={() => {
+                            setAppliedCoupon(null);
+                            setCouponDiscount(0);
+                        }}
                     />
                     <CartSummary
                         subtotal={subtotal}

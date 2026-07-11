@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import Link from 'next/link';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { resolveProductImageUrl } from '@/lib/product';
 
 export interface BrandItem {
     id: string | number;
@@ -85,7 +86,7 @@ export default function OurBrands({ title = "Featured Brands", brands }: OurBran
                         {/* Main Card Background with Gradient and Full-bleed Product Image */}
                         <div className={`w-full h-[130px] sm:h-[150px] rounded-2xl bg-gradient-to-b ${brand.bgGradient} overflow-hidden transition-all duration-300 group-hover:-translate-y-1 border border-white/50 relative`}>
                             <img
-                                src={brand.productImageUrl}
+                                src={resolveProductImageUrl(brand.productImageUrl)}
                                 alt={`${brand.name} product`}
                                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                             />
@@ -94,7 +95,7 @@ export default function OurBrands({ title = "Featured Brands", brands }: OurBran
                         {/* Overlapping Circular Brand Logo: Covers fully, reduced size and top offset to prevent clipping */}
                         <div className="absolute -top-7 left-1/2 -translate-x-1/2 w-14 h-14 sm:w-16 sm:h-16 bg-white rounded-full border-4 border-white flex items-center justify-center overflow-hidden z-10 transition-transform duration-300 group-hover:scale-105">
                             <img
-                                src={brand.logoUrl}
+                                src={resolveProductImageUrl(brand.logoUrl)}
                                 alt={`${brand.name} logo`}
                                 className="w-full h-full object-cover"
                             />

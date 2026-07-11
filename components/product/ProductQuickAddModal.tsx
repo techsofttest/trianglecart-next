@@ -7,6 +7,7 @@ import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useRouter } from 'next/navigation';
 import VariantSelector, { ProductVariant } from './VariantSelector';
+import { resolveProductImageUrl } from '@/lib/product';
 
 interface ProductQuickAddModalProps {
     product: Product;
@@ -72,7 +73,7 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
                 <div className="p-6 space-y-6">
                     <div className="flex gap-4">
                         <div className="w-20 h-20 bg-gray-50 rounded-2xl p-2 flex items-center justify-center shrink-0">
-                            <img src={product.image} alt={product.title} className="max-w-full max-h-full object-contain" />
+                            <img src={resolveProductImageUrl(product.image)} alt={product.title} className="max-w-full max-h-full object-contain" />
                         </div>
                         <div className="flex-1 min-w-0">
                             <p className="text-[10px] font-bold text-[#0c4a9e] uppercase tracking-widest mb-0.5">{product.brand}</p>

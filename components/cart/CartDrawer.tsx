@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { X, ShoppingBag, Trash2, ChevronRight, Plus, Minus, ShoppingCart, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
+import { resolveProductImageUrl } from '@/lib/product';
 
 export default function CartDrawer() {
     const { 
@@ -91,7 +92,7 @@ export default function CartDrawer() {
                                 {cartItems.map((item) => (
                                     <div key={item.id} className="flex gap-4 group">
                                         <div className="w-20 h-20 bg-gray-50 rounded-2xl p-2 flex items-center justify-center shrink-0 border border-transparent group-hover:border-[#0c4a9e]/20 transition-all">
-                                            <img src={item.image} alt={item.name} className="max-w-full max-h-full object-contain" />
+                                            <img src={resolveProductImageUrl(item.image)} alt={item.name} className="max-w-full max-h-full object-contain" />
                                         </div>
                                         <div className="flex-1 min-w-0 py-1">
                                             <div className="flex justify-between items-start">

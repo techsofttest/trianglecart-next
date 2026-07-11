@@ -39,11 +39,10 @@ export default function VariantSelector({ variants, selectedVariantId, onSelectV
                             type="button"
                             onClick={() => onSelectVariant(variant)}
                             disabled={outOfStock}
-                            className={`px-4 py-2.5 rounded-xl border-2 font-semibold text-[13px] transition-all ${
-                                active
-                                    ? 'border-[#0c4a9e] bg-[#0c4a9e]/5 text-[#0c4a9e]'
+                            className={`px-4 py-2.5 rounded-xl border-2 font-semibold text-[13px] transition-all ${active
+                                    ? 'border-[#008446] bg-[#008446]/5 text-[#008446]'
                                     : 'border-gray-100 text-gray-500 hover:border-gray-200'
-                            } ${outOfStock ? 'opacity-50 cursor-not-allowed line-through' : ''}`}
+                                } ${outOfStock ? 'opacity-50 cursor-not-allowed line-through' : ''}`}
                         >
                             {formatLabel(variant)}
                         </button>

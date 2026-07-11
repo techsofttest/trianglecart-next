@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Trash2, Plus, Minus, Zap } from 'lucide-react';
+import { Trash2, Plus, Minus } from 'lucide-react';
+import { resolveProductImageUrl } from '@/lib/product';
 
 interface CartItemProps {
     item: {
@@ -24,7 +25,7 @@ export default function CartItemCard({ item, onUpdateQuantity, onRemove, isLast 
     return (
         <div className={`p-4 flex flex-col sm:flex-row gap-4 ${!isLast ? 'border-b border-gray-50' : ''}`}>
             <div className={`w-full sm:w-28 h-28 bg-gray-50 rounded-2xl flex items-center justify-center p-3 relative group shrink-0 ${!item.inStock ? 'grayscale' : ''}`}>
-                <img src={item.image} alt={item.name} className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500" />
+                <img src={resolveProductImageUrl(item.image)} alt={item.name} className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500" />
             </div>
             <div className="flex-1 flex flex-col justify-between py-1">
                 <div>
@@ -66,13 +67,11 @@ export default function CartItemCard({ item, onUpdateQuantity, onRemove, isLast 
 
                 <div className="flex items-center gap-4 mt-6">
                     <button
-                        disabled={!item.inStock}
-                        className="text-xs font-medium text-[#0c4a9e] hover:bg-blue-50 px-4 py-2 rounded-xl transition-all flex items-center gap-2 border border-blue-200 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed"
-                    >
-                        <Zap className="w-4 h-4 fill-current text-[#0c4a9e]" /> Buy This Now
-                    </button>
-                    <button
-                        onClick={() => onRemove(item.id)}
+                        onClick={() => {
+                            if (window.confirm(`Remove ${item.name} from your cart?`)) {
+                                onRemove(item.id);
+                            }
+                        }}
                         className="text-xs font-medium text-gray-600 hover:text-red-600 flex items-center gap-1.5 px-4 py-2 rounded-xl hover:bg-red-50 transition-all border border-transparent"
                     >
                         <Trash2 className="w-4 h-4" /> Remove

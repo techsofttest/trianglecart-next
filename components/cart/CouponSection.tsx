@@ -2,27 +2,44 @@
 
 import React, { useState } from 'react';
 import { Ticket, X } from 'lucide-react';
+import { apiUrl } from '@/lib/api';
 
 interface CouponSectionProps {
     appliedCoupon: string | null;
-    onApply: (code: string) => void;
+    onApply: (code: string, discount: number) => void;
     onRemove: () => void;
 }
 
 export default function CouponSection({ appliedCoupon, onApply, onRemove }: CouponSectionProps) {
     const [coupon, setCoupon] = useState('');
     const [error, setError] = useState('');
+    const [isApplying, setIsApplying] = useState(false);
 
-    const handleApply = () => {
-        if (!coupon.trim()) return;
+    const handleApply = async () => {
+        const trimmed = coupon.trim();
+        if (!trimmed) return;
 
-        // Mock coupon logic
-        if (coupon.toUpperCase() === 'SAVE10') {
-            onApply(coupon.toUpperCase());
-            setError('');
-        } else {
-            setError('Invalid coupon code');
-            setTimeout(() => setError(''), 3000);
+        setIsApplying(true);
+        setError('');
+
+        try {
+            const response = await fetch(apiUrl('/api/coupons/validate'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ coupon_code: trimmed, subtotal: 1000 }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.valid) {
+                onApply(data.coupon.coupon_code, Number(data.discount || 0));
+            } else {
+                setError(data.message || 'Invalid coupon code');
+            }
+        } catch {
+            setError('Unable to validate coupon right now');
+        } finally {
+            setIsApplying(false);
         }
     };
 
@@ -50,10 +67,10 @@ export default function CouponSection({ appliedCoupon, onApply, onRemove }: Coup
                         />
                         <button
                             onClick={handleApply}
-                            disabled={!coupon.trim()}
+                            disabled={!coupon.trim() || isApplying}
                             className="bg-[#0c4a9e] text-white px-6 py-3 rounded-xl text-sm font-bold hover:bg-blue-800 transition-all disabled:opacity-50 uppercase tracking-widest"
                         >
-                            Apply
+                            {isApplying ? 'Checking...' : 'Apply'}
                         </button>
                     </div>
                     {error && <p className="text-sm text-red-600 font-bold ml-1 animate-pulse">{error}</p>}

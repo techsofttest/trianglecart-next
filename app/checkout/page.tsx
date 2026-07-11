@@ -37,6 +37,7 @@ function CheckoutContent() {
     const [paymentMethod, setPaymentMethod] = useState('card');
     const [isOrderPlaced, setIsOrderPlaced] = useState(false);
     const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+    const [couponDiscount, setCouponDiscount] = useState(0);
     const [isAddressConfirmed, setIsAddressConfirmed] = useState(false);
 
     // Selected address and eligibility checking states
@@ -226,7 +227,7 @@ function CheckoutContent() {
     };
 
     const subtotal = checkoutItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    const discount = appliedCoupon === 'SAVE10' ? subtotal * 0.1 : 0;
+    const discount = couponDiscount;
 
     const tax = 0;
     const total = subtotal - discount + shipping + tax;
@@ -527,8 +528,14 @@ function CheckoutContent() {
                         total={total}
                         isAddressComplete={isAddressComplete}
                         appliedCoupon={appliedCoupon}
-                        onApplyCoupon={(code) => setAppliedCoupon(code)}
-                        onRemoveCoupon={() => setAppliedCoupon(null)}
+                        onApplyCoupon={(code, discount) => {
+                            setAppliedCoupon(code);
+                            setCouponDiscount(discount);
+                        }}
+                        onRemoveCoupon={() => {
+                            setAppliedCoupon(null);
+                            setCouponDiscount(0);
+                        }}
                         onPlaceOrder={handlePlaceOrder}
                     />
                 </div>

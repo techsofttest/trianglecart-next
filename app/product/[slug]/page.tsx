@@ -3,7 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import ProductCard from '@/components/product/ProductCard';
 import ProductDetailClient from '@/components/product/detail/ProductDetailClient';
 import { fetchStorefront } from '@/lib/storefront';
-import { StorefrontProduct, toProductCardModel } from '@/lib/product';
+import { DEFAULT_PRODUCT_IMAGE, StorefrontProduct, resolveProductImageUrl, toProductCardModel } from '@/lib/product';
 
 type ProductResponse = StorefrontProduct;
 
@@ -60,11 +60,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         .slice(0, 10)
         .map((item) => toProductCardModel(item));
 
-    const gallery = [product.featured_image, ...(product.gallery ?? [])].filter((img): img is string => Boolean(img));
+    const gallery = [product.featured_image, ...(product.gallery ?? [])]
+        .filter((img): img is string => Boolean(img))
+        .map((img) => resolveProductImageUrl(img));
 
     return (
         <div className="bg-white min-h-screen">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="mx-auto px-3 sm:px-3 lg:px-3 py-0">
                 <nav className="flex items-center gap-2 text-[11px] text-gray-400 font-medium mb-6 overflow-x-auto whitespace-nowrap">
                     <Link href="/" className="hover:text-[#0c4a9e]">Home</Link>
                     <ChevronRight className="w-3 h-3 text-gray-200" />
@@ -85,7 +87,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                         reviews: product.review_count || 0,
                         description: product.description || 'No product description is available yet.',
                         highlights: splitHighlights(product.key_features),
-                        images: gallery.length > 0 ? gallery : ['/logo/mock-logo.png'],
+                        images: gallery.length > 0 ? gallery : [DEFAULT_PRODUCT_IMAGE],
                         variants,
                     }}
                 />

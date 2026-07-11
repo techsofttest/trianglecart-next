@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 // 1. Define the TypeScript structure for what a "Category" looks like
 export interface CategoryItem {
@@ -38,14 +37,12 @@ export default function CategoryGrid({ title, categories }: CategoryGridProps) {
                         {/* Card / Image Container */}
                         <div className={`w-full aspect-square rounded-xl md:rounded-2xl flex items-center justify-center mb-2 md:mb-3 transition-transform duration-300 group-hover:-translate-y-1 overflow-hidden relative ${category.bgColor || 'bg-white'}`}>
 
-                            {/* Image/Icon Implementation */}
+                            {/* Image/Icon Implementation — loads directly from admin storage */}
                             {category.imagePath ? (
-                                <Image
+                                <img
                                     src={category.imagePath}
                                     alt={category.name}
-                                    fill
-                                    className="object-cover transition-transform duration-300 group-hover:scale-110"
-                                    sizes="(max-width: 640px) 33vw, (max-width: 768px) 25vw, 12vw"
+                                    className="absolute inset-0 w-full h-full object-contain transition-transform duration-300 group-hover:scale-110"
                                 />
                             ) : (
                                 <div className="text-gray-400 group-hover:text-[#0c4a9e] transition-colors">

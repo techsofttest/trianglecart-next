@@ -6,6 +6,7 @@ import { Trash2 } from 'lucide-react';
 import { useWishlist } from '@/context/WishlistContext';
 import ProductQuickAddModal from './ProductQuickAddModal';
 import { slugify } from '@/utils/slugify';
+import { resolveProductImageUrl } from '@/lib/product';
 
 export interface Product {
     id: string;
@@ -74,9 +75,9 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                     className="relative w-full aspect-square bg-gray-50 rounded-xl mb-2 overflow-hidden p-0"
                 >
                     <img
-                        src={product.image}
+                        src={resolveProductImageUrl(product.image)}
                         alt={product.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                     />
                 </Link>
 
@@ -106,9 +107,14 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                     <div className="mt-auto pt-2 border-t border-gray-50 flex items-center justify-between">
                         <div className="flex flex-col">
 
-                            <span className="text-sm sm:text-base font-semibold text-[#008446] leading-none">
-                                ${product.price.toFixed(2)}
-                            </span>
+                            <div className="flex items-center gap-2">
+                                <span className="text-sm sm:text-base font-semibold text-[#008446] leading-none">
+                                    ${product.price.toFixed(2)}
+                                </span>
+                                <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-semibold text-green-700">
+                                    In Stock
+                                </span>
+                            </div>
                         </div>
 
                         <button

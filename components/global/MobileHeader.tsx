@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
+import { apiUrl } from '@/lib/api';
 import { Search, MapPin, ChevronDown, Home, Briefcase, Package } from 'lucide-react';
 import LocationDrawer from './LocationDrawer';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
@@ -27,7 +27,7 @@ export default function MobileHeader() {
     } | null>(null);
 
     const [categories, setCategories] = useState<HeaderCategory[]>([]);
-    const [brandLogo, setBrandLogo] = useState('/logo/mock-logo.png');
+    const [brandLogo, setBrandLogo] = useState<string>(apiUrl('/images/logo/brand-logo-nobg.png?v1'));
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -69,13 +69,10 @@ export default function MobileHeader() {
                 {!isScrolled && (
                     <div className="flex items-center justify-between px-4 py-3 animate-in fade-in slide-in-from-top-2 duration-300">
                         <Link href="/" className="flex-shrink-0">
-                            <Image
+                            <img
                                 src={brandLogo}
                                 alt="Logo"
-                                width={120}
-                                height={32}
                                 className="h-8 w-auto object-contain"
-                                priority
                             />
                         </Link>
                         

@@ -73,11 +73,6 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/careers" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
-                                    Careers
-                                </Link>
-                            </li>
-                            <li>
                                 <Link href="/contact" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
                                     Contact Us
                                 </Link>
@@ -111,7 +106,7 @@ export default function Footer() {
                             </li>
                             <li>
                                 <Link href="/faq" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
-                                    FAQ / Support
+                                    FAQ
                                 </Link>
                             </li>
                         </ul>
@@ -144,22 +139,6 @@ export default function Footer() {
                         </ul>
                     </div>
 
-                    {/* Smart Features Column */}
-                    <div>
-                        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase mb-4">E-Cart Features</h3>
-                        <ul className="space-y-2 text-[12px]">
-                            <li>
-                                <Link href="/features/favorites" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
-                                    Add to Favourites list
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/features/last-buy" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
-                                    Last Buy Quick Cart
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
 
                     {/* Divider for Registered Addresses (matches Flipkart design for vertical split layout) */}
                     <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 md:pl-6 md:border-l border-gray-900">
@@ -171,77 +150,40 @@ export default function Footer() {
                             <p className="text-gray-400 leading-relaxed font-semibold text-white">
                                 Triangle Cart Pvt Ltd
                             </p>
-                            <p className="text-gray-400 leading-relaxed font-medium">
-                                50 Maltby CCT,<br />
-                                Wanniassa, ACT-2903,<br />
-                                Australia
-                            </p>
+                            
                             <p className="text-gray-400 font-medium">
-                                <span className="font-semibold text-gray-400">Email:</span> contact@10xminds.dev
+                                <span className="font-semibold text-gray-400">Email:</span> shop@trianglecart.com.au
                             </p>
                         </div>
-
-                        {/* Registered Office Column */}
-                        <div className="text-[12px] space-y-3">
-                            <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
-                                <MapPin className="w-3.5 h-3.5 text-gray-400" /> Registered Office
-                            </h3>
-                            <p className="text-gray-400 leading-relaxed font-semibold text-white">
-                                Triangle Cart Pvt Ltd
-                            </p>
-                            <p className="text-gray-400 leading-relaxed font-medium">
-                                50 Maltby CCT,<br />
-                                Wanniassa, ACT-2903,<br />
-                                Australia
-                            </p>
-                            <div className="pt-1.5 space-y-1">
-                                <p className="text-gray-400 font-mono text-[12px] font-medium">
-                                    <span className="font-semibold text-gray-400">ABN:</span> 88 407 290 295
-                                </p>
-                                <p className="text-gray-400 font-medium">
-                                    <span className="font-semibold text-gray-400">Directors:</span><br />
-                                    Sarith Chandran, Shyno Thomas
-                                </p>
-                            </div>
-                        </div>
+                        
                     </div>
 
                 </div>
 
                 {/* Footer Bottom Strip (Icons, Legal links & Payment Badges) */}
                 <div className="pt-8 flex flex-col lg:flex-row items-center justify-between gap-6">
-                    <div className="flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-3 text-[12px] font-semibold text-gray-400">
-                        <Link href="/advertise" className="flex items-center gap-1.5 hover:text-white hover:underline transition text-gray-400">
-                            <Percent className="w-4 h-4 text-gray-400" /> Advertise with Us
-                        </Link>
-                        <Link href="/help" className="flex items-center gap-1.5 hover:text-white hover:underline transition text-gray-400">
-                            <HelpCircle className="w-4 h-4 text-gray-400" /> Help Center
-                        </Link>
-                    </div>
+                    
 
                     {/* Copyright & Team Information */}
                     <div className="text-center lg:text-right">
                         <p className="text-[12px] text-gray-400 leading-relaxed font-medium">
-                            &copy; 2007-2026 Triangle Cart Pvt Ltd. All rights reserved.
-                        </p>
-                        <p className="text-[12px] text-gray-400 mt-0.5 font-medium">
-                            Standardized e-commerce system aligned with branding. Designed by Sarith Chandran & Shyno Thomas.
+                            &copy; 2026 Triangle Cart Pvt Ltd. All rights reserved
                         </p>
                     </div>
 
                     {/* Payment Gateways Badges (Clean Neutral Styled) */}
                     <div className="flex flex-wrap items-center justify-center gap-2">
-                        <span className="text-[12px] uppercase tracking-wider font-semibold text-gray-500 mr-1 hidden sm:inline">Secured Payments</span>
-                        <div className="px-2 py-1 bg-gray-900 border border-gray-800 rounded text-[12px] font-semibold text-gray-500 tracking-wider">VISA</div>
-                        <div className="px-2 py-1 bg-gray-900 border border-gray-800 rounded text-[12px] font-semibold text-gray-500 tracking-wider">MC</div>
-                        <div className="px-2 py-1 bg-gray-900 border border-gray-800 rounded text-[12px] font-semibold text-gray-500 tracking-wider">AMEX</div>
-                        <div className="px-2 py-1 bg-gray-900 border border-gray-800 rounded text-[12px] font-semibold text-gray-500 tracking-wider">PAYPAL</div>
-                        <div className="px-2 py-1 bg-gray-900 border border-gray-800 rounded text-[12px] font-semibold text-gray-500 tracking-wider">STRIPE</div>
-                        <div className="px-2 py-1 bg-gray-900 border border-gray-800 rounded text-[12px] font-semibold text-gray-500 tracking-wider">OTP SMS</div>
+                        <span className="text-[12px] uppercase tracking-wider font-semibold text-gray-500 mr-1 hidden sm:inline">Secure Payments</span>
+                        <div className="px-2 py-1 bg-gray-900 border border-gray-800 rounded text-[12px] font-semibold text-gray-500 tracking-wider">Apple Pay</div>
+                        <div className="px-2 py-1 bg-gray-900 border border-gray-800 rounded text-[12px] font-semibold text-gray-500 tracking-wider">Google Pay</div>
+                        <div className="px-2 py-1 bg-gray-900 border border-gray-800 rounded text-[12px] font-semibold text-gray-500 tracking-wider">Credit Card</div>
+                        <div className="px-2 py-1 bg-gray-900 border border-gray-800 rounded text-[12px] font-semibold text-gray-500 tracking-wider">Debit Card</div>
                     </div>
                 </div>
 
             </div>
+
+
         </footer>
     );
 }

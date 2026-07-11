@@ -3,11 +3,6 @@ import { MapPin, FileText, Mail, Users } from 'lucide-react';
 export default function FeaturesBanner() {
     const contacts = [
         {
-            icon: <MapPin className="w-6 h-6 md:w-8 md:h-8 text-gray-500" />,
-            title: "Store Location",
-            description: "50 Maltby CCT, Wanniassa, ACT-2903, Australia"
-        },
-        {
             icon: <FileText className="w-6 h-6 md:w-8 md:h-8 text-gray-500" />,
             title: "ABN (Company Reg.)",
             description: "88 407 290 295 | Triangle Cart Pvt Ltd"
@@ -16,11 +11,6 @@ export default function FeaturesBanner() {
             icon: <Mail className="w-6 h-6 md:w-8 md:h-8 text-gray-500" />,
             title: "Support Desk",
             description: "contact@10xminds.dev | 24/7 Helpline"
-        },
-        {
-            icon: <Users className="w-6 h-6 md:w-8 md:h-8 text-gray-500" />,
-            title: "Management Team",
-            description: "Directors: Sarith Chandran & Shyno Thomas"
         }
     ];
 

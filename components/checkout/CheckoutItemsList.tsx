@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { ShoppingBag, Minus, Plus } from 'lucide-react';
+import { resolveProductImageUrl } from '@/lib/product';
 
 interface CheckoutItemsListProps {
     items: any[];
@@ -19,7 +20,7 @@ export default function CheckoutItemsList({ items, onUpdateQuantity }: CheckoutI
             {items.map((item, idx) => (
                 <div key={item.id} className={`p-4 flex gap-4 ${idx !== items.length - 1 ? 'border-b border-gray-50' : ''}`}>
                     <div className="w-20 h-20 bg-gray-50 rounded-xl flex-shrink-0 p-2">
-                        <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                        <img src={resolveProductImageUrl(item.image)} alt={item.name} className="w-full h-full object-contain" />
                     </div>
                     <div className="flex-1 min-w-0">
                                 <div className="flex flex-col sm:flex-row justify-between items-start gap-1">
