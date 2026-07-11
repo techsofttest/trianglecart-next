@@ -1,13 +1,21 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Search, MapPin, ChevronDown, Home, Briefcase } from 'lucide-react';
-import { ALL_CATEGORIES } from '@/data/categories';
-import { slugify } from '@/utils/slugify';
+import { Search, MapPin, ChevronDown, Home, Briefcase, Package } from 'lucide-react';
 import LocationDrawer from './LocationDrawer';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
+import { fetchStorefront } from '@/lib/storefront';
+
+type HeaderCategory = {
+    id: number;
+    name: string;
+    slug: string;
+    href: string;
+    image_url: string | null;
+    icon_url: string | null;
+};
 
 export default function MobileHeader() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -17,6 +25,22 @@ export default function MobileHeader() {
         title: string; 
         subtitle: string; 
     } | null>(null);
+
+    const [categories, setCategories] = useState<HeaderCategory[]>([]);
+    const [brandLogo, setBrandLogo] = useState('/logo/mock-logo.png');
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const data = await fetchStorefront<{ brand: { logo: string }; categories: HeaderCategory[] }>('/api/storefront/header');
+            if (data?.categories) {
+                setCategories(data.categories);
+            }
+            if (data?.brand?.logo) {
+                setBrandLogo(data.brand.logo);
+            }
+        };
+        fetchCategories();
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -46,11 +70,12 @@ export default function MobileHeader() {
                     <div className="flex items-center justify-between px-4 py-3 animate-in fade-in slide-in-from-top-2 duration-300">
                         <Link href="/" className="flex-shrink-0">
                             <Image
-                                src="/logo/mock-logo.png"
+                                src={brandLogo}
                                 alt="Logo"
                                 width={120}
                                 height={32}
                                 className="h-8 w-auto object-contain"
+                                priority
                             />
                         </Link>
                         
@@ -95,15 +120,19 @@ export default function MobileHeader() {
                 {/* Bottom Row: Categories Carousel */}
                 <div className={`border-t border-gray-50 overflow-x-auto scrollbar-hide bg-white transition-all duration-300 ${isScrolled ? 'py-1.5' : 'py-3'}`}>
                     <div className="flex items-center gap-6 px-4 min-w-max">
-                        {ALL_CATEGORIES.map((cat, idx) => (
+                        {categories.map((cat) => (
                             <Link 
-                                key={idx} 
-                                href={`/category/${slugify(cat.name)}`}
+                                key={cat.id} 
+                                href={`/category/${cat.slug}`}
                                 className={`flex flex-col items-center transition-all ${isScrolled ? 'flex-row gap-2' : 'gap-1'}`}
                             >
                                 {!isScrolled && (
-                                    <div className="w-10 h-10 rounded-full bg-orange-50 flex items-center justify-center text-orange-400 animate-in zoom-in duration-300">
-                                        {React.cloneElement(cat.icon as any, { className: "w-5 h-5 mb-0" })}
+                                    <div className="w-10 h-10 rounded-full bg-orange-50/50 flex items-center justify-center text-orange-400 animate-in zoom-in duration-300">
+                                        {cat.icon_url ? (
+                                            <img src={cat.icon_url} alt={cat.name} className="w-5 h-5 object-contain" />
+                                        ) : (
+                                            <Package className="w-5 h-5 text-[#0c4a9e]" />
+                                        )}
                                     </div>
                                 )}
                                 <span className={`text-[12px] font-bold text-gray-700 whitespace-nowrap ${isScrolled ? 'px-3 py-1 bg-gray-50 rounded-full border border-gray-100' : ''}`}>
