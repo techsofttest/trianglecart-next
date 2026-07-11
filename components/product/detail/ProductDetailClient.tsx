@@ -81,9 +81,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 />
 
                 <div className="flex items-center justify-between text-sm">
-                    <span className={`font-semibold ${selectedStock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                        {selectedStock > 0 ? `${selectedStock} in stock` : 'Out of stock'}
-                    </span>
+
                     <span className="text-gray-500">{selectedWeight}</span>
                 </div>
 

@@ -105,11 +105,7 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
 
                     <div className="mt-auto pt-2 border-t border-gray-50 flex items-center justify-between">
                         <div className="flex flex-col">
-                            {product.originalPrice > product.price && (
-                                <span className="text-sm sm:text-sm text-gray-600 line-through leading-none mb-0.5">
-                                    ${product.originalPrice.toFixed(2)}
-                                </span>
-                            )}
+
                             <span className="text-sm sm:text-base font-semibold text-[#008446] leading-none">
                                 ${product.price.toFixed(2)}
                             </span>
