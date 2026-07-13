@@ -47,9 +47,8 @@ export default function ProductInfo({ brand, title, rating, reviews, price, orig
                             </h5>
 
                             <p className="mt-1 text-sm leading-4 text-gray-600">
-                                Free same day delivery in Melbourne provided the selected
-                                delivery slot is available. Please check our Delivery Route
-                                page for more information. Regional and interstate orders
+                                Free same day delivery in Canberra provided the selected
+                                delivery slot is available. Regional and interstate orders
                                 are delivered via courier. Questions? Simply ask.
                             </p>
                         </div>

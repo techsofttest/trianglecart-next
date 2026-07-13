@@ -122,7 +122,7 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                                 }}
                                 className="w-full flex items-center justify-center gap-1 bg-[#008446] text-white hover:bg-white hover:border-2 hover:border-[#008446] hover:text-[#008446] font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95"
                             >
-                                <span>ADD</span>
+                                <span>ADD TO CART</span>
                                 <span className="font-normal text-sm sm:text-base leading-none mb-0.5">+</span>
                             </button>
 
@@ -131,10 +131,10 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                                     e.preventDefault();
                                     toggleWishlist(product);
                                 }}
-                                className="w-full flex items-center justify-center gap-2 bg-white border-2 border-[#008446] text-[#008446] hover:bg-[#008446] hover:text-white font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95"
+                                className="w-full flex items-center justify-center gap-2 bg-white border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95"
                             >
                                 <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
-                                <span>{isWishlisted ? 'SAVED' : 'SAVE'}</span>
+                                <span>{isWishlisted ? 'WISHLISTED' : 'SAVE TO WISHLIST'}</span>
                             </button>
                         </div>
                     </div>

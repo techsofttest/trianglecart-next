@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { User, Package, MapPin, Heart, LogOut, LayoutDashboard } from 'lucide-react';
+import { User, Package, MapPin, Heart, LogOut, Key } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
@@ -83,11 +83,17 @@ export default function ProfileSidebar({
       href: '/profile/addresses',
       icon: <MapPin className="w-[18px] h-[18px]" />,
     },
-    { 
-      id: 'wishlist', 
-      label: 'My Wishlist', 
+    {
+      id: 'wishlist',
+      label: 'My Wishlist',
       href: '/profile/wishlist',
-      icon: <Heart className="w-[18px] h-[18px]" /> 
+      icon: <Heart className="w-[18px] h-[18px]" />
+    },
+    {
+      id: 'reset-password',
+      label: 'Reset Password',
+      href: '/profile/reset-password',
+      icon: <Key className="w-[18px] h-[18px]" />
     },
   ];
 
