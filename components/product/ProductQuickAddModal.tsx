@@ -78,7 +78,10 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
                         <div className="flex-1 min-w-0">
                             <p className="text-[10px] font-bold text-[#0c4a9e] uppercase tracking-widest mb-0.5">{product.brand}</p>
                             <h4 className="font-semibold text-gray-900 text-sm line-clamp-2 leading-tight mb-1">{product.title}</h4>
-                            <p className="text-sm font-bold text-[#0c4a9e]">${selectedPrice.toFixed(2)}</p>
+                            <p className="text-sm font-bold text-[#0c4a9e] mb-1">${selectedPrice.toFixed(2)}</p>
+                            <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-semibold text-green-700">
+                                In Stock
+                            </span>
                         </div>
                     </div>
 
@@ -87,15 +90,6 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
                         selectedVariantId={selectedVariant?.id || null}
                         onSelectVariant={setSelectedVariant}
                     />
-
-                    {selectedVariant && (
-                        <div className="flex items-center justify-between text-xs">
-                            <span className={`font-semibold ${isOutOfStock ? 'text-red-600' : 'text-green-600'}`}>
-                                {isOutOfStock ? 'Out of stock' : `${selectedVariant.stock} in stock`}
-                            </span>
-                            <span className="text-gray-500">Selected: {selectedWeight}</span>
-                        </div>
-                    )}
 
                     <div className="space-y-3">
                         <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider ml-1">Quantity</label>

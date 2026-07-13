@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Heart } from 'lucide-react';
 import { useWishlist } from '@/context/WishlistContext';
 import ProductQuickAddModal from './ProductQuickAddModal';
 import { slugify } from '@/utils/slugify';
@@ -104,29 +104,39 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                         </span>
                     )}
 
-                    <div className="mt-auto pt-2 border-t border-gray-50 flex items-center justify-between">
-                        <div className="flex flex-col">
-
-                            <div className="flex items-center gap-2">
-                                <span className="text-sm sm:text-base font-semibold text-[#008446] leading-none">
-                                    ${product.price.toFixed(2)}
-                                </span>
-                                <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-semibold text-green-700">
-                                    In Stock
-                                </span>
-                            </div>
+                    <div className="mt-auto pt-2 border-t border-gray-50">
+                        <div className="flex items-center justify-between mb-3">
+                            <span className="text-sm sm:text-base font-semibold text-[#008446] leading-none">
+                                ${product.price.toFixed(2)}
+                            </span>
+                            <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-semibold text-green-700">
+                                In Stock
+                            </span>
                         </div>
 
-                        <button
-                            onClick={(e) => {
-                                e.preventDefault();
-                                setIsQuickAddOpen(true);
-                            }}
-                            className="flex items-center gap-1 bg-white border-2 border-[#008446] text-[#008446] hover:bg-[#008446] hover:text-white font-semibold px-3 py-1 sm:px-4 sm:py-1 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95"
-                        >
-                            <span>ADD</span>
-                            <span className="font-normal text-sm sm:text-base leading-none mb-0.5">+</span>
-                        </button>
+                        <div className="space-y-2">
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    setIsQuickAddOpen(true);
+                                }}
+                                className="w-full flex items-center justify-center gap-1 bg-[#008446] text-white hover:bg-white hover:border-2 hover:border-[#008446] hover:text-[#008446] font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95"
+                            >
+                                <span>ADD</span>
+                                <span className="font-normal text-sm sm:text-base leading-none mb-0.5">+</span>
+                            </button>
+
+                            <button
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    toggleWishlist(product);
+                                }}
+                                className="w-full flex items-center justify-center gap-2 bg-white border-2 border-[#008446] text-[#008446] hover:bg-[#008446] hover:text-white font-semibold px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95"
+                            >
+                                <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
+                                <span>{isWishlisted ? 'SAVED' : 'SAVE'}</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
