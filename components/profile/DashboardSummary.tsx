@@ -72,23 +72,7 @@ export default function DashboardSummary({
           </p>
         </div>
 
-        <div className="rounded-2xl border border-gray-100 bg-gray-50/30 p-6 lg:col-span-2">
-          <div className="flex items-center justify-between gap-6">
-            <div>
-              <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
-                Reward Points
-              </p>
-              <p className="text-3xl font-bold text-[#0c4a9e] mt-2">
-                {summary.reward_points}
-              </p>
-            </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600 font-medium">
-                Earn points on each order.
-              </p>
-            </div>
-          </div>
-        </div>
+
       </div>
 
       <div className="mt-10 rounded-2xl border border-gray-100 p-6 bg-white">
@@ -134,27 +118,6 @@ export default function DashboardSummary({
           </div>
         )}
 
-        {/* Quick Actions placeholders for Phase 1 */}
-        <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          {[
-            'Reorder Last Purchase',
-            'View Wishlist',
-            'Track Current Order',
-            'Manage Addresses',
-            'Update Profile',
-          ].map((label) => (
-            <button
-              key={label}
-              className="flex items-center justify-center rounded-xl border border-gray-100 bg-white px-3 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition"
-              type="button"
-              onClick={() => {
-                // Phase 1: no routing yet
-              }}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
       </div>
     </div>
   );

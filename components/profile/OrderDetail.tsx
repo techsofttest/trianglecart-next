@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     ArrowLeft, Package, Truck, Clock,
     MapPin, XCircle, Star, CheckCircle2,
     CreditCard, ShoppingBag, RefreshCcw, AlertCircle
 } from 'lucide-react';
+import { apiUrl } from '@/lib/api';
 import OrderAction from './OrderAction';
 
 interface OrderDetailProps {
@@ -14,57 +15,78 @@ interface OrderDetailProps {
 }
 
 export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
-    // 1. Core Logic
-    const orderStatus = orderId === 'TC-98421' ? 'Delivered' : orderId === 'TC-97812' ? 'Cancelled' : 'Processing';
-    const isCancelled = orderStatus === 'Cancelled';
-    const isDelivered = orderStatus === 'Delivered';
-
-    const [order] = useState({
-        id: orderId,
-        date: 'May 10, 2026',
-        status: orderStatus,
-        total: 145.80,
-        paymentMethod: 'Credit Card (**** 4242)',
-        address: {
-            name: 'John Doe',
-            type: 'Home',
-            street: '123 Bennelong Point',
-            suburb: 'Sydney, NSW 2000',
-            phone: '+61 400 000 000'
-        },
-        items: [
-            { id: 1, name: 'Premium Organic Bananas', price: 4.99, quantity: 2, weight: '1kg', image: 'https://images.unsplash.com/photo-1540189549336-e6e99c3679fe?w=400&q=80', brand: 'Nature\'s Best' },
-            { id: 2, name: 'Fresh Hass Avocado', price: 3.50, quantity: 3, weight: '3 pcs', image: 'https://images.unsplash.com/photo-1512152272829-e3139592d56f?w=400&q=80', brand: 'Farm Fresh' },
-        ],
-        timeSlot: '10:00 AM - 12:00 PM',
-    });
-
-    // Default to false so user can see the confirm action, unless it's already delivered
-    const [selectedSlot, setSelectedSlot] = useState<string | null>(order.timeSlot);
-    const [isSlotConfirmed, setIsSlotConfirmed] = useState(isDelivered);
+    const [order, setOrder] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
     const [rating, setRating] = useState(0);
     const [view, setView] = useState<'detail' | 'return' | 'cancel'>('detail');
 
-    // 2. Dynamic Timeline
+    useEffect(() => {
+        const fetchOrderDetail = async () => {
+            try {
+                const res = await fetch(apiUrl(`/api/customer/orders/${orderId}`), {
+                    method: 'GET',
+                    credentials: 'include',
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    setOrder(data);
+                }
+            } catch (err) {
+                console.error('Error fetching order details:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOrderDetail();
+    }, [orderId]);
+
+    if (loading) {
+        return (
+            <div className="max-w-4xl mx-auto bg-white min-h-screen py-20 text-center text-gray-500">
+                Loading order details...
+            </div>
+        );
+    }
+
+    if (!order) {
+        return (
+            <div className="max-w-4xl mx-auto bg-white min-h-screen py-20 text-center text-gray-500">
+                <p className="mb-4">Order not found.</p>
+                <button onClick={onBack} className="text-[#0c4a9e] font-bold hover:underline">
+                    Go Back
+                </button>
+            </div>
+        );
+    }
+
+    const orderStatus = order.status || 'pending';
+    const isCancelled = orderStatus.toLowerCase() === 'cancelled';
+    const isDelivered = orderStatus.toLowerCase() === 'delivered';
+    const isProcessing = orderStatus.toLowerCase() === 'processing' || orderStatus.toLowerCase() === 'pending' || orderStatus.toLowerCase() === 'pending_payment';
+
+    // Dynamic Timeline (Shipped step removed)
     const timeline = isCancelled
         ? [
-            { label: 'Order Placed', time: 'May 10, 09:30 AM', done: true, icon: ShoppingBag },
-            { label: 'Cancelled', time: 'May 10, 10:15 AM', done: true, icon: XCircle },
-            { label: 'Refund Processing', time: 'May 11, 09:00 AM', done: true, icon: RefreshCcw },
-            { label: 'Refund Completed', time: 'Expected May 14', done: false, icon: CheckCircle2 },
+            { label: 'Order Placed', time: order.date, done: true, icon: ShoppingBag },
+            { label: 'Cancelled', time: '', done: true, icon: XCircle },
+            { label: 'Refund Processing', time: '', done: true, icon: RefreshCcw },
         ]
         : [
-            { label: 'Order Placed', time: 'May 10, 09:30 AM', done: true, icon: ShoppingBag },
-            { label: 'Processing', time: 'May 10, 11:45 AM', done: true, icon: Package },
-            { label: 'Shipped', time: 'Pending', done: isDelivered, icon: Truck },
-            { label: 'Delivered', time: isDelivered ? 'May 12, 10:00 AM' : 'Pending', done: isDelivered, icon: CheckCircle2 },
+            { label: 'Order Placed', time: order.date, done: true, icon: ShoppingBag },
+            { label: 'Processing', time: isProcessing || isDelivered ? 'In Progress' : 'Pending', done: isProcessing || isDelivered, icon: Package },
+            { label: 'Delivered', time: isDelivered ? 'Completed' : 'Pending', done: isDelivered, icon: CheckCircle2 },
         ];
 
-    const statusStyles = {
-        'Delivered': 'bg-green-100 text-green-800 border-green-200',
-        'Processing': 'bg-blue-100 text-blue-800 border-blue-200',
-        'Cancelled': 'bg-red-100 text-red-800 border-red-200'
+    const statusStyles: Record<string, string> = {
+        'delivered': 'bg-green-100 text-green-800 border-green-200',
+        'processing': 'bg-blue-100 text-blue-800 border-blue-200',
+        'pending': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        'pending_payment': 'bg-yellow-100 text-yellow-800 border-yellow-200',
+        'cancelled': 'bg-red-100 text-red-800 border-red-200'
     };
+
+    const currentStatusStyle = statusStyles[orderStatus.toLowerCase()] || 'bg-gray-100 text-gray-800 border-gray-200';
 
     if (view === 'return' || view === 'cancel') {
         return <OrderAction order={order} mode={view} onBack={() => setView('detail')} />;
@@ -84,9 +106,9 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                         <ArrowLeft className="w-5 h-5 text-gray-700" />
                     </button>
                     <div>
-                        <h2 className="text-lg md:text-xl font-extrabold text-gray-900 leading-tight">Order #{order.id}</h2>
+                        <h2 className="text-lg md:text-xl font-extrabold text-gray-900 leading-tight">Order #{order.order_number}</h2>
                         <div className="flex items-center gap-2 mt-0.5">
-                            <span className={`text-[10px] md:text-xs font-bold uppercase px-2 py-0.5 rounded border ${statusStyles[order.status as keyof typeof statusStyles]}`}>
+                            <span className={`text-[10px] md:text-xs font-bold uppercase px-2 py-0.5 rounded border ${currentStatusStyle}`}>
                                 {order.status}
                             </span>
                             <span className="text-xs text-gray-500 font-medium">• {order.date}</span>
@@ -127,14 +149,11 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                     <div className="flex flex-col md:flex-row justify-between relative px-2">
                         {timeline.map((step, idx) => {
                             const Icon = step.icon;
-
-                            // Visual Logic for Node Colors
                             const isFirstStep = idx === 0;
                             const isDoneAndCancelled = step.done && isCancelled;
 
                             let nodeColor = 'bg-white border-gray-300 text-gray-400';
                             if (step.done) {
-                                // Order Placed (idx 0) is always blue. Other cancelled steps are red.
                                 if (isDoneAndCancelled && !isFirstStep) {
                                     nodeColor = 'bg-red-500 border-red-500 text-white';
                                 } else {
@@ -142,7 +161,6 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                                 }
                             }
 
-                            // Visual Logic for Connecting Line Colors
                             let lineColor = 'bg-gray-200';
                             if (step.done && timeline[idx + 1]?.done) {
                                 lineColor = isCancelled ? 'bg-red-500' : 'bg-[#0c4a9e]';
@@ -164,7 +182,7 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
 
                                     <div className="md:text-center mt-1 md:mt-0">
                                         <p className={`text-sm font-bold ${step.done ? 'text-gray-900' : 'text-gray-500'}`}>{step.label}</p>
-                                        <p className="text-xs text-gray-500 mt-0.5">{step.time}</p>
+                                        {step.time && <p className="text-xs text-gray-500 mt-0.5">{step.time}</p>}
                                     </div>
                                 </div>
                             );
@@ -203,7 +221,7 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                                 </h3>
                                 <div className="pl-7">
                                     <p className="text-sm text-gray-800 font-medium leading-relaxed">
-                                        A refund of <span className="font-bold">${order.total.toFixed(2)}</span> has been initiated to your original payment method.
+                                        A refund of <span className="font-bold">${order.grand_total.toFixed(2)}</span> has been initiated to your original payment method.
                                         Please allow 3-5 business days for the amount to reflect.
                                     </p>
                                 </div>
@@ -211,61 +229,24 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                         ) : (
                             <>
                                 <h3 className="text-sm font-extrabold text-gray-900 mb-5 flex items-center gap-2">
-                                    <Clock className="w-5 h-5 text-gray-500" /> Delivery Slot
+                                    <Clock className="w-5 h-5 text-gray-500" /> Delivery Details
                                 </h3>
                                 <div className="pl-7">
-                                    {isDelivered ? (
-                                        // LOGIC FIX: Show this ONLY if delivered
-                                        <div className="flex items-start gap-3 bg-green-50 p-4 rounded-lg border border-green-100">
-                                            <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                                    <div className="bg-blue-50/50 p-4 rounded-lg border border-blue-100">
+                                        <div className="flex items-start gap-3">
+                                            <CheckCircle2 className="w-5 h-5 text-[#0c4a9e] shrink-0 mt-0.5" />
                                             <div>
-                                                <p className="text-sm text-green-800 font-bold">Delivered Successfully</p>
-                                                <p className="text-sm text-green-700 mt-1">Dropped off on {order.date} between {order.timeSlot}</p>
+                                                <p className="text-sm text-[#0c4a9e] font-bold">Confirmed Delivery</p>
+                                                <p className="text-sm text-blue-800 mt-1">
+                                                    Date: {order.delivery_date || 'Standard Courier'}<br />
+                                                    Time Slot: {order.time_slot || 'Standard Business Hours'}
+                                                </p>
+                                                <p className="text-[10px] text-gray-400 mt-2 font-medium italic">
+                                                    (Cannot change once ordered)
+                                                </p>
                                             </div>
                                         </div>
-                                    ) : isSlotConfirmed ? (
-                                        // LOGIC FIX: Show Confirmed state with Edit Button
-                                        <div className="flex items-start justify-between bg-blue-50/50 p-4 rounded-lg border border-blue-100">
-                                            <div className="flex items-start gap-3">
-                                                <CheckCircle2 className="w-5 h-5 text-[#0c4a9e] shrink-0 mt-0.5" />
-                                                <div>
-                                                    <p className="text-sm text-[#0c4a9e] font-bold">Slot Confirmed</p>
-                                                    <p className="text-sm text-blue-800 mt-1">Delivery expected during:<br />{selectedSlot}</p>
-                                                </div>
-                                            </div>
-                                            <button
-                                                onClick={() => setIsSlotConfirmed(false)}
-                                                className="text-xs font-bold text-[#0c4a9e] hover:underline px-2"
-                                            >
-                                                Edit
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        // Show selection grid
-                                        <>
-                                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
-                                                {['08:00 AM - 10:00 AM', '10:00 AM - 12:00 PM', '12:00 PM - 02:00 PM', '04:00 PM - 06:00 PM'].map((slot) => (
-                                                    <button
-                                                        key={slot}
-                                                        onClick={() => setSelectedSlot(slot)}
-                                                        className={`text-left p-3 rounded-lg border text-xs font-bold transition-all ${selectedSlot === slot
-                                                            ? 'border-[#0c4a9e] bg-blue-50 text-[#0c4a9e]'
-                                                            : 'border-gray-300 text-gray-600 hover:border-gray-400 hover:bg-gray-50'
-                                                            }`}
-                                                    >
-                                                        {slot}
-                                                    </button>
-                                                ))}
-                                            </div>
-                                            <button
-                                                onClick={() => setIsSlotConfirmed(true)}
-                                                disabled={!selectedSlot}
-                                                className="w-full bg-[#0c4a9e] text-white font-bold py-3 rounded-lg hover:bg-blue-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                                            >
-                                                Confirm Slot
-                                            </button>
-                                        </>
-                                    )}
+                                    </div>
                                 </div>
                             </>
                         )}
@@ -279,17 +260,23 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                     </h3>
 
                     <div className="space-y-6 pl-7">
-                        {order.items.map((item) => (
+                        {order.items.map((item: any) => (
                             <div key={item.id} className="flex gap-4 md:gap-6 items-start">
-                                <div className="w-20 h-20 bg-gray-50 rounded-lg p-2 shrink-0 border border-gray-200">
-                                    <img src={item.image} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
+                                <div className="w-20 h-20 bg-gray-50 rounded-lg p-2 shrink-0 border border-gray-200 flex items-center justify-center">
+                                    {item.image ? (
+                                        <img src={item.image} alt={item.name} className="w-full h-full object-contain mix-blend-multiply" />
+                                    ) : (
+                                        <Package className="w-8 h-8 text-gray-300" />
+                                    )}
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex flex-col sm:flex-row sm:justify-between items-start gap-2">
                                         <div>
                                             <p className="text-[10px] font-bold text-[#0c4a9e] uppercase tracking-wider mb-1">{item.brand}</p>
                                             <h4 className="text-sm font-bold text-gray-900 leading-tight">{item.name}</h4>
-                                            <p className="text-xs text-gray-600 mt-1">{item.weight} • Qty: {item.quantity}</p>
+                                            <p className="text-xs text-gray-600 mt-1">
+                                                {item.weight && `${item.weight} • `}Qty: {item.quantity}
+                                            </p>
                                         </div>
                                         <div className="sm:text-right mt-2 sm:mt-0">
                                             <p className="text-sm font-extrabold text-gray-900">${(item.price * item.quantity).toFixed(2)}</p>
@@ -313,25 +300,29 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                             <span className="text-gray-600 font-medium">Payment Method</span>
                             <span className="text-gray-900 font-bold flex items-center gap-2">
                                 <CreditCard className="w-4 h-4 text-gray-400" />
-                                {order.paymentMethod}
+                                {order.payment_method || 'Card'}
                             </span>
                         </div>
                         <div className="flex items-center justify-between text-sm">
                             <span className="text-gray-600 font-medium">Subtotal</span>
-                            <span className="text-gray-900 font-medium">$135.81</span>
+                            <span className="text-gray-900 font-medium">${order.subtotal.toFixed(2)}</span>
                         </div>
+                        {order.discount > 0 && (
+                            <div className="flex items-center justify-between text-sm">
+                                <span className="text-gray-600 font-medium">Discount</span>
+                                <span className="text-red-600 font-bold">-${order.discount.toFixed(2)}</span>
+                            </div>
+                        )}
                         <div className="flex items-center justify-between text-sm">
                             <span className="text-gray-600 font-medium">Delivery Fee</span>
-                            <span className="text-green-600 font-bold">FREE</span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600 font-medium">GST (10%)</span>
-                            <span className="text-gray-900 font-medium">$9.99</span>
+                            <span className={order.shipping_cost === 0 ? "text-green-600 font-bold" : "text-gray-900 font-medium"}>
+                                {order.shipping_cost === 0 ? "FREE" : `$${order.shipping_cost.toFixed(2)}`}
+                            </span>
                         </div>
 
                         <div className="pt-4 mt-2 border-t border-gray-200 flex items-center justify-between">
                             <p className="text-base font-extrabold text-gray-900">Total {isCancelled ? 'Refunded' : 'Amount Paid'}</p>
-                            <p className="text-2xl font-black text-[#0c4a9e]">${order.total.toFixed(2)}</p>
+                            <p className="text-2xl font-black text-[#0c4a9e]">${order.grand_total.toFixed(2)}</p>
                         </div>
                     </div>
                 </section>
