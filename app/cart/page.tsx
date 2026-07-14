@@ -14,6 +14,7 @@ import CartSummary from '@/components/cart/CartSummary';
 import CouponSection from '@/components/cart/CouponSection';
 import { useCart } from '@/context/CartContext';
 import { MOCK_ADDRESSES } from '@/data/mockData';
+import { apiUrl } from '@/lib/api';
 
 export default function CartPage() {
     const { cartItems, updateQuantity, removeFromCart, clearCart, cartTotal, cartCount } = useCart();
@@ -34,11 +35,11 @@ export default function CartPage() {
     // Re-validate coupon when subtotal changes
     useEffect(() => {
         const savedCoupon = sessionStorage.getItem('appliedCoupon');
-        if (savedCoupon && subtotal > 0) {
+        if (savedCoupon && cartTotal > 0) {
             fetch(apiUrl('/api/coupons/validate'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ coupon_code: savedCoupon, subtotal }),
+                body: JSON.stringify({ coupon_code: savedCoupon, subtotal: cartTotal }),
                 credentials: 'include',
             })
             .then(res => res.json())
@@ -58,7 +59,7 @@ export default function CartPage() {
             setAppliedCoupon(null);
             setCouponDiscount(0);
         }
-    }, [subtotal]);
+    }, [cartTotal]);
 
     useEffect(() => {
         setIsMounted(true);
