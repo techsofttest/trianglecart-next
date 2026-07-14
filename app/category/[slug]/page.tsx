@@ -39,7 +39,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
     return (
         <div className="bg-white min-h-screen">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div className="max-w-7xl mx-auto  sm:px-6 lg:px-8 py-6">
                 <div className="pb-4">
                     <Breadcrumbs items={breadcrumbItems} />
                 </div>
