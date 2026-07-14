@@ -46,30 +46,7 @@ export default function AboutPage() {
                     </p>
                 </div>
 
-                {/* Brand Story */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
-                    <div className="lg:col-span-7 space-y-6">
-                        <h2 className="text-2xl font-bold text-gray-900 tracking-tight">Our Story</h2>
-                        <p className="text-[15px] text-gray-600 leading-relaxed font-medium">
-                            Founded with a passion for quality and authentic heritage, Triangle Cart is Australia's premier online destination for Indian and South Asian groceries. We understand that food is more than sustenance—it is a connection to culture, family, and home.
-                        </p>
-                        <p className="text-[15px] text-gray-600 leading-relaxed font-medium">
-                            What started as a vision to simplify grocery shopping has grown into a state-of-the-art logistics and storefront platform. We partner directly with premium brands and local growers to deliver everything from farm-fresh produce and artisanal flours to rare spices, traditional sweets, and daily household essentials.
-                        </p>
-                        <p className="text-[15px] text-gray-600 leading-relaxed font-medium">
-                            With our advanced inventory system, expiration tracking safeguards, and temperature-controlled dispatch routing, we guarantee that you only receive the highest quality items, exactly when you expect them.
-                        </p>
-                    </div>
-                    <div className="lg:col-span-5 flex flex-col justify-center bg-gray-50 p-8 rounded-3xl border border-gray-100">
-                        <h3 className="text-sm font-bold text-[#0c4a9e] uppercase tracking-[0.2em] mb-4">Our Vision</h3>
-                        <blockquote className="text-[17px] font-semibold text-gray-800 leading-relaxed italic mb-6">
-                            "To make premium, authentic South Asian food products accessible, affordable, and easily deliverable to every household across Australia."
-                        </blockquote>
-                        <div className="border-t border-gray-200/60 pt-4">
-                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Triangle Cart Team</p>
-                        </div>
-                    </div>
-                </div>
+                
 
                 {/* Core Values */}
                 <div className="space-y-10">

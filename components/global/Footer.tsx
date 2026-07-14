@@ -20,7 +20,7 @@ export default function Footer() {
             {/* Top Features Ribbon: Showcases key client capabilities with neutral, standardized branding */}
             <div className="border-b border-gray-900 bg-gray-950 py-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
-                        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
                         <div className="p-2 bg-gray-900 text-gray-400 rounded-lg">
                             <Truck className="w-5 h-5" />
                         </div>
@@ -68,40 +68,13 @@ export default function Footer() {
                         <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase mb-4">About</h3>
                         <ul className="space-y-2 text-[12px]">
                             <li>
-                                <Link href="/about" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
+                                <Link href="/about-us" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
                                     About Us
                                 </Link>
                             </li>
                             <li>
                                 <Link href="/contact" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
                                     Contact Us
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/advertising" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
-                                    Local Advertising Options
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-
-                    {/* Help & Support Column */}
-                    <div>
-                        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase mb-4">Help</h3>
-                        <ul className="space-y-2 text-[12px]">
-                            <li>
-                                <Link href="/payments" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
-                                    Payments & OTP
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/shipping" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
-                                    Shipping & Dispatch
-                                </Link>
-                            </li>
-                            <li>
-                                <Link href="/cancellation-returns" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
-                                    Cancellation & Returns
                                 </Link>
                             </li>
                             <li>
@@ -112,27 +85,49 @@ export default function Footer() {
                         </ul>
                     </div>
 
+                    {/* Help & Support Column */}
+                    <div>
+                        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase mb-4">Help</h3>
+                        <ul className="space-y-2 text-[12px]">
+                            <li>
+                                <Link href="/payments-otp" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
+                                    Payments & OTP
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/shipping-dispatch" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
+                                    Shipping & Dispatch
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/cancellation-returns" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
+                                    Cancellation & Returns
+                                </Link>
+                            </li>
+                        </ul>
+                    </div>
+
                     {/* Policy Column */}
                     <div>
                         <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase mb-4">Consumer Policy</h3>
                         <ul className="space-y-2 text-[12px]">
                             <li>
-                                <Link href="/policy/terms" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
+                                <Link href="/terms-of-use" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
                                     Terms Of Use
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/policy/security" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
+                                <Link href="/security-privacy" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
                                     Security & Privacy
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/policy/refund" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
+                                <Link href="/refund-policy" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
                                     Refund Policy
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/policy/expiry-rules" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
+                                <Link href="/product-expiry-rules" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
                                     Product Expiry Rules
                                 </Link>
                             </li>
@@ -150,19 +145,19 @@ export default function Footer() {
                             <p className="text-gray-400 leading-relaxed font-semibold text-white">
                                 Triangle Cart Pvt Ltd
                             </p>
-                            
+
                             <p className="text-gray-400 font-medium">
                                 <span className="font-semibold text-gray-400">Email:</span> shop@trianglecart.com.au
                             </p>
                         </div>
-                        
+
                     </div>
 
                 </div>
 
                 {/* Footer Bottom Strip (Icons, Legal links & Payment Badges) */}
                 <div className="pt-8 flex flex-col lg:flex-row items-center justify-between gap-6">
-                    
+
 
                     {/* Copyright & Team Information */}
                     <div className="text-center lg:text-right">
