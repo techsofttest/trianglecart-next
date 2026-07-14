@@ -2,16 +2,23 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, ShieldCheck, Truck, Tag, CreditCard } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Truck } from 'lucide-react';
 
 interface CartSummaryProps {
     subtotal: number;
     discount: number;
     shipping: number;
     total: number;
+    appliedCoupon: string | null;
 }
 
-export default function CartSummary({ subtotal, discount, shipping, total }: CartSummaryProps) {
+export default function CartSummary({
+    subtotal,
+    discount,
+    shipping,
+    total,
+    appliedCoupon,
+}: CartSummaryProps) {
     return (
         <div className="space-y-4">
             <div className="bg-white rounded-3xl border border-gray-100 p-6 shadow-sm">
@@ -23,7 +30,7 @@ export default function CartSummary({ subtotal, discount, shipping, total }: Car
                     </div>
                     {discount > 0 && (
                         <div className="flex justify-between text-emerald-600 font-bold text-sm">
-                            <span>Discount (SAVE10)</span>
+                            <span>Discount ({appliedCoupon || 'Coupon'})</span>
                             <span>-${discount.toFixed(2)}</span>
                         </div>
                     )}
@@ -41,7 +48,6 @@ export default function CartSummary({ subtotal, discount, shipping, total }: Car
                     </div>
                 </div>
 
-                
                 <Link 
                     href="/checkout"
                     className="w-full bg-[#0c4a9e] text-white font-bold py-4 rounded-2xl shadow-xl shadow-blue-900/10 hover:bg-blue-800 hover:shadow-2xl transition-all active:scale-[0.98] flex items-center justify-center gap-3 group text-sm uppercase tracking-widest"

@@ -66,6 +66,7 @@ function CheckoutContent() {
             setPlacedOrderNumber(orderNumber);
             setIsOrderPlaced(true);
             clearCart();
+            sessionStorage.removeItem('appliedCoupon');
             // Clear URL search params immediately to prevent reload loop on subsequent navigations
             window.history.replaceState({}, '', window.location.pathname);
         }
@@ -227,6 +228,32 @@ function CheckoutContent() {
     };
 
     const subtotal = checkoutItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
+
+    // Auto-restore and validate coupon on checkout
+    useEffect(() => {
+        const savedCoupon = sessionStorage.getItem('appliedCoupon');
+        if (savedCoupon && subtotal > 0) {
+            fetch(apiUrl('/api/coupons/validate'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ coupon_code: savedCoupon, subtotal }),
+                credentials: 'include',
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.valid) {
+                    setAppliedCoupon(data.coupon.coupon_code);
+                    setCouponDiscount(Number(data.discount || 0));
+                } else {
+                    setAppliedCoupon(null);
+                    setCouponDiscount(0);
+                    sessionStorage.removeItem('appliedCoupon');
+                }
+            })
+            .catch(() => {});
+        }
+    }, [subtotal]);
+
     const discount = couponDiscount;
 
     const tax = 0;
@@ -279,7 +306,8 @@ function CheckoutContent() {
             delivery_date: deliveryType === 'direct' ? selectedDateString : null,
             delivery_slot_id: deliveryType === 'direct' ? selectedSlotId : null,
             payment_method: 'card',
-            notes: addressForm.delivery_notes || ''
+            notes: addressForm.delivery_notes || '',
+            coupon_code: appliedCoupon || null
         };
 
         try {
@@ -292,6 +320,7 @@ function CheckoutContent() {
 
             const data = await res.json();
             if (res.ok && data.valid) {
+                sessionStorage.removeItem('appliedCoupon');
                 if (data.payment_intent && data.payment_intent.client_secret) {
                     setCreatedOrderNumber(data.order_number);
                     setPaymentClientSecret(data.payment_intent.client_secret);
@@ -531,10 +560,12 @@ function CheckoutContent() {
                         onApplyCoupon={(code, discount) => {
                             setAppliedCoupon(code);
                             setCouponDiscount(discount ?? 0);
+                            sessionStorage.setItem('appliedCoupon', code);
                         }}
                         onRemoveCoupon={() => {
                             setAppliedCoupon(null);
                             setCouponDiscount(0);
+                            sessionStorage.removeItem('appliedCoupon');
                         }}
                         onPlaceOrder={handlePlaceOrder}
                     />

@@ -31,6 +31,35 @@ export default function CartPage() {
     const [couponDiscount, setCouponDiscount] = useState(0);
     const router = useRouter();
 
+    // Re-validate coupon when subtotal changes
+    useEffect(() => {
+        const savedCoupon = sessionStorage.getItem('appliedCoupon');
+        if (savedCoupon && subtotal > 0) {
+            fetch(apiUrl('/api/coupons/validate'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ coupon_code: savedCoupon, subtotal }),
+                credentials: 'include',
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.valid) {
+                    setAppliedCoupon(data.coupon.coupon_code);
+                    setCouponDiscount(Number(data.discount || 0));
+                } else {
+                    // Invalid now (e.g. subtotal fell below minimum)
+                    setAppliedCoupon(null);
+                    setCouponDiscount(0);
+                    sessionStorage.removeItem('appliedCoupon');
+                }
+            })
+            .catch(() => {});
+        } else if (!savedCoupon) {
+            setAppliedCoupon(null);
+            setCouponDiscount(0);
+        }
+    }, [subtotal]);
+
     useEffect(() => {
         setIsMounted(true);
         const userStr = localStorage.getItem('user');
@@ -144,13 +173,17 @@ export default function CartPage() {
                 <div className="space-y-4 sticky top-24 self-start">
                     <CouponSection
                         appliedCoupon={appliedCoupon}
+                        appliedDiscount={couponDiscount}
+                        subtotal={subtotal}
                         onApply={(code, discount) => {
                             setAppliedCoupon(code);
                             setCouponDiscount(discount);
+                            sessionStorage.setItem('appliedCoupon', code);
                         }}
                         onRemove={() => {
                             setAppliedCoupon(null);
                             setCouponDiscount(0);
+                            sessionStorage.removeItem('appliedCoupon');
                         }}
                     />
                     <CartSummary
@@ -158,6 +191,7 @@ export default function CartPage() {
                         discount={discount}
                         shipping={shipping}
                         total={total}
+                        appliedCoupon={appliedCoupon}
                     />
                 </div>
             </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Tag, CreditCard, Lock, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { Lock, AlertTriangle, ShieldCheck } from 'lucide-react';
 import CouponSection from '@/components/cart/CouponSection';
 
 interface OrderSummarySidebarProps {
@@ -33,6 +33,8 @@ export default function OrderSummarySidebar({
         <div className="space-y-4">
             <CouponSection
                 appliedCoupon={appliedCoupon}
+                appliedDiscount={discount}
+                subtotal={subtotal}
                 onApply={onApplyCoupon}
                 onRemove={onRemoveCoupon}
             />
@@ -47,7 +49,7 @@ export default function OrderSummarySidebar({
                     </div>
                     {discount > 0 && (
                         <div className="flex justify-between text-emerald-600 font-bold text-sm">
-                            <span>Discount (SAVE10)</span>
+                            <span>Discount ({appliedCoupon || 'Coupon'})</span>
                             <span>-${discount.toFixed(2)}</span>
                         </div>
                     )}
@@ -63,8 +65,6 @@ export default function OrderSummarySidebar({
                         <span className="text-[#0c4a9e] tracking-tight">${total.toFixed(2)}</span>
                     </div>
                 </div>
-
-                
 
                 <button
                     onClick={onPlaceOrder}

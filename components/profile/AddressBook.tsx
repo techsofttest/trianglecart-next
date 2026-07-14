@@ -284,11 +284,12 @@ export default function AddressBook() {
                     addr.id === editingId ? { ...addr, ...formData } : addr
                 );
             } else {
+                const hasDefault = addresses.some(addr => addr.is_default_shipping || addr.is_default_billing);
                 const newAddr: Address = {
                     ...formData,
                     id: Date.now(),
-                    is_default_shipping: addresses.length === 0,
-                    is_default_billing: addresses.length === 0
+                    is_default_shipping: !hasDefault,
+                    is_default_billing: !hasDefault
                 };
                 updated = [...addresses, newAddr];
             }
@@ -354,7 +355,8 @@ export default function AddressBook() {
         } catch (e) {
             const updated = addresses.map(addr => ({
                 ...addr,
-                is_default_shipping: addr.id === id
+                is_default_shipping: addr.id === id,
+                is_default_billing: addr.id === id
             }));
             setAddresses(updated);
             localStorage.setItem('triangle-saved-addresses', JSON.stringify(updated));
@@ -615,14 +617,9 @@ export default function AddressBook() {
                                 </div>
 
                                 <div className="flex gap-2">
-                                    {addr.is_default_shipping && (
+                                    {(addr.is_default_shipping || addr.is_default_billing) && (
                                         <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 bg-green-50 text-green-700 rounded-lg border border-green-100 flex items-center gap-1">
-                                            <Check className="w-3 h-3" /> Default Shipping
-                                        </span>
-                                    )}
-                                    {addr.is_default_billing && (
-                                        <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 bg-blue-50 text-[#0c4a9e] rounded-lg border border-blue-100 flex items-center gap-1">
-                                            <Check className="w-3 h-3" /> Default Billing
+                                            <Check className="w-3 h-3" /> Default
                                         </span>
                                     )}
                                 </div>
@@ -657,20 +654,12 @@ export default function AddressBook() {
                             </div>
 
                             <div className="flex gap-1.5">
-                                {!addr.is_default_shipping && (
+                                {!addr.is_default_shipping && !addr.is_default_billing && (
                                     <button 
                                         onClick={() => handleSetDefaultShipping(addr.id)}
                                         className="px-3 py-1.5 bg-gray-50 hover:bg-[#0c4a9e]/5 text-gray-600 hover:text-[#0c4a9e] rounded-xl transition-colors text-xs font-bold"
                                     >
-                                        Set Shipping
-                                    </button>
-                                )}
-                                {!addr.is_default_billing && (
-                                    <button 
-                                        onClick={() => handleSetDefaultBilling(addr.id)}
-                                        className="px-3 py-1.5 bg-gray-50 hover:bg-[#0c4a9e]/5 text-gray-600 hover:text-[#0c4a9e] rounded-xl transition-colors text-xs font-bold"
-                                    >
-                                        Set Billing
+                                        Set as default
                                     </button>
                                 )}
                             </div>

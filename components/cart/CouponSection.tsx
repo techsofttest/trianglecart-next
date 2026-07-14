@@ -6,11 +6,19 @@ import { apiUrl } from '@/lib/api';
 
 interface CouponSectionProps {
     appliedCoupon: string | null;
+    appliedDiscount?: number;
     onApply: (code: string, discount: number) => void;
     onRemove: () => void;
+    subtotal: number;
 }
 
-export default function CouponSection({ appliedCoupon, onApply, onRemove }: CouponSectionProps) {
+export default function CouponSection({
+    appliedCoupon,
+    appliedDiscount,
+    onApply,
+    onRemove,
+    subtotal,
+}: CouponSectionProps) {
     const [coupon, setCoupon] = useState('');
     const [error, setError] = useState('');
     const [isApplying, setIsApplying] = useState(false);
@@ -26,13 +34,15 @@ export default function CouponSection({ appliedCoupon, onApply, onRemove }: Coup
             const response = await fetch(apiUrl('/api/coupons/validate'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ coupon_code: trimmed, subtotal: 1000 }),
+                body: JSON.stringify({ coupon_code: trimmed, subtotal }),
+                credentials: 'include',
             });
 
             const data = await response.json();
 
             if (response.ok && data.valid) {
                 onApply(data.coupon.coupon_code, Number(data.discount || 0));
+                setError('');
             } else {
                 setError(data.message || 'Invalid coupon code');
             }
@@ -74,7 +84,6 @@ export default function CouponSection({ appliedCoupon, onApply, onRemove }: Coup
                         </button>
                     </div>
                     {error && <p className="text-sm text-red-600 font-bold ml-1 animate-pulse">{error}</p>}
-                    
                 </div>
             ) : (
                 <div className="bg-emerald-50/50 border border-emerald-100 rounded-2xl p-4 flex items-center justify-between animate-in zoom-in-95 duration-300">
@@ -83,8 +92,10 @@ export default function CouponSection({ appliedCoupon, onApply, onRemove }: Coup
                             <Ticket className="w-5 h-5" />
                         </div>
                         <div>
-                            <p className="text-sm font-bold text-emerald-700 uppercase tracking-wider"></p>
-                            <p className="text-sm text-emerald-600 font-medium"></p>
+                            <p className="text-sm font-bold text-emerald-700 uppercase tracking-wider">{appliedCoupon}</p>
+                            {appliedDiscount !== undefined && appliedDiscount > 0 && (
+                                <p className="text-xs text-emerald-600 font-semibold">Discount: -${appliedDiscount.toFixed(2)}</p>
+                            )}
                         </div>
                     </div>
                     <button

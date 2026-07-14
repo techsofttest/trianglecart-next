@@ -91,9 +91,9 @@ export default function AddressSection({
                 const data = (await res.json()) as Address[];
                 setAddresses(data);
                 if (data.length > 0) {
-                    // Auto-select default shipping address
-                    const defaultShipping = data.find(a => a.is_default_shipping);
-                    const selected = defaultShipping || data[0];
+                    // Auto-select the default address
+                    const defaultAddress = data.find(a => a.is_default_shipping || a.is_default_billing);
+                    const selected = defaultAddress || data[0];
                     setSelectedAddressId(selected.id);
                     selectAddressFields(selected);
                     setShowNewAddressForm(false);
@@ -110,7 +110,7 @@ export default function AddressSection({
             const data: Address[] = saved ? JSON.parse(saved) : [];
             setAddresses(data);
             if (data.length > 0) {
-                const defaultShipping = data.find(a => a.is_default_shipping);
+                const defaultShipping = data.find(a => a.is_default_shipping || a.is_default_billing);
                 const selected = defaultShipping || data[0];
                 setSelectedAddressId(selected.id);
                 selectAddressFields(selected);
@@ -454,7 +454,7 @@ export default function AddressSection({
                                                 <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded">
                                                     {item.label || 'Other'}
                                                 </span>
-                                                {item.is_default_shipping && (
+                                                {(item.is_default_shipping || item.is_default_billing) && (
                                                     <span className="text-[9px] font-bold uppercase tracking-wider px-1 bg-green-50 text-green-600 rounded border border-green-100">
                                                         Default
                                                     </span>
