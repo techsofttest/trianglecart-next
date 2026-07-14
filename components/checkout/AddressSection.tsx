@@ -44,7 +44,7 @@ export default function AddressSection({
     selectedAddressId: propSelectedAddressId,
     setSelectedAddressId: propSetSelectedAddressId
 }: AddressSectionProps) {
-    const { isAuthenticated } = useCustomerAuth();
+    const { isAuthenticated, customer } = useCustomerAuth();
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [localSelectedAddressId, setLocalSelectedAddressId] = useState<number | null>(null);
@@ -61,6 +61,7 @@ export default function AddressSection({
         label: '',
         contact_name: '',
         phone: '',
+        email: '',
         address_line_1: '',
         address_line_2: '',
         suburb: '',
@@ -73,6 +74,13 @@ export default function AddressSection({
         google_place_id: '',
         delivery_notes: ''
     });
+
+    // Pre-fill email from authenticated customer
+    useEffect(() => {
+        if (customer?.email && !newAddress.email) {
+            setNewAddress(prev => ({ ...prev, email: customer.email || '' }));
+        }
+    }, [customer]);
 
     const autocompleteInputRef = useRef<HTMLInputElement>(null);
     const autocompleteRef = useRef<any>(null);
@@ -138,7 +146,7 @@ export default function AddressSection({
         setAddressForm({
             name: addr.contact_name,
             phone: addr.phone,
-            email: addressForm.email || 'customer@example.com',
+            email: addressForm.email || newAddress.email || customer?.email || '',
             address: `${addr.address_line_1}${addr.address_line_2 ? ', ' + addr.address_line_2 : ''}, ${addr.suburb ? addr.suburb + ', ' : ''}${addr.city}, ${addr.state} ${addr.postcode}, ${addr.country}`,
             type: addr.label || 'Home',
             contact_name: addr.contact_name,
@@ -272,6 +280,7 @@ export default function AddressSection({
         const errors: Record<string, boolean> = {};
         if (!newAddress.contact_name) errors.contact_name = true;
         if (!newAddress.phone) errors.phone = true;
+        if (!newAddress.email) errors.email = true;
         if (!newAddress.address_line_1) errors.address_line_1 = true;
         if (!newAddress.city) errors.city = true;
         if (!newAddress.state) errors.state = true;
@@ -334,6 +343,7 @@ export default function AddressSection({
         const errors: Record<string, boolean> = {};
         if (!newAddress.contact_name) errors.contact_name = true;
         if (!newAddress.phone) errors.phone = true;
+        if (!newAddress.email) errors.email = true;
         if (!newAddress.address_line_1) errors.address_line_1 = true;
         if (!newAddress.city) errors.city = true;
         if (!newAddress.state) errors.state = true;
@@ -350,7 +360,7 @@ export default function AddressSection({
         setAddressForm({
             name: newAddress.contact_name,
             phone: newAddress.phone,
-            email: addressForm.email || 'customer@example.com',
+            email: newAddress.email,
             address: formattedAddress,
             type: newAddress.label || 'Home',
             contact_name: newAddress.contact_name,
@@ -477,6 +487,7 @@ export default function AddressSection({
                                         label: '',
                                         contact_name: '',
                                         phone: '',
+                                        email: customer?.email || '',
                                         address_line_1: '',
                                         address_line_2: '',
                                         suburb: '',
@@ -578,6 +589,18 @@ export default function AddressSection({
                                             className={`w-full bg-gray-50 border rounded-2xl pl-14 pr-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all ${fieldErrors.phone ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
                                         />
                                     </div>
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Email Address*</label>
+                                    <input
+                                        type="email"
+                                        value={newAddress.email}
+                                        onChange={(e) => setNewAddress({ ...newAddress, email: e.target.value })}
+                                        onFocus={() => setFieldErrors(prev => ({ ...prev, email: false }))}
+                                        placeholder="your@email.com"
+                                        className={`w-full bg-gray-50 border rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all ${fieldErrors.email ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
+                                    />
                                 </div>
 
                                 <div className="space-y-1.5">

@@ -264,6 +264,7 @@ function CheckoutContent() {
         addressForm.name &&
         addressForm.address &&
         addressForm.phone &&
+        addressForm.email &&
         isEligible === true &&
         (deliveryType !== 'direct' || (selectedDateString && selectedSlotId))
     );
@@ -284,7 +285,7 @@ function CheckoutContent() {
             })),
             customer_type: savedAddresses.length > 0 || localStorage.getItem('user') ? 'customer' : 'guest',
             customer_name: addressForm.contact_name || addressForm.name,
-            customer_email: addressForm.email || 'customer@example.com',
+            customer_email: addressForm.email,
             customer_phone: addressForm.phone,
             address: {
                 contact_name: addressForm.contact_name || addressForm.name,
