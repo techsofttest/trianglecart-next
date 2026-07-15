@@ -11,6 +11,7 @@ interface CategoryHeaderProps {
     breadcrumbItems: BreadcrumbItem[];
     sortBy: string;
     onSortChange: (sort: string) => void;
+    onOpenFilters?: () => void;
 }
 
 export default function CategoryHeader({ 
@@ -21,7 +22,8 @@ export default function CategoryHeader({
     onFilterSelect,
     breadcrumbItems,
     sortBy,
-    onSortChange
+    onSortChange,
+    onOpenFilters
 }: CategoryHeaderProps) {
     return (
         <div className="mb-8">
@@ -37,7 +39,9 @@ export default function CategoryHeader({
                 </div>
 
                 <div className="flex items-center gap-3">
-                    <button className="lg:hidden flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg text-sm transition-colors flex-1">
+                    <button 
+                        onClick={onOpenFilters}
+                        className="lg:hidden flex items-center justify-center gap-2 bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg text-sm transition-colors flex-1">
                         <SlidersHorizontal className="w-4 h-4" /> Filter
                     </button>
                     <div className="relative flex-1 md:flex-none">

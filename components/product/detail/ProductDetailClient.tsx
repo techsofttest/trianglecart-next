@@ -27,6 +27,7 @@ type ProductDetailClientProps = {
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
     const firstVariant = product.variants[0] ?? null;
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(firstVariant);
+    const [quantity, setQuantity] = useState(1);
 
     const selectedPrice = selectedVariant?.price ?? product.price;
     const selectedStock = selectedVariant?.stock ?? 0;
@@ -85,7 +86,26 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                     description={product.description}
                 />
 
-                <ProductActions product={productForActions} quantity={1} />
+                <div className="space-y-3 pt-2">
+                    <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider ml-1">Quantity</label>
+                    <div className="flex items-center gap-4 w-max bg-gray-50/50 p-1 rounded-xl border border-gray-100">
+                        <button
+                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                            className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-lg font-bold hover:bg-[#0c4a9e] hover:text-white transition-all shadow-sm border border-gray-100"
+                        >
+                            -
+                        </button>
+                        <span className="w-8 text-center font-bold text-gray-700 text-sm">{quantity}</span>
+                        <button
+                            onClick={() => setQuantity(quantity + 1)}
+                            className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-lg font-bold hover:bg-[#0c4a9e] hover:text-white transition-all shadow-sm border border-gray-100"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+
+                <ProductActions product={productForActions} quantity={quantity} />
             </div>
         </div>
     );

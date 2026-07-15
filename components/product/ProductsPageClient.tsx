@@ -7,6 +7,7 @@ import { LayoutGrid, Package } from 'lucide-react';
 import { BreadcrumbItem } from '@/components/ui/Breadcrumbs';
 import CategorySidebar from '@/components/category/CategorySidebar';
 import CategoryHeader from '@/components/category/CategoryHeader';
+import FilterDrawer from '@/components/category/FilterDrawer';
 import ProductGrid from '@/components/category/ProductGrid';
 import { ProductGridSkeleton } from '@/components/category/ProductSkeleton';
 import { FilterOption } from '@/components/category/SubCategoryFilter';
@@ -42,6 +43,7 @@ export default function ProductsPageClient() {
     const [priceRange, setPriceRange] = useState({ min: 0, max: 100 });
     const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
     const [sortBy, setSortBy] = useState('relevance');
+    const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
     // Loading & Pagination
     const [isLoading, setIsLoading] = useState(true);
@@ -207,6 +209,7 @@ export default function ProductsPageClient() {
                             breadcrumbItems={breadcrumbItems}
                             sortBy={sortBy}
                             onSortChange={setSortBy}
+                            onOpenFilters={() => setIsFilterDrawerOpen(true)}
                         />
 
                         {/* Product Grid or Skeletons */}
@@ -245,6 +248,17 @@ export default function ProductsPageClient() {
                     </div>
                 </div>
             </div>
+
+            {/* Mobile Filter Drawer */}
+            <FilterDrawer
+                isOpen={isFilterDrawerOpen}
+                onClose={() => setIsFilterDrawerOpen(false)}
+                brands={dynamicBrands}
+                selectedBrands={selectedBrands}
+                setSelectedBrands={setSelectedBrands}
+                priceRange={priceRange}
+                setPriceRange={setPriceRange}
+            />
         </div>
     );
 }

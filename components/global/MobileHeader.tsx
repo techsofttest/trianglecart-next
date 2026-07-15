@@ -3,8 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { apiUrl } from '@/lib/api';
-import { Search, MapPin, ChevronDown, Home, Briefcase, Package } from 'lucide-react';
+import { MapPin, ChevronDown, Home, Briefcase, Package } from 'lucide-react';
 import LocationDrawer from './LocationDrawer';
+import HeaderSearch from './HeaderSearch';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { fetchStorefront } from '@/lib/storefront';
 
@@ -104,14 +105,7 @@ export default function MobileHeader() {
 
                 {/* Middle Row: Search Bar (Always visible, moves up on scroll) */}
                 <div className={`px-4 ${isScrolled ? 'py-2' : 'pb-3'}`}>
-                    <div className="flex items-center w-full bg-gray-50 rounded-xl border border-gray-200 px-3 py-2.5 transition-all">
-                        <Search className="w-4 h-4 text-gray-400 mr-2" />
-                        <input 
-                            type="text" 
-                            placeholder="Search for groceries..." 
-                            className="bg-transparent w-full text-sm outline-none text-gray-800 placeholder-gray-500 font-medium"
-                        />
-                    </div>
+                    <HeaderSearch />
                 </div>
 
                 {/* Bottom Row: Categories Carousel */}

@@ -18,7 +18,7 @@ interface ProductQuickAddModalProps {
 export default function ProductQuickAddModal({ product, isOpen, onClose }: ProductQuickAddModalProps) {
     const [quantity, setQuantity] = useState(1);
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(product.variants?.[0] ?? null);
-    const { addToCart, openCartDrawer } = useCart();
+    const { addToCart } = useCart();
     const { toggleWishlist, isInWishlist } = useWishlist();
     const router = useRouter();
 
@@ -42,7 +42,6 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
             selectedVariant,
         }, quantity);
         onClose();
-        openCartDrawer();
     };
 
     const handleBuyNow = () => {
@@ -111,20 +110,28 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
                     </div>
 
                     <div className="space-y-3 pt-2">
-                        <button
-                            onClick={() => toggleWishlist(product)}
-                            className="w-full bg-[#008446] text-white font-bold py-4 rounded-2xl hover:bg-[#008446]/90 transition-all shadow-lg shadow-[#008446]/15 flex items-center justify-center gap-2 text-sm"
-                        >
-                            {isWishlisted ? 'REMOVE FROM WISHLIST' : 'ADD TO WISHLIST'}
-                        </button>
+
+
+
                         <button
                             onClick={handleAddToCart}
                             disabled={isOutOfStock}
-                            className="w-full bg-white border-2 border-[#008446] disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed text-[#008446] font-bold py-4 rounded-2xl hover:bg-[#008446]/5 transition-all flex items-center justify-center gap-2 text-sm"
+                            className="w-full bg-[#008446] disabled:border-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed text-white font-bold py-4 rounded-2xl hover:bg-[#008446]/90 transition-all shadow-lg shadow-[#008446]/15 flex items-center justify-center gap-2 text-sm"
                         >
                             <ShoppingCart className="w-4 h-4" />
                             {isOutOfStock ? 'OUT OF STOCK' : 'ADD TO CART'}
                         </button>
+
+
+
+                        <button
+                            onClick={() => toggleWishlist(product)}
+                            className="w-full bg-white border-2 border-[#008446]  text-[#008446] font-bold py-4 rounded-2xl hover:bg-[#008446]/5 transition-all flex items-center justify-center gap-2 text-sm"
+                        >
+                            {isWishlisted ? 'REMOVE FROM WISHLIST' : 'ADD TO WISHLIST'}
+                        </button>
+
+
                     </div>
                 </div>
             </div>
