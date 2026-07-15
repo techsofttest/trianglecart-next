@@ -287,6 +287,7 @@ export default function AddressSection({
         if (!newAddress.phone) errors.phone = true;
         if (!newAddress.email || !isValidEmail(newAddress.email)) errors.email = true;
         if (!newAddress.address_line_1) errors.address_line_1 = true;
+        if (!newAddress.address_line_2) errors.address_line_2 = true;
         if (!newAddress.city) errors.city = true;
         if (!newAddress.state) errors.state = true;
         if (!newAddress.postcode) errors.postcode = true;
@@ -350,6 +351,7 @@ export default function AddressSection({
         if (!newAddress.phone) errors.phone = true;
         if (!newAddress.email || !isValidEmail(newAddress.email)) errors.email = true;
         if (!newAddress.address_line_1) errors.address_line_1 = true;
+        if (!newAddress.address_line_2) errors.address_line_2 = true;
         if (!newAddress.city) errors.city = true;
         if (!newAddress.state) errors.state = true;
         if (!newAddress.postcode) errors.postcode = true;
@@ -620,13 +622,14 @@ export default function AddressSection({
                                 </div>
 
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Address Line 2 (Optional)</label>
+                                    <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Address Line 2*</label>
                                     <input
                                         type="text"
                                         value={newAddress.address_line_2}
                                         onChange={(e) => setNewAddress({ ...newAddress, address_line_2: e.target.value })}
+                                        onFocus={() => setFieldErrors(prev => ({ ...prev, address_line_2: false }))}
                                         placeholder="Apartment, suite, unit"
-                                        className="w-full bg-gray-50 border border-gray-300 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all"
+                                        className={`w-full bg-gray-50 border rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all ${fieldErrors.address_line_2 ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
                                     />
                                 </div>
 

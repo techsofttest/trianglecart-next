@@ -42,15 +42,13 @@ export default function ProductInfo({ brand, title, rating, reviews, price, orig
                         </div>
 
                         <div>
-                            <h5 className="font-semibold text-gray-900">
-                                Free Same Day Delivery
-                            </h5>
-
+                           
                             <p className="mt-1 text-sm leading-4 text-gray-600">
-                                Free same day delivery in Canberra provided the selected
+                                <b>Free same day delivery :</b> In Canberra provided the selected
                                 delivery slot is available. Regional and interstate orders
                                 are delivered via courier. Questions? Simply ask.
                             </p>
+                            
                         </div>
                     </div>
 
@@ -60,16 +58,14 @@ export default function ProductInfo({ brand, title, rating, reviews, price, orig
                         </div>
 
                         <div>
-                            <h5 className="font-semibold text-gray-900">
-                                Free Returns
-                            </h5>
-
+                           
                             <p className="mt-1 text-sm leading-4 text-gray-600">
-                                You may return most new, unopened items within 10 days of
+                                <b>Free Returns :</b>You may return most new, unopened items within 10 days of
                                 delivery for a full refund. We'll also cover the return
                                 shipping costs if the return is due to our error, such as
                                 receiving an incorrect or defective item.
                             </p>
+
                         </div>
                     </div>
 

@@ -7,16 +7,43 @@ import { DEFAULT_PRODUCT_IMAGE, StorefrontProduct, resolveProductImageUrl, toPro
 
 type ProductResponse = StorefrontProduct;
 
+type CategoryResponse = {
+    id: number;
+    name: string;
+    slug: string;
+    children?: Array<{ id: number; name: string; slug: string }>;
+};
+
 function splitHighlights(value?: string | null): string[] {
     if (!value) return [];
     return value.split(/\r?\n|•|;/).map((item) => item.trim()).filter(Boolean);
 }
 
+function deriveSuggestionCategorySlug(categories: CategoryResponse[] | null, categorySlug?: string | null): string | undefined {
+    if (!categorySlug || !categories) return undefined;
+
+    const topLevelCategory = categories.find((item) => item.slug === categorySlug);
+    if (topLevelCategory) {
+        return categorySlug;
+    }
+
+    const parentCategory = categories.find((item) =>
+        item.children?.some((child) => child.slug === categorySlug)
+    );
+
+    return parentCategory?.slug || categorySlug;
+}
+
 export default async function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = await params;
 
-    const homeData = await fetchStorefront<{ products: StorefrontProduct[] }>('/api/storefront/home');
-    let product = await fetchStorefront<ProductResponse>(`/api/storefront/products/${slug}`);
+    const [homeData, categories, fetchedProduct] = await Promise.all([
+        fetchStorefront<{ products: StorefrontProduct[] }>('/api/storefront/home'),
+        fetchStorefront<CategoryResponse[]>('/api/storefront/categories'),
+        fetchStorefront<ProductResponse>(`/api/storefront/products/${slug}`),
+    ]);
+
+    let product = fetchedProduct;
 
     if (!product) {
         const fallback = homeData?.products.find((item) => item.slug === slug || String(item.id) === slug);
@@ -40,6 +67,20 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             </div>
         );
     }
+
+    const suggestionCategorySlug = deriveSuggestionCategorySlug(categories, product.category?.slug);
+    const suggestedCategoryResponse = suggestionCategorySlug
+        ? await fetchStorefront<{ data: StorefrontProduct[] }>(`/api/storefront/products?category=${encodeURIComponent(suggestionCategorySlug)}&per_page=18`)
+        : null;
+
+    const suggestedProducts = (suggestedCategoryResponse?.data ?? [])
+        .filter((item) => item.slug !== product.slug)
+        .slice(0, 10)
+        .map((item) => toProductCardModel(item));
+
+    const fallbackProducts = suggestedProducts.length === 0
+        ? (homeData?.products ?? []).filter((item) => item.slug !== product.slug).slice(0, 10).map((item) => toProductCardModel(item))
+        : suggestedProducts;
 
     const variants = (product.variants ?? []).map((variant) => ({
         id: variant.id,
@@ -92,13 +133,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                     }}
                 />
 
-                {suggestedProducts.length > 0 && (
+                {fallbackProducts.length > 0 && (
                     <div className="pt-16 mt-16 border-t border-gray-100">
                         <div className="flex items-center justify-between mb-8">
                             <h2 className="text-2xl font-bold text-gray-900 tracking-tight">You May Also Like</h2>
                         </div>
                         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
-                            {suggestedProducts.map((item) => (
+                            {fallbackProducts.map((item) => (
                                 <ProductCard key={item.id} product={item} />
                             ))}
                         </div>

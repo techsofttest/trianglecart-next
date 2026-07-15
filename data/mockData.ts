@@ -105,13 +105,6 @@ export const LARGE_MOCK_PRODUCTS: Product[] = Array.from({ length: 800 }, (_, i)
     title: `${MOCK_PRODUCTS[i % MOCK_PRODUCTS.length].title} (Special Pack ${i + 1})`,
 }));
 
-// User & Auth Mock Data
-export const MOCK_USERS = [
-    { email: 'john@example.com', phone: '9876543210', name: 'John Smith', dob: '1990-05-15' },
-    { email: 'sarah@triangle.com', phone: '0412345678', name: 'Sarah Wilson', dob: '1992-10-20' },
-    { email: 'test@test.com', phone: '1234567890', name: 'Test User', dob: '2000-01-01' }
-];
-
 // Address Mock Data
 export const MOCK_ADDRESSES = [
     {

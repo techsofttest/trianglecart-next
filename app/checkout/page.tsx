@@ -316,6 +316,7 @@ function CheckoutContent() {
         if (!isAddressConfirmed) validationErrors.push('Please confirm your delivery address.');
         if (!addressForm.name) validationErrors.push('Recipient name is missing.');
         if (!addressForm.address && !addressForm.address_line_1) validationErrors.push('Delivery address is incomplete.');
+        if (!addressForm.address_line_2) validationErrors.push('Address line 2 is required.');
         if (!addressForm.phone) validationErrors.push('Phone number is missing.');
         if (!addressForm.email) validationErrors.push('Email is missing or invalid.');
         if (isEligible === false) validationErrors.push(eligibilityMessage || 'Delivery is not available for this postcode.');

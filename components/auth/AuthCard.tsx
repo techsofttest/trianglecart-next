@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { RefreshCw, ArrowLeft } from 'lucide-react';
-import { MOCK_USERS } from '@/data/mockData';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { apiUrl } from '@/lib/api';
 
@@ -76,24 +75,8 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
             const errorData = await res.json().catch(() => ({}));
             throw new Error(errorData.message || 'Invalid credentials');
         } catch (err: any) {
-            console.warn('Backend login failed, using mock fallback', err);
-
-            // Check against mock users
-            const matchedUser = MOCK_USERS.find(u => u.email.toLowerCase() === email.toLowerCase().trim());
-
-            if (matchedUser) {
-                persistUser(matchedUser);
-                router.push('/');
-                if (onSuccess) onSuccess();
-            } else {
-                persistUser({
-                    name: email.split('@')[0],
-                    email,
-                    phone: ''
-                });
-                router.push('/');
-                if (onSuccess) onSuccess();
-            }
+            console.warn('Backend login failed', err);
+            setErrorMessage(err?.message || 'Invalid email or password.');
         } finally {
             setIsLoading(false);
         }
@@ -145,18 +128,8 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
             const errorData = await res.json().catch(() => ({}));
             throw new Error(errorData.message || 'Failed to create account');
         } catch (err: any) {
-            console.warn('Backend registration failed, using mock fallback', err);
-
-            persistUser({
-                name,
-                email,
-                phone: ''
-            });
-            setSuccessMessage("Account created successfully!");
-            setTimeout(() => {
-                router.push('/');
-                if (onSuccess) onSuccess();
-            }, 800);
+            console.warn('Backend registration failed', err);
+            setErrorMessage(err?.message || 'Failed to create account.');
         } finally {
             setIsLoading(false);
         }
