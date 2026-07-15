@@ -33,12 +33,25 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
         login(data);
     };
 
+    const isValidEmail = (value: string) => {
+        const email = value.trim();
+        return /^[^\s@\/]+@[^\s@\/]+\.[^\s@\/]+$/.test(email);
+    };
+
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMessage('');
         setSuccessMessage('');
 
-        if (!email || !password) return;
+        if (!email || !password) {
+            setErrorMessage('Please enter both email and password.');
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            setErrorMessage('Please enter a valid email address without "/".');
+            return;
+        }
 
         setIsLoading(true);
         try {
@@ -91,7 +104,15 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
         setErrorMessage('');
         setSuccessMessage('');
 
-        if (!name || !email || !password || !confirmPassword) return;
+        if (!name || !email || !password || !confirmPassword) {
+            setErrorMessage('Please fill in all fields.');
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            setErrorMessage('Please enter a valid email address without "/".');
+            return;
+        }
 
         if (password !== confirmPassword) {
             setErrorMessage("Passwords do not match");
@@ -146,7 +167,15 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
         setErrorMessage('');
         setSuccessMessage('');
 
-        if (!email) return;
+        if (!email) {
+            setErrorMessage('Please enter your email address.');
+            return;
+        }
+
+        if (!isValidEmail(email)) {
+            setErrorMessage('Please enter a valid email address without "/".');
+            return;
+        }
 
         setIsLoading(true);
         setTimeout(() => {

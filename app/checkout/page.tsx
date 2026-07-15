@@ -36,6 +36,8 @@ function CheckoutContent() {
     const [checkoutItems, setCheckoutItems] = useState<any[]>([]);
     const [paymentMethod, setPaymentMethod] = useState('card');
     const [isOrderPlaced, setIsOrderPlaced] = useState(false);
+    const [paymentFailed, setPaymentFailed] = useState(false);
+    const [paymentFailureMessage, setPaymentFailureMessage] = useState<string | null>(null);
     const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
     const [couponDiscount, setCouponDiscount] = useState(0);
     const [isAddressConfirmed, setIsAddressConfirmed] = useState(false);
@@ -61,16 +63,54 @@ function CheckoutContent() {
     // Check url search params for payment redirect success
     useEffect(() => {
         const status = searchParams.get('status');
+        const redirectStatus = searchParams.get('redirect_status');
         const orderNumber = searchParams.get('orderNumber');
+        const stripeError = searchParams.get('error') || searchParams.get('error_description');
+
+        if (redirectStatus !== null) {
+            if (redirectStatus === 'succeeded' && orderNumber) {
+                setPlacedOrderNumber(orderNumber);
+                setIsOrderPlaced(true);
+                setPaymentFailed(false);
+                setPaymentFailureMessage(null);
+                clearCart();
+                sessionStorage.removeItem('appliedCoupon');
+            } else {
+                setPlacedOrderNumber(orderNumber || '');
+                setPaymentFailed(true);
+                setPaymentFailureMessage(stripeError || 'Payment could not be completed. Please try again.');
+            }
+            window.history.replaceState({}, '', window.location.pathname);
+            return;
+        }
+
         if (status === 'success' && orderNumber) {
             setPlacedOrderNumber(orderNumber);
             setIsOrderPlaced(true);
+            setPaymentFailed(false);
+            setPaymentFailureMessage(null);
             clearCart();
             sessionStorage.removeItem('appliedCoupon');
-            // Clear URL search params immediately to prevent reload loop on subsequent navigations
             window.history.replaceState({}, '', window.location.pathname);
+            return;
         }
-    }, [searchParams, clearCart]);
+
+        if (status === 'failed') {
+            setPlacedOrderNumber(orderNumber || '');
+            setPaymentFailed(true);
+            setPaymentFailureMessage(stripeError || 'Payment could not be completed. Please try again.');
+            window.history.replaceState({}, '', window.location.pathname);
+            return;
+        }
+
+        if (!paymentClientSecret) {
+            setIsOrderPlaced(false);
+            setPaymentFailed(false);
+            setPaymentFailureMessage(null);
+            setPlacedOrderNumber('');
+            setCreatedOrderNumber('');
+        }
+    }, [searchParams, clearCart, paymentClientSecret]);
 
 
     // Form state for address completion
@@ -356,6 +396,32 @@ function CheckoutContent() {
 
     if (isOrderPlaced) {
         return <OrderSuccess orderNumber={placedOrderNumber} />;
+    }
+
+    if (paymentFailed) {
+        return (
+            <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center animate-in zoom-in-95 duration-500">
+                <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
+                    <AlertTriangle className="w-12 h-12 text-red-500" />
+                </div>
+                <h1 className="text-3xl font-medium text-gray-900 mb-2">Payment Failed</h1>
+                <p className="text-gray-500 max-w-md mb-4 font-medium">
+                    {paymentFailureMessage || 'Your payment could not be completed. Please try again.'}
+                </p>
+                <button
+                    type="button"
+                    onClick={() => {
+                        setPaymentFailed(false);
+                        setPaymentFailureMessage(null);
+                        setPlacedOrderNumber('');
+                        router.push('/checkout');
+                    }}
+                    className="bg-[#0c4a9e] text-white px-8 py-3 rounded-xl font-medium hover:bg-blue-800 transition-all"
+                >
+                    Try Again
+                </button>
+            </div>
+        );
     }
 
     // Show Stripe Payment Element when client secret is available

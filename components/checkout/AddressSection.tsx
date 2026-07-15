@@ -175,6 +175,11 @@ export default function AddressSection({
         }
     };
 
+    const isValidEmail = (value: string) => {
+        const email = value.trim();
+        return /^[^\s@\/]+@[^\s@\/]+\.[^\s@\/]+$/.test(email);
+    };
+
     // Autocomplete script loading for new address form
     useEffect(() => {
         if (!showNewAddressForm) return;
@@ -280,14 +285,14 @@ export default function AddressSection({
         const errors: Record<string, boolean> = {};
         if (!newAddress.contact_name) errors.contact_name = true;
         if (!newAddress.phone) errors.phone = true;
-        if (!newAddress.email) errors.email = true;
+        if (!newAddress.email || !isValidEmail(newAddress.email)) errors.email = true;
         if (!newAddress.address_line_1) errors.address_line_1 = true;
         if (!newAddress.city) errors.city = true;
         if (!newAddress.state) errors.state = true;
         if (!newAddress.postcode) errors.postcode = true;
         if (Object.keys(errors).length > 0) {
             setFieldErrors(errors);
-            setErrorMsg('Please fill in all mandatory fields (*)');
+            setErrorMsg('Please fill in all mandatory fields (*) and enter a valid email.');
             return;
         }
 
@@ -343,14 +348,14 @@ export default function AddressSection({
         const errors: Record<string, boolean> = {};
         if (!newAddress.contact_name) errors.contact_name = true;
         if (!newAddress.phone) errors.phone = true;
-        if (!newAddress.email) errors.email = true;
+        if (!newAddress.email || !isValidEmail(newAddress.email)) errors.email = true;
         if (!newAddress.address_line_1) errors.address_line_1 = true;
         if (!newAddress.city) errors.city = true;
         if (!newAddress.state) errors.state = true;
         if (!newAddress.postcode) errors.postcode = true;
         if (Object.keys(errors).length > 0) {
             setFieldErrors(errors);
-            setErrorMsg('Please fill in all mandatory fields (*)');
+            setErrorMsg('Please fill in all mandatory fields (*) and enter a valid email.');
             return;
         }
 
