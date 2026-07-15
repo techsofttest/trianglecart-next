@@ -366,7 +366,7 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
                                     setErrorMessage('');
                                     setSuccessMessage('');
                                 }}
-                                className="font-bold text-[#0c4a9e] hover:underline"
+                                className   ="font-bold text-[#0c4a9e] hover:underline"
                             >
                                 Sign In
                             </button>

@@ -154,6 +154,7 @@ export default function ProductListingTemplate({
                         setSelectedBrands={setSelectedBrands}
                         priceRange={priceRange}
                         setPriceRange={setPriceRange}
+                        maxPrice={maxProductPrice}
                         selectedRatings={selectedRatings}
                         setSelectedRatings={setSelectedRatings}
                     />
