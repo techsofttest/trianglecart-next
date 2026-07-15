@@ -38,6 +38,8 @@ export default function ProductsPageClient() {
     const [products, setProducts] = useState<Product[]>([]);
     const [categories, setCategories] = useState<CategoryApiResponse[]>([]);
     const [selectedCategorySlug, setSelectedCategorySlug] = useState<string>('all');
+    const [allBrands, setAllBrands] = useState<string[]>([]);
+    const [maxPriceLimit, setMaxPriceLimit] = useState(100);
     
     // Sidebar Filters State
     const [priceRange, setPriceRange] = useState({ min: 0, max: 100 });
@@ -67,26 +69,53 @@ export default function ProductsPageClient() {
         loadCategories();
     }, []);
 
-    // 3. Dynamic Brands list extraction & Max Price calculator from current loaded products
-    const { dynamicBrands, maxProductPrice } = useMemo(() => {
-        const brands = new Set<string>();
-        let maxPrice = 0;
-        products.forEach(p => {
-            if (p.brand) brands.add(p.brand);
-            if (p.price > maxPrice) maxPrice = p.price;
-        });
-        return {
-            dynamicBrands: Array.from(brands).sort(),
-            maxProductPrice: Math.ceil(maxPrice) || 1000
-        };
-    }, [products]);
-
-    // Update price slider range based on loaded products max price
-    useEffect(() => {
-        if (maxProductPrice > 0) {
-            setPriceRange(prev => ({ min: 0, max: Math.max(prev.max, maxProductPrice) }));
+    // 3. Load global brand list and dynamic price limits from the storefront
+    const loadAllBrands = async () => {
+        try {
+            const response = await fetchStorefront<{ brands: { name: string }[] }>('/api/storefront/home');
+            if (response?.brands) {
+                setAllBrands(
+                    response.brands
+                        .map((brand) => brand.name)
+                        .filter(Boolean)
+                        .sort((a, b) => a.localeCompare(b))
+                );
+            }
+        } catch (err) {
+            console.error('Failed to load brand list:', err);
         }
-    }, [maxProductPrice]);
+    };
+
+    const loadMaxPriceLimit = async (categorySlug: string) => {
+        try {
+            let url = `/api/storefront/products?per_page=48&page=1&sort=price_high`;
+            if (categorySlug !== 'all') {
+                url += `&category=${categorySlug}`;
+            }
+
+            const response = await fetchStorefront<ProductApiResponse>(url);
+            if (response?.data?.length) {
+                const highestPrice = Math.ceil(response.data.reduce((max, product) => Math.max(max, product.price), 0));
+                if (highestPrice > 0) {
+                    setMaxPriceLimit(highestPrice);
+                    setPriceRange((prev) => ({
+                        min: Math.min(prev.min, highestPrice),
+                        max: Math.max(Math.min(prev.max, highestPrice), prev.min),
+                    }));
+                }
+            }
+        } catch (err) {
+            console.error('Failed to load max price limit:', err);
+        }
+    };
+
+    useEffect(() => {
+        loadAllBrands();
+    }, []);
+
+    useEffect(() => {
+        loadMaxPriceLimit(selectedCategorySlug);
+    }, [selectedCategorySlug]);
 
     // 4. Fetch Products hook when category or sort changes
     const fetchProducts = async (page: number, append = false) => {
@@ -188,11 +217,12 @@ export default function ProductsPageClient() {
                 <div className="flex flex-col lg:flex-row gap-4">
                     {/* LEFT SIDEBAR */}
                     <CategorySidebar 
-                        brands={dynamicBrands} 
+                        brands={allBrands} 
                         selectedBrands={selectedBrands}
                         setSelectedBrands={setSelectedBrands}
                         priceRange={priceRange}
                         setPriceRange={setPriceRange}
+                        maxPrice={maxPriceLimit}
                         selectedRatings={[]}
                         setSelectedRatings={() => {}}
                     />
@@ -253,11 +283,12 @@ export default function ProductsPageClient() {
             <FilterDrawer
                 isOpen={isFilterDrawerOpen}
                 onClose={() => setIsFilterDrawerOpen(false)}
-                brands={dynamicBrands}
+                brands={allBrands}
                 selectedBrands={selectedBrands}
                 setSelectedBrands={setSelectedBrands}
                 priceRange={priceRange}
                 setPriceRange={setPriceRange}
+                maxPrice={maxPriceLimit}
             />
         </div>
     );

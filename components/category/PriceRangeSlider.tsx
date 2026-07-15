@@ -6,14 +6,15 @@ interface PriceRangeSliderProps {
     min: number;
     max: number;
     step: number;
+    value: { min: number; max: number };
     onChange: (values: { min: number; max: number }) => void;
 }
 
-export default function PriceRangeSlider({ min, max, step, onChange }: PriceRangeSliderProps) {
-    const [minVal, setMinVal] = useState(min);
-    const [maxVal, setMaxVal] = useState(max);
-    const minValRef = useRef(min);
-    const maxValRef = useRef(max);
+export default function PriceRangeSlider({ min, max, step, value, onChange }: PriceRangeSliderProps) {
+    const [minVal, setMinVal] = useState(value.min);
+    const [maxVal, setMaxVal] = useState(value.max);
+    const minValRef = useRef(value.min);
+    const maxValRef = useRef(value.max);
     const range = useRef<HTMLDivElement>(null);
 
     // Convert value to percentage for precise track coloring
@@ -21,6 +22,14 @@ export default function PriceRangeSlider({ min, max, step, onChange }: PriceRang
         (value: number) => Math.round(((value - min) / (max - min)) * 100),
         [min, max]
     );
+
+    // Sync internal slider state when parent values change
+    useEffect(() => {
+        setMinVal(value.min);
+        minValRef.current = value.min;
+        setMaxVal(value.max);
+        maxValRef.current = value.max;
+    }, [value.min, value.max]);
 
     // Update active track visuals when Min changes
     useEffect(() => {

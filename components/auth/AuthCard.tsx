@@ -314,7 +314,7 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0c4a9e]/10 focus:border-[#0c4a9e] transition-all text-[15px]"
-                                placeholder="john@example.com"
+                                placeholder=""
                                 required
                             />
                         </div>
@@ -329,7 +329,7 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0c4a9e]/10 focus:border-[#0c4a9e] transition-all text-[15px]"
-                                placeholder="••••••••"
+                                placeholder=""
                                 required
                             />
                         </div>
@@ -344,7 +344,7 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0c4a9e]/10 focus:border-[#0c4a9e] transition-all text-[15px]"
-                                placeholder="••••••••"
+                                placeholder=""
                                 required
                             />
                         </div>
@@ -387,7 +387,7 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0c4a9e]/10 focus:border-[#0c4a9e] transition-all text-[15px]"
-                                placeholder="john@example.com"
+                                placeholder=""
                                 required
                             />
                         </div>

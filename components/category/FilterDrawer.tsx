@@ -11,6 +11,7 @@ interface FilterDrawerProps {
     setSelectedBrands: (brands: string[]) => void;
     priceRange: { min: number; max: number };
     setPriceRange: (range: { min: number; max: number }) => void;
+    maxPrice: number;
 }
 
 export default function FilterDrawer({
@@ -21,6 +22,7 @@ export default function FilterDrawer({
     setSelectedBrands,
     priceRange,
     setPriceRange,
+    maxPrice,
 }: FilterDrawerProps) {
     const toggleBrand = (brand: string) => {
         if (selectedBrands.includes(brand)) {
@@ -66,8 +68,9 @@ export default function FilterDrawer({
                         </h3>
                         <PriceRangeSlider
                             min={0}
-                            max={100}
+                            max={maxPrice}
                             step={1}
+                            value={priceRange}
                             onChange={setPriceRange}
                         />
                     </div>

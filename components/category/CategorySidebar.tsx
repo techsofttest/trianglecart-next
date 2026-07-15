@@ -7,6 +7,7 @@ interface CategorySidebarProps {
     setSelectedBrands: (brands: string[]) => void;
     priceRange: { min: number; max: number };
     setPriceRange: (range: { min: number; max: number }) => void;
+    maxPrice: number;
     selectedRatings: number[];
     setSelectedRatings: (ratings: number[]) => void;
 }
@@ -17,6 +18,7 @@ export default function CategorySidebar({
     setSelectedBrands,
     priceRange,
     setPriceRange,
+    maxPrice,
     selectedRatings,
     setSelectedRatings
 }: CategorySidebarProps) {
@@ -50,8 +52,9 @@ export default function CategorySidebar({
                     <h4 className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider mb-2">Price Range</h4>
                     <PriceRangeSlider
                         min={0}
-                        max={100}
+                        max={maxPrice}
                         step={1}
+                        value={priceRange}
                         onChange={setPriceRange}
                     />
                 </div>
