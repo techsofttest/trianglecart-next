@@ -37,14 +37,14 @@ export default function FilterDrawer({
             {/* Overlay */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden transition-opacity duration-200"
+                    className="fixed inset-0 bg-black bg-opacity-50 z-[120] lg:hidden transition-opacity duration-200"
                     onClick={onClose}
                 />
             )}
 
             {/* Drawer */}
             <div
-                className={`fixed left-0 top-0 h-full w-80 max-w-[85vw] bg-white z-50 shadow-xl transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto ${
+                className={`fixed left-0 top-0 h-full w-80 max-w-[85vw] bg-white z-[130] shadow-xl transform transition-transform duration-300 ease-in-out lg:hidden overflow-y-auto ${
                     isOpen ? 'translate-x-0' : '-translate-x-full'
                 }`}
             >
