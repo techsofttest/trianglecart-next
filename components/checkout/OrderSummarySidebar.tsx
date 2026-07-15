@@ -15,6 +15,7 @@ interface OrderSummarySidebarProps {
     onApplyCoupon: (code: string, discount: number) => void;
     onRemoveCoupon: () => void;
     onPlaceOrder: () => void;
+    checkoutErrors?: string[];
 }
 
 export default function OrderSummarySidebar({
@@ -28,6 +29,7 @@ export default function OrderSummarySidebar({
     onApplyCoupon,
     onRemoveCoupon,
     onPlaceOrder
+    , checkoutErrors = []
 }: OrderSummarySidebarProps) {
     return (
         <div className="space-y-4">
@@ -73,11 +75,15 @@ export default function OrderSummarySidebar({
                     <Lock className="w-4 h-4" /> Pay Now
                 </button>
 
-                {!isAddressComplete && (
-                    <p className="text-sm text-red-600 flex items-center justify-center gap-1.5 text-center tracking-widest mb-4">
-                        <AlertTriangle className="w-4 h-4" />
-                        Complete delivery address to proceed
-                    </p>
+                {checkoutErrors && checkoutErrors.length > 0 && (
+                    <div className="text-sm text-red-600 flex flex-col items-center justify-center gap-1.5 text-center tracking-widest mb-4">
+                        {checkoutErrors.map((err, idx) => (
+                            <p key={idx} className="flex items-center gap-2">
+                                <AlertTriangle className="w-4 h-4" />
+                                <span>{err}</span>
+                            </p>
+                        ))}
+                    </div>
                 )}
 
                 <div className="flex items-center justify-center gap-2 text-sm text-gray-500 font-bold uppercase tracking-widest">

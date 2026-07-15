@@ -59,6 +59,7 @@ function CheckoutContent() {
     const [isPlacingOrder, setIsPlacingOrder] = useState(false);
     const [paymentClientSecret, setPaymentClientSecret] = useState<string | null>(null);
     const [createdOrderNumber, setCreatedOrderNumber] = useState<string>('');
+    const [checkoutErrors, setCheckoutErrors] = useState<string[]>([]);
 
     // Check url search params for payment redirect success
     useEffect(() => {
@@ -310,11 +311,25 @@ function CheckoutContent() {
     );
 
     const handlePlaceOrder = async () => {
-        if (!isAddressComplete) {
-            alert('Please complete your delivery address details and select a delivery slot if required.');
+        const validationErrors: string[] = [];
+
+        if (!isAddressConfirmed) validationErrors.push('Please confirm your delivery address.');
+        if (!addressForm.name) validationErrors.push('Recipient name is missing.');
+        if (!addressForm.address && !addressForm.address_line_1) validationErrors.push('Delivery address is incomplete.');
+        if (!addressForm.phone) validationErrors.push('Phone number is missing.');
+        if (!addressForm.email) validationErrors.push('Email is missing or invalid.');
+        if (isEligible === false) validationErrors.push(eligibilityMessage || 'Delivery is not available for this postcode.');
+        if (deliveryType === 'direct') {
+            if (!selectedDateString) validationErrors.push('Please select a delivery date.');
+            if (!selectedSlotId) validationErrors.push('Please select a delivery slot.');
+        }
+
+        if (validationErrors.length > 0) {
+            setCheckoutErrors(validationErrors);
             return;
         }
 
+        setCheckoutErrors([]);
         setIsPlacingOrder(true);
         const payload = {
             cart: checkoutItems.map(item => ({
@@ -369,8 +384,22 @@ function CheckoutContent() {
                     setPlacedOrderNumber(data.order_number);
                     setIsOrderPlaced(true);
                 }
+                setCheckoutErrors([]);
             } else {
-                alert(data.message || 'Failed to place order. ' + (data.error || ''));
+                // collect and show server-side validation messages
+                const serverErrors: string[] = [];
+                if (data.errors) {
+                    // Laravel validation errors shape
+                    Object.values(data.errors).forEach((v: any) => {
+                        if (Array.isArray(v)) serverErrors.push(...v.map(String));
+                        else serverErrors.push(String(v));
+                    });
+                }
+                if (data.message) serverErrors.push(String(data.message));
+                if (data.error) serverErrors.push(String(data.error));
+
+                if (serverErrors.length > 0) setCheckoutErrors(serverErrors);
+                else setCheckoutErrors([data.message || 'Failed to place order.']);
             }
         } catch (e) {
             console.error('Checkout error:', e);
@@ -624,6 +653,7 @@ function CheckoutContent() {
                         total={total}
                         isAddressComplete={isAddressComplete}
                         appliedCoupon={appliedCoupon}
+                        checkoutErrors={checkoutErrors}
                         onApplyCoupon={(code, discount) => {
                             setAppliedCoupon(code);
                             setCouponDiscount(discount ?? 0);

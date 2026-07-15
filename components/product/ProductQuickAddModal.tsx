@@ -126,7 +126,11 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
 
                         <button
                             onClick={() => toggleWishlist(product)}
-                            className="w-full bg-white border-2 border-[#008446]  text-[#008446] font-bold py-4 rounded-2xl hover:bg-[#008446]/5 transition-all flex items-center justify-center gap-2 text-sm"
+                            className={`w-full font-bold py-4 rounded-2xl transition-all flex items-center justify-center gap-2 text-sm ${
+                                isWishlisted
+                                    ? 'bg-red-600 text-white border-2 border-red-600'
+                                    : 'bg-white border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white'
+                            }`}
                         >
                             {isWishlisted ? 'REMOVE FROM WISHLIST' : 'ADD TO WISHLIST'}
                         </button>

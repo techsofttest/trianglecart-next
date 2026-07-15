@@ -131,9 +131,13 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                                     e.preventDefault();
                                     toggleWishlist(product);
                                 }}
-                                className="w-full flex items-center justify-center gap-2 bg-white border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white font-semibold text-xs sm:text-sm px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95"
+                                className={`w-full flex items-center justify-center gap-2 font-semibold text-xs sm:text-sm px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95 group ${
+                                    isWishlisted
+                                        ? 'bg-red-600 text-white border-2 border-red-600'
+                                        : 'bg-white border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white'
+                                }`}
                             >
-                                <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-current' : ''}`} />
+                                <Heart className={`w-4 h-4 ${isWishlisted ? 'text-white fill-current' : 'text-red-600 group-hover:text-white'}`} />
                                 <span>{isWishlisted ? 'WISHLISTED' : 'WISHLIST'}</span>
                             </button>
                         </div>
