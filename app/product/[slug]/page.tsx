@@ -96,11 +96,6 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         ? product.max_price
         : Math.round(selectedPrice * 1.15 * 100) / 100;
 
-    const suggestedProducts = (homeData?.products ?? [])
-        .filter((item) => item.slug !== product.slug)
-        .slice(0, 10)
-        .map((item) => toProductCardModel(item));
-
     const gallery = [product.featured_image, ...(product.gallery ?? [])]
         .filter((img): img is string => Boolean(img))
         .map((img) => resolveProductImageUrl(img));
