@@ -138,10 +138,10 @@ export default function Footer() {
                     </div>
 
 
-                    {/* Contact Us Column */}
-<div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 md:pl-6 md:border-l border-gray-900">
-    <div className="text-[12px] space-y-3">
-        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
+                  {/* Contact Us Column */}
+<div className="col-span-2 flex justify-center md:border-l border-gray-900">
+    <div className="text-[12px] space-y-3 text-center">
+        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center justify-center gap-1.5">
             <Mail className="w-3.5 h-3.5 text-gray-400" />
             Contact Us
         </h3>
@@ -169,30 +169,27 @@ export default function Footer() {
     </div>
 </div>
 
+{/* About Company Column */}
+<div className="col-span-2 flex justify-center md:border-l border-gray-900">
+    <div className="text-[12px] space-y-3 text-center">
+        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center justify-center gap-1.5">
+            <Building2 className="w-3.5 h-3.5 text-gray-400" />
+            About Company
+        </h3>
 
-                    {/* Divider for Registered Addresses (matches Flipkart design for vertical split layout) */}
-                    <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 md:pl-6 md:border-l border-gray-900">
-                        {/* Mail Us / Warehouse Column */}
-                        <div className="text-[12px] space-y-3">
-                            <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
-                                <Building2 className="w-3.5 h-3.5 text-gray-400" /> About Company
-                            </h3>
+        <p className="text-white font-semibold">
+            Triangle Cart Pty Ltd
+        </p>
 
-                            <p className="text-gray-400 leading-relaxed font-semibold text-white">
-                                Triangle Cart Pvt Ltd
-                            </p>
+        <p className="text-gray-400 font-medium">
+            <span className="font-semibold">ABN:</span> {Config.ABN_NUMBER}
+        </p>
 
-                            <p className="text-gray-400 font-medium">
-                                <span className="font-semibold text-gray-400">ABN :</span> {Config.ABN_NUMBER}
-                            </p>
-
-                            <p className="text-gray-400 font-medium">
-                                <span className="font-semibold text-gray-400">ACN :</span> {Config.ACN_NUMBER}
-                            </p>
-
-                        </div>
-
-                    </div>
+        <p className="text-gray-400 font-medium">
+            <span className="font-semibold">ACN:</span> {Config.ACN_NUMBER}
+        </p>
+    </div>
+</div>
 
 
 
