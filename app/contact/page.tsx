@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
-import { Mail, Phone, MapPin, Send, CheckCircle2 } from 'lucide-react';
+import { Mail, Phone, MapPin, Send, CheckCircle2,Building2 } from 'lucide-react';
 
 import * as Config from "@/lib/config"
 
@@ -84,6 +84,34 @@ export default function ContactPage() {
                             </p>
                         </div>
 
+
+                        {/* Company Details */}
+                    <div className="flex gap-4">
+                        <div className="p-3 bg-blue-50/50 text-[#0c4a9e] rounded-xl h-fit border border-blue-50">
+                            <Building2 className="w-5 h-5" />
+                        </div>
+
+                        <div className="space-y-1">
+                            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+                                Company Details
+                            </p>
+
+                            <p className="text-sm font-semibold text-gray-900">
+                                Triangle Cart Pty Ltd
+                            </p>
+
+                            <p className="text-sm text-gray-700 font-medium">
+                                <span className="font-semibold">ABN:</span> {Config.ABN_NUMBER}
+                            </p>
+
+                            <p className="text-sm text-gray-700 font-medium">
+                                <span className="font-semibold">ACN:</span> {Config.ACN_NUMBER}
+                            </p>
+                        </div>
+                    </div>
+
+
+
                         <div className="space-y-6">
                             {/* Email */}
                             <div className="flex gap-4">
@@ -105,12 +133,19 @@ export default function ContactPage() {
                                 </div>
                                 <div className="space-y-1">
                                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Contact Support</p>
-                                    <p className="text-sm font-semibold text-gray-900">
+                                    <a
+                                        href={`tel:${Config.PRIMARY_CONTACT.replace(/\s+/g, "")}`}
+                                        className="block text-sm font-semibold text-gray-900 hover:text-[#0c4a9e] hover:underline transition-colors"
+                                    >
                                         {Config.PRIMARY_CONTACT}
-                                    </p>
-                                    <p className="text-sm font-semibold text-gray-900">
+                                    </a>
+
+                                    <a
+                                        href={`tel:${Config.SECONDARY_CONTACT.replace(/\s+/g, "")}`}
+                                        className="block text-sm font-semibold text-gray-900 hover:text-[#0c4a9e] hover:underline transition-colors"
+                                    >
                                         {Config.SECONDARY_CONTACT}
-                                    </p>
+                                    </a>
                                     <p className="text-[12px] text-gray-400 font-medium">Mon - Sat: 9:00 AM - 6:00 PM</p>
                                 </div>
                             </div>
