@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { Mail, Phone, MapPin, Send, CheckCircle2 } from 'lucide-react';
 
+import * as Config from "@/lib/config"
+
 export default function ContactPage() {
     const breadcrumbItems = [
         { label: 'Home', href: '/' },
@@ -90,8 +92,8 @@ export default function ContactPage() {
                                 </div>
                                 <div className="space-y-1">
                                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Email Us</p>
-                                    <a href="mailto:contact@10xminds.dev" className="text-sm font-semibold text-gray-900 hover:text-[#0c4a9e] hover:underline">
-                                        contact@10xminds.dev
+                                    <a href="{Config.SUPPORT_EMAIL}" className="text-sm font-semibold text-gray-900 hover:text-[#0c4a9e] hover:underline">
+                                        {Config.SUPPORT_EMAIL}
                                     </a>
                                 </div>
                             </div>
@@ -102,29 +104,14 @@ export default function ContactPage() {
                                     <Phone className="w-5 h-5" />
                                 </div>
                                 <div className="space-y-1">
-                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Call Support</p>
+                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Contact Support</p>
                                     <p className="text-sm font-semibold text-gray-900">
-                                        +61 2 9876 5432
+                                        {Config.PRIMARY_CONTACT}
+                                    </p>
+                                    <p className="text-sm font-semibold text-gray-900">
+                                        {Config.SECONDARY_CONTACT}
                                     </p>
                                     <p className="text-[12px] text-gray-400 font-medium">Mon - Sat: 9:00 AM - 6:00 PM</p>
-                                </div>
-                            </div>
-
-                            {/* Registered Office */}
-                            <div className="flex gap-4">
-                                <div className="p-3 bg-blue-50/50 text-[#0c4a9e] rounded-xl h-fit border border-blue-50">
-                                    <MapPin className="w-5 h-5" />
-                                </div>
-                                <div className="space-y-1">
-                                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Registered Office</p>
-                                    <p className="text-sm font-semibold text-gray-900 leading-relaxed">
-                                        Triangle Cart Pvt Ltd
-                                    </p>
-                                    <p className="text-sm text-gray-500 leading-relaxed font-medium">
-                                        50 Maltby CCT,<br />
-                                        Wanniassa, ACT-2903,<br />
-                                        Australia
-                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -184,7 +171,7 @@ export default function ContactPage() {
                                                 name="email"
                                                 value={formData.email}
                                                 onChange={handleChange}
-                                                placeholder="john@example.com"
+                                                placeholder=""
                                                 className={`w-full px-4 py-2.5 text-sm bg-white border rounded-xl outline-none transition ${errors.email ? 'border-red-400 focus:border-red-400' : 'border-gray-300 focus:border-[#0c4a9e]'}`}
                                             />
                                             {errors.email && <p className="text-xs text-red-500 font-medium">{errors.email}</p>}
@@ -200,7 +187,7 @@ export default function ContactPage() {
                                             name="subject"
                                             value={formData.subject}
                                             onChange={handleChange}
-                                            placeholder="e.g. Order Tracking, Delivery Issue"
+                                            placeholder=""
                                             className={`w-full px-4 py-2.5 text-sm bg-white border rounded-xl outline-none transition ${errors.subject ? 'border-red-400 focus:border-red-400' : 'border-gray-300 focus:border-[#0c4a9e]'}`}
                                         />
                                         {errors.subject && <p className="text-xs text-red-500 font-medium">{errors.subject}</p>}
@@ -215,7 +202,7 @@ export default function ContactPage() {
                                             rows={5}
                                             value={formData.message}
                                             onChange={handleChange}
-                                            placeholder="Describe your issue or inquiry in detail..."
+                                            placeholder=""
                                             className={`w-full px-4 py-2.5 text-sm bg-white border rounded-xl outline-none transition resize-none ${errors.message ? 'border-red-400 focus:border-red-400' : 'border-gray-300 focus:border-[#0c4a9e]'}`}
                                         />
                                         {errors.message && <p className="text-xs text-red-500 font-medium">{errors.message}</p>}

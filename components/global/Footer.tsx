@@ -14,6 +14,8 @@ import {
     Mail
 } from 'lucide-react';
 
+import * as Config from "@/lib/config"
+
 export default function Footer() {
     return (
         <footer className="bg-gray-950 text-gray-300 border-t border-gray-900 mt-auto">
@@ -140,10 +142,19 @@ export default function Footer() {
                         {/* Mail Us / Warehouse Column */}
                         <div className="text-[12px] space-y-3">
                             <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
-                                <Mail className="w-3.5 h-3.5 text-gray-400" /> Mail Us
+                                <Mail className="w-3.5 h-3.5 text-gray-400" /> Contact Us
                             </h3>
                             <p className="text-gray-400 leading-relaxed font-semibold text-white">
                                 Triangle Cart Pvt Ltd
+                            </p>
+
+                            <p className="text-gray-400 font-medium">
+                                <span className="font-semibold text-gray-400"></span> {Config.PRIMARY_CONTACT}
+                            </p>
+
+
+                            <p className="text-gray-400 font-medium">
+                                <span className="font-semibold text-gray-400"></span> {Config.SECONDARY_CONTACT}
                             </p>
 
                             <p className="text-gray-400 font-medium">
@@ -152,6 +163,36 @@ export default function Footer() {
                         </div>
 
                     </div>
+
+
+                    {/* Divider for Registered Addresses (matches Flipkart design for vertical split layout) */}
+                    <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 md:pl-6 md:border-l border-gray-900">
+                        {/* Mail Us / Warehouse Column */}
+                        <div className="text-[12px] space-y-3">
+                            <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
+                                <Mail className="w-3.5 h-3.5 text-gray-400" />About Company
+                            </h3>
+
+                            <p className="text-gray-400 leading-relaxed font-semibold text-white">
+                                Triangle Cart Pvt Ltd
+                            </p>
+
+                            <p className="text-gray-400 font-medium">
+                                <span className="font-semibold text-gray-400">ABN :</span> {Config.ABN_NUMBER}
+                            </p>
+
+                            <p className="text-gray-400 font-medium">
+                                <span className="font-semibold text-gray-400">ACN :</span> {Config.ACN_NUMBER}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+
+
 
                 </div>
 
