@@ -81,11 +81,6 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                     onSelectVariant={setSelectedVariant}
                 />
 
-                <ProductFeatures
-                    highlights={product.highlights}
-                    description={product.description}
-                />
-
                 <div className="space-y-3 pt-2">
                     <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider ml-1">Quantity</label>
                     <div className="flex items-center gap-4 w-max bg-gray-50/50 p-1 rounded-xl border border-gray-100">
@@ -104,6 +99,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                         </button>
                     </div>
                 </div>
+
+                <ProductFeatures
+                    highlights={product.highlights}
+                    description={product.description}
+                />
 
                 <ProductActions product={productForActions} quantity={quantity} />
             </div>

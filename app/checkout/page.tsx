@@ -60,47 +60,87 @@ function CheckoutContent() {
     const [paymentClientSecret, setPaymentClientSecret] = useState<string | null>(null);
     const [createdOrderNumber, setCreatedOrderNumber] = useState<string>('');
     const [checkoutErrors, setCheckoutErrors] = useState<string[]>([]);
+    const [showPaymentStatusPage, setShowPaymentStatusPage] = useState(false);
+    const [isPaymentStatusLoading, setIsPaymentStatusLoading] = useState(false);
 
-    // Check url search params for payment redirect success
+    // Check url search params for payment redirect success or status-only redirect
     useEffect(() => {
         const status = searchParams.get('status');
         const redirectStatus = searchParams.get('redirect_status');
         const orderNumber = searchParams.get('orderNumber');
         const stripeError = searchParams.get('error') || searchParams.get('error_description');
+        const statusKey = orderNumber ? `payment_status_viewed_${orderNumber}` : null;
+        const hasViewed = statusKey ? sessionStorage.getItem(statusKey) === 'true' : false;
 
-        if (redirectStatus !== null) {
-            if (redirectStatus === 'succeeded' && orderNumber) {
+        const markViewed = () => {
+            if (statusKey) {
+                sessionStorage.setItem(statusKey, 'true');
+            }
+        };
+
+        const showOrderStatus = (success: boolean, failed: boolean, message: string | null) => {
+            if (orderNumber) {
                 setPlacedOrderNumber(orderNumber);
-                setIsOrderPlaced(true);
-                setPaymentFailed(false);
-                setPaymentFailureMessage(null);
+            }
+            setIsOrderPlaced(success);
+            setPaymentFailed(failed);
+            setPaymentFailureMessage(message);
+            setShowPaymentStatusPage(true);
+            if (success || failed) {
                 clearCart();
                 sessionStorage.removeItem('appliedCoupon');
+            }
+            markViewed();
+        };
+
+        if (redirectStatus !== null && orderNumber) {
+            if (redirectStatus === 'succeeded') {
+                showOrderStatus(true, false, null);
             } else {
-                setPlacedOrderNumber(orderNumber || '');
-                setPaymentFailed(true);
-                setPaymentFailureMessage(stripeError || 'Payment could not be completed. Please try again.');
+                showOrderStatus(false, true, stripeError || 'Payment could not be completed. Please try again.');
             }
             window.history.replaceState({}, '', window.location.pathname);
             return;
         }
 
         if (status === 'success' && orderNumber) {
-            setPlacedOrderNumber(orderNumber);
-            setIsOrderPlaced(true);
-            setPaymentFailed(false);
-            setPaymentFailureMessage(null);
-            clearCart();
-            sessionStorage.removeItem('appliedCoupon');
+            showOrderStatus(true, false, null);
             window.history.replaceState({}, '', window.location.pathname);
             return;
         }
 
-        if (status === 'failed') {
-            setPlacedOrderNumber(orderNumber || '');
-            setPaymentFailed(true);
-            setPaymentFailureMessage(stripeError || 'Payment could not be completed. Please try again.');
+        if (status === 'failed' && orderNumber) {
+            showOrderStatus(false, true, stripeError || 'Payment could not be completed. Please try again.');
             window.history.replaceState({}, '', window.location.pathname);
+            return;
+        }
+
+        if (orderNumber && !hasViewed) {
+            setIsPaymentStatusLoading(true);
+            fetch(apiUrl('/api/checkout/payment-status'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ order_number: orderNumber }),
+                credentials: 'include',
+            })
+                .then(async res => {
+                    const data = await res.json();
+                    if (res.ok && data.order_id) {
+                        setCreatedOrderNumber(data.order_number);
+                        setPlacedOrderNumber(data.order_number);
+                        setShowPaymentStatusPage(true);
+                        setIsOrderPlaced(data.is_success);
+                        setPaymentFailed(data.is_failed);
+                        setPaymentFailureMessage(data.is_failed ? data.message : null);
+                        if (data.is_success || data.is_failed) {
+                            clearCart();
+                            sessionStorage.removeItem('appliedCoupon');
+                        }
+                        markViewed();
+                    }
+                })
+                .catch(() => {})
+                .finally(() => setIsPaymentStatusLoading(false));
             return;
         }
 
@@ -110,6 +150,7 @@ function CheckoutContent() {
             setPaymentFailureMessage(null);
             setPlacedOrderNumber('');
             setCreatedOrderNumber('');
+            setShowPaymentStatusPage(false);
         }
     }, [searchParams, clearCart, paymentClientSecret]);
 
@@ -147,10 +188,15 @@ function CheckoutContent() {
         if (checkoutType === 'buynow' && productId) {
             const allPossibleProducts = [...MOCK_PRODUCTS, ...LARGE_MOCK_PRODUCTS];
             const directItem = allPossibleProducts.find(p => p.id === productId);
+            const variantIdParam = searchParams.get('variantId');
+            const variantId = variantIdParam ? Number(variantIdParam) : null;
 
             if (directItem) {
                 setCheckoutItems([{
                     id: directItem.id,
+                    product_id: directItem.id,
+                    variant_id: variantId,
+                    selectedVariantId: variantId,
                     name: directItem.title,
                     price: directItem.price,
                     image: directItem.image,
@@ -334,9 +380,9 @@ function CheckoutContent() {
         setIsPlacingOrder(true);
         const payload = {
             cart: checkoutItems.map(item => ({
-                product_id: item.id,
+                product_id: item.product_id || item.id,
                 quantity: item.quantity,
-                variant_id: item.variant_id || null,
+                variant_id: item.variant_id ?? item.selectedVariantId ?? null,
                 price: item.price
             })),
             customer_type: savedAddresses.length > 0 || localStorage.getItem('user') ? 'customer' : 'guest',
@@ -423,6 +469,76 @@ function CheckoutContent() {
     }, [addressForm]);
 
     if (!isMounted) return null;
+
+    if (showPaymentStatusPage) {
+        if (isOrderPlaced) {
+            return <OrderSuccess orderNumber={placedOrderNumber} />;
+        }
+
+        if (paymentFailed) {
+            return (
+                <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center animate-in zoom-in-95 duration-500">
+                    <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
+                        <AlertTriangle className="w-12 h-12 text-red-500" />
+                    </div>
+                    <h1 className="text-3xl font-medium text-gray-900 mb-2">Payment Failed</h1>
+                    <p className="text-gray-500 max-w-md mb-4 font-medium">
+                        {paymentFailureMessage || 'Your payment could not be completed. Please try again.'}
+                    </p>
+                    <button
+                        type="button"
+                        onClick={() => {
+                            setPaymentFailed(false);
+                            setPaymentFailureMessage(null);
+                            setPlacedOrderNumber('');
+                            setShowPaymentStatusPage(false);
+                            router.push('/checkout');
+                        }}
+                        className="bg-[#0c4a9e] text-white px-8 py-3 rounded-xl font-medium hover:bg-blue-800 transition-all"
+                    >
+                        Try Again
+                    </button>
+                </div>
+            );
+        }
+
+        if (isPaymentStatusLoading) {
+            return (
+                <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center animate-in zoom-in-95 duration-500">
+                    <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6">
+                        <Loader2 className="w-12 h-12 text-gray-500 animate-spin" />
+                    </div>
+                    <h1 className="text-3xl font-medium text-gray-900 mb-2">Checking Payment Status...</h1>
+                    <p className="text-gray-500 max-w-md mb-4 font-medium">Please wait while we confirm your payment.</p>
+                </div>
+            );
+        }
+
+        return (
+            <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center animate-in zoom-in-95 duration-500">
+                <div className="w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center mb-6">
+                    <Clock className="w-12 h-12 text-yellow-500" />
+                </div>
+                <h1 className="text-3xl font-medium text-gray-900 mb-2">Payment Pending</h1>
+                <p className="text-gray-500 max-w-md mb-4 font-medium">
+                    We are verifying your payment. Please wait and do not refresh this page.
+                </p>
+                <button
+                    type="button"
+                    onClick={() => {
+                        setShowPaymentStatusPage(false);
+                        setPlacedOrderNumber('');
+                        setPaymentFailureMessage(null);
+                        setPaymentFailed(false);
+                        router.push('/');
+                    }}
+                    className="bg-[#0c4a9e] text-white px-8 py-3 rounded-xl font-medium hover:bg-blue-800 transition-all"
+                >
+                    Continue Shopping
+                </button>
+            </div>
+        );
+    }
 
     if (isOrderPlaced) {
         return <OrderSuccess orderNumber={placedOrderNumber} />;

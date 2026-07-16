@@ -4,6 +4,10 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface CartItem {
   id: string;
+  product_id: string;
+  variant_id?: number | null;
+  selectedVariantId?: number | null;
+  selectedVariant?: any;
   name: string;
   price: number;
   quantity: number;
@@ -56,14 +60,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addToCart = (product: any, quantity: number = 1) => {
     setCartItems(prev => {
-      const existing = prev.find(item => item.id === String(product.id));
+      const selectedVariantId = product.selectedVariantId ?? product.variant_id ?? null;
+      const existing = prev.find(item =>
+        item.id === String(product.id) &&
+        (item.selectedVariantId ?? item.variant_id ?? null) === selectedVariantId
+      );
       if (existing) {
-        return prev.map(item => 
-          item.id === String(product.id) ? { ...item, quantity: item.quantity + quantity } : item
+        return prev.map(item =>
+          item.id === String(product.id) &&
+          (item.selectedVariantId ?? item.variant_id ?? null) === selectedVariantId
+            ? { ...item, quantity: item.quantity + quantity }
+            : item
         );
       }
       return [...prev, {
         id: String(product.id),
+        product_id: String(product.id),
+        variant_id: product.variant_id ?? selectedVariantId ?? null,
+        selectedVariantId: selectedVariantId,
+        selectedVariant: product.selectedVariant ?? null,
         name: product.name,
         price: product.price,
         image: product.image,
