@@ -53,8 +53,8 @@ function CheckoutContent() {
     const [availableDates, setAvailableDates] = useState<any[]>([]);
     const [selectedDateString, setSelectedDateString] = useState<string | null>(null);
     const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
-    const [shipping, setShipping] = useState(9.99);
-    
+    const [shipping, setShipping] = useState<number | null>(null);
+
     const [placedOrderNumber, setPlacedOrderNumber] = useState<string>('');
     const [isPlacingOrder, setIsPlacingOrder] = useState(false);
     const [paymentClientSecret, setPaymentClientSecret] = useState<string | null>(null);
@@ -145,14 +145,49 @@ function CheckoutContent() {
         }
 
         if (!paymentClientSecret) {
-            setIsOrderPlaced(false);
-            setPaymentFailed(false);
-            setPaymentFailureMessage(null);
-            setPlacedOrderNumber('');
-            setCreatedOrderNumber('');
-            setShowPaymentStatusPage(false);
+            // If we are currently displaying a status page (success or failure),
+            // do not reset these states when the URL query parameters are cleared.
+            setShowPaymentStatusPage(prev => {
+                if (prev) return prev;
+
+                setIsOrderPlaced(false);
+                setPaymentFailed(false);
+                setPaymentFailureMessage(null);
+                setPlacedOrderNumber('');
+                setCreatedOrderNumber('');
+                return false;
+            });
         }
     }, [searchParams, clearCart, paymentClientSecret]);
+
+    // Redirect if cart is empty and not in payment flow
+    useEffect(() => {
+        if (!isMounted) return;
+
+        if (
+            !showPaymentStatusPage &&
+            !isOrderPlaced &&
+            !paymentFailed &&
+            !isPaymentStatusLoading &&
+            !paymentClientSecret &&
+            checkoutItems.length === 0
+        ) {
+            const savedCartStr = localStorage.getItem('triangle-cart');
+            let savedCart = [];
+            try {
+                savedCart = savedCartStr ? JSON.parse(savedCartStr) : [];
+            } catch (e) {
+                console.error(e);
+            }
+            const isBuyNow = searchParams.get('type') === 'buynow';
+
+            if (isBuyNow) {
+                router.push('/');
+            } else if (savedCart.length === 0) {
+                router.push('/cart');
+            }
+        }
+    }, [isMounted, checkoutItems, showPaymentStatusPage, isOrderPlaced, paymentFailed, isPaymentStatusLoading, paymentClientSecret, router, searchParams]);
 
 
     // Form state for address completion
@@ -246,6 +281,7 @@ function CheckoutContent() {
         }
     }, [savedAddresses]);
 
+
     // Validate postcode eligibility when address or cart changes
     useEffect(() => {
         const validatePostcode = async () => {
@@ -254,6 +290,7 @@ function CheckoutContent() {
                 setIsEligible(null);
                 setDeliveryType(null);
                 setEligibilityMessage('');
+                setShipping(null);
                 return;
             }
 
@@ -288,16 +325,15 @@ function CheckoutContent() {
                     setIsEligible(false);
                     setDeliveryType(null);
                     setEligibilityMessage(data.message || 'Delivery not available for this postcode.');
+                    setShipping(null);
                     setAvailableDates([]);
                     setSelectedDateString(null);
                 }
             } catch (e) {
-                // If API fails (e.g. database not seeded), fallback to courier
-                const currentSubtotal = checkoutItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-                setIsEligible(true);
-                setDeliveryType('courier');
-                setEligibilityMessage('Eligibility checked (courier fallback).');
-                setShipping(currentSubtotal > 50 ? 0 : 9.99);
+                setIsEligible(false);
+                setDeliveryType(null);
+                setEligibilityMessage('Unable to check delivery eligibility at this time.');
+                setShipping(null);
                 setAvailableDates([]);
                 setSelectedDateString(null);
             } finally {

@@ -7,7 +7,7 @@ import CouponSection from '@/components/cart/CouponSection';
 interface OrderSummarySidebarProps {
     subtotal: number;
     discount: number;
-    shipping: number;
+    shipping: number | null;
     tax: number;
     total: number;
     isAddressComplete: boolean;
@@ -58,7 +58,7 @@ export default function OrderSummarySidebar({
                     <div className="flex justify-between text-sm font-medium text-gray-700">
                         <span>Shipping</span>
                         <span className={shipping === 0 ? "text-green-600 font-bold" : "text-gray-900"}>
-                            {shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`}
+                            {shipping === null ? '-' : (shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`)}
                         </span>
                     </div>
 
