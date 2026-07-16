@@ -153,7 +153,7 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
         setIsLoading(true);
         setTimeout(() => {
             setIsLoading(false);
-            setSuccessMessage("A password reset link has been sent to your email address.");
+            setSuccessMessage("A password reset link will be be sent to your email if you have registered with us.");
         }, 1000);
     };
 
