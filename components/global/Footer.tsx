@@ -11,6 +11,7 @@ import {
     Percent,
     Store,
     Info,
+    Building2,
     Mail
 } from 'lucide-react';
 
@@ -137,40 +138,44 @@ export default function Footer() {
                     </div>
 
 
+                    {/* Contact Us Column */}
+<div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 md:pl-6 md:border-l border-gray-900">
+    <div className="text-[12px] space-y-3">
+        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
+            <Mail className="w-3.5 h-3.5 text-gray-400" />
+            Contact Us
+        </h3>
+
+        <a
+            href={`tel:${Config.PRIMARY_CONTACT.replace(/\s+/g, "")}`}
+            className="block text-gray-400 font-medium hover:text-white transition-colors"
+        >
+            {Config.PRIMARY_CONTACT}
+        </a>
+
+        <a
+            href={`tel:${Config.SECONDARY_CONTACT.replace(/\s+/g, "")}`}
+            className="block text-gray-400 font-medium hover:text-white transition-colors"
+        >
+            {Config.SECONDARY_CONTACT}
+        </a>
+
+        <a
+            href={`mailto:${Config.SUPPORT_EMAIL}`}
+            className="block text-gray-400 font-medium hover:text-white transition-colors break-all"
+        >
+            {Config.SUPPORT_EMAIL}
+        </a>
+    </div>
+</div>
+
+
                     {/* Divider for Registered Addresses (matches Flipkart design for vertical split layout) */}
                     <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 md:pl-6 md:border-l border-gray-900">
                         {/* Mail Us / Warehouse Column */}
                         <div className="text-[12px] space-y-3">
                             <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
-                                <Mail className="w-3.5 h-3.5 text-gray-400" /> Contact Us
-                            </h3>
-                            <p className="text-gray-400 leading-relaxed font-semibold text-white">
-                                Triangle Cart Pvt Ltd
-                            </p>
-
-                            <p className="text-gray-400 font-medium">
-                                <span className="font-semibold text-gray-400"></span> {Config.PRIMARY_CONTACT}
-                            </p>
-
-
-                            <p className="text-gray-400 font-medium">
-                                <span className="font-semibold text-gray-400"></span> {Config.SECONDARY_CONTACT}
-                            </p>
-
-                            <p className="text-gray-400 font-medium">
-                                <span className="font-semibold text-gray-400">Email:</span> shop@trianglecart.com.au
-                            </p>
-                        </div>
-
-                    </div>
-
-
-                    {/* Divider for Registered Addresses (matches Flipkart design for vertical split layout) */}
-                    <div className="col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 md:pl-6 md:border-l border-gray-900">
-                        {/* Mail Us / Warehouse Column */}
-                        <div className="text-[12px] space-y-3">
-                            <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center gap-1.5">
-                                <Mail className="w-3.5 h-3.5 text-gray-400" />About Company
+                                <Building2 className="w-3.5 h-3.5 text-gray-400" /> About Company
                             </h3>
 
                             <p className="text-gray-400 leading-relaxed font-semibold text-white">
