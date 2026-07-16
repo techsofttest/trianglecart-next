@@ -380,7 +380,7 @@ function CheckoutContent() {
     const discount = couponDiscount;
 
     const tax = 0;
-    const total = subtotal - discount + shipping + tax;
+    const total = subtotal - discount + (shipping ?? 0) + tax;
 
     const isAddressComplete = !!(
         isAddressConfirmed &&
