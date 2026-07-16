@@ -18,10 +18,12 @@ export async function generateStaticParams() {
     return CMS_SLUGS.map((slug) => ({ slug }));
 }
 
+export const dynamic = 'force-dynamic';
+
 async function getCmsPage(slug: string) {
     try {
         const res = await fetch(apiUrl(`/api/cms/${slug}`), {
-            next: { revalidate: 60 },
+            cache: 'no-store',
         });
         if (!res.ok) return null;
         return res.json();
