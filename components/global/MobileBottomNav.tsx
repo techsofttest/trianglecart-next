@@ -4,14 +4,16 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
-    Home, ShoppingCart, User, Grid, Info, Mail, 
-    ShieldQuestion, FileText, X, ChevronRight 
+    Home, ShoppingCart, User, Grid, X, ChevronRight,
+    ShoppingBag, Heart, PlusCircle
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
+import { useCustomerAuth } from '@/context/CustomerAuthContext';
 
 export default function MobileBottomNav() {
     const pathname = usePathname();
     const { cartCount } = useCart();
+    const { isAuthenticated } = useCustomerAuth();
     const [isMoreOpen, setIsMoreOpen] = useState(false);
 
     // Close menu when route changes
@@ -27,10 +29,21 @@ export default function MobileBottomNav() {
     ];
 
     const moreLinks = [
-        { label: 'About Us', icon: <Info className="w-5 h-5" />, href: '/about' },
-        { label: 'Contact Us', icon: <Mail className="w-5 h-5" />, href: '/contact' },
-        { label: 'FAQ', icon: <ShieldQuestion className="w-5 h-5" />, href: '/faq' },
-        { label: 'Terms of Service', icon: <FileText className="w-5 h-5" />, href: '/terms-of-service' },
+        { 
+            label: 'Last Purchase', 
+            icon: <ShoppingBag className="w-5 h-5" />, 
+            href: isAuthenticated ? '/profile/orders' : '/login' 
+        },
+        { 
+            label: 'Wishlist', 
+            icon: <Heart className="w-5 h-5" />, 
+            href: '/profile/wishlist' 
+        },
+        { 
+            label: 'Request New Product', 
+            icon: <PlusCircle className="w-5 h-5" />, 
+            href: '/contact' 
+        },
     ];
 
     return (
