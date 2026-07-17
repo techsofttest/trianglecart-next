@@ -13,7 +13,7 @@ import { useCustomerAuth } from '@/context/CustomerAuthContext';
 export default function MobileBottomNav() {
     const pathname = usePathname();
     const { cartCount } = useCart();
-    const { isAuthenticated } = useCustomerAuth();
+    const { isAuthenticated, customer, logout } = useCustomerAuth();
     const [isMoreOpen, setIsMoreOpen] = useState(false);
 
     // Close menu when route changes
@@ -21,30 +21,28 @@ export default function MobileBottomNav() {
         setIsMoreOpen(false);
     }, [pathname]);
 
+    const firstName = customer?.name ? String(customer.name).split(' ')[0] : null;
+
     const navItems = [
-        { label: 'Home', icon: <Home className="w-6 h-6" />, href: '/' },
+        { label: 'Home', icon: <Home className="w-3 h-3" />, href: '/' },
         { label: 'Cart', icon: <ShoppingCart className="w-6 h-6" />, href: '/cart', badge: cartCount },
-        { label: 'Profile', icon: <User className="w-6 h-6" />, href: '/profile' },
+        isAuthenticated
+            ? { label: firstName || 'Profile', icon: <User className="w-6 h-6" />, href: '/profile/personal' }
+            : { label: 'Login', icon: <User className="w-6 h-6" />, href: '/login' },
         { label: 'More', icon: <Grid className="w-6 h-6" />, onClick: () => setIsMoreOpen(true) },
     ];
 
-    const moreLinks = [
-        { 
-            label: 'Last Purchase', 
-            icon: <ShoppingBag className="w-5 h-5" />, 
-            href: isAuthenticated ? '/profile/orders' : '/login' 
-        },
-        { 
-            label: 'Wishlist', 
-            icon: <Heart className="w-5 h-5" />, 
-            href: '/profile/wishlist' 
-        },
-        { 
-            label: 'Request New Product', 
-            icon: <PlusCircle className="w-5 h-5" />, 
-            href: '/contact' 
-        },
-    ];
+    const moreLinks = [] as Array<{ label: string; icon: React.ReactNode; href: string }>;
+
+    // These two menus are only shown for authenticated users
+    if (isAuthenticated) {
+        moreLinks.push({ label: 'My Last Purchase', icon: <ShoppingBag className="w-5 h-5" />, href: '/profile/orders' });
+        moreLinks.push({ label: 'My Wishlist', icon: <Heart className="w-5 h-5" />, href: '/profile/wishlist' });
+        moreLinks.push({ label: 'My Addresses', icon: <User className="w-5 h-5" />, href: '/profile/addresses' });
+    }
+
+    // Always available
+    moreLinks.push({ label: 'Request New Product', icon: <PlusCircle className="w-5 h-5" />, href: '/contact' });
 
     return (
         <>
@@ -58,7 +56,7 @@ export default function MobileBottomNav() {
                                 <div className={`relative ${isActive ? 'text-[#0c4a9e] scale-110' : 'text-gray-400'}`}>
                                     {item.icon}
                                     {item.badge !== undefined && item.badge > 0 && (
-                                        <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white animate-in zoom-in duration-300">
+                                        <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white animate-in zoom-in duration-300">
                                             {item.badge}
                                         </span>
                                     )}
@@ -111,6 +109,20 @@ export default function MobileBottomNav() {
                                 </Link>
                             ))}
                         </div>
+
+                        {isAuthenticated && (
+                            <div className="mt-6 grid grid-cols-1 gap-3">
+                                <button
+                                    onClick={() => {
+                                        setIsMoreOpen(false);
+                                        logout();
+                                    }}
+                                    className="w-full p-4 rounded-2xl border border-red-100 bg-red-50 hover:bg-red-100 text-red-600 font-bold"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        )}
 
                         <div className="mt-8 pt-6 border-t border-gray-100 text-center">
                             <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Triangle Cart Pty Ltd</p>
