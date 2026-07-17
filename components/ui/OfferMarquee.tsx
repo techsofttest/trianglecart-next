@@ -8,7 +8,7 @@ export default function OfferMarquee({ messages }: { messages: string[] }) {
   const trackItems = [...messages, ...messages];
 
   return (
-    <section className="w-full overflow-hidden rounded-[2rem] border border-blue-950/10 bg-gradient-to-r from-[#0c4a9e] via-[#0c4a9e]/90 to-[#005e7d] px-4 py-3 shadow-[0_18px_40px_-20px_rgba(12,74,158,0.8)]">
+    <section className="w-full overflow-hidden rounded-[5px] border border-blue-950/10 bg-gradient-to-r from-[#0c4a9e] via-[#0c4a9e]/90 to-[#005e7d] px-4 py-3 shadow-[0_18px_40px_-20px_rgba(12,74,158,0.8)]">
       <div className="relative overflow-hidden">
         <div className="flex min-w-max items-center gap-6 animate-marquee">
           {trackItems.map((text, index) => (

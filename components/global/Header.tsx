@@ -13,7 +13,7 @@ import {
     Leaf, Utensils, Mountain, Croissant, Popcorn, ChefHat, Zap, Candy, Soup, Droplets, Coffee,
     LogOut, Briefcase
 } from 'lucide-react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import LocationDrawer from './LocationDrawer';
@@ -46,6 +46,7 @@ export default function Header() {
     const headerRef = useRef<HTMLDivElement>(null);
     const router = useRouter();
     const params = useParams();
+    const pathname = usePathname();
 
     // Check location state on mount
     useEffect(() => {
@@ -284,7 +285,7 @@ export default function Header() {
 
             {/* Bottom Row: Categories Carousel */}
             <div className="border-t border-gray-100 bg-white hidden md:block relative group/carousel">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 relative flex items-center">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 relative flex items-center justify-center">
 
                     {/* Left Scroll Button */}
                     <button
