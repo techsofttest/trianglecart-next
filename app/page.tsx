@@ -120,6 +120,7 @@
 
   const prominentCategories: CategoryItem[] =
     sortedCategoriesData?.map((cat, index) => ({
+      id: cat.id,
       name: cat.name,
       link: `/category/${cat.slug}`,
       bgColor: bgColors[index % bgColors.length],
