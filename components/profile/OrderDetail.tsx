@@ -327,7 +327,7 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                         </div>
 
                         <div className="pt-4 mt-2 border-t border-gray-200 flex items-center justify-between">
-                            <p className="text-base font-extrabold text-gray-900">Total {isCancelled ? 'Refunded' : 'Amount Paid'}</p>
+                            <p className="text-base font-extrabold text-gray-900">Total</p>
                             <p className="text-2xl font-black text-[#0c4a9e]">${order.grand_total.toFixed(2)}</p>
                         </div>
                     </div>
