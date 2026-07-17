@@ -139,7 +139,7 @@ export default function OrderHistory() {
 
                                     <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end justify-between lg:justify-center gap-6 lg:min-w-[240px]">
                                         <div className="lg:text-right">
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Paid</p>
+                                            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total</p>
                                             <p className="text-3xl font-bold text-gray-900 tracking-tighter">${displayAmount.toFixed(2)}</p>
                                             
                                         </div>
