@@ -1,4 +1,5 @@
   import PromoSlider from "@/components/ui/PromoSlider";
+  import OfferMarquee from "@/components/ui/OfferMarquee";
   import CategoryGrid, { CategoryItem } from "@/components/product/CategoryGrid";
   import SubCategories, { SubCategoryItem } from "@/components/product/SubCategories";
   import ProductRow from "@/components/product/ProductRow";
@@ -155,6 +156,16 @@
       link: offer.href,
     })) ?? [];
 
+    const offerMessages: string[] = topOffersData?.length
+      ? topOffersData.map((offer) => `${offer.title}: ${offer.label}`)
+      : [
+          'Save up to 40% on fresh spices today',
+          'Free delivery on orders over $150',
+          'New season essentials just landed',
+          'Limited-time festival bundles available now',
+          'Shop pantry staples with instant offers',
+        ];
+
     const premiumSpicesItems: SubCategoryItem[] = [
       { label1: "Kashmiri Red Chilli", label2: "Vibrant & Fiery", imageUrl: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80", linkUrl: "/category/spices/red-chilli" },
       { label1: "Aromatic Cardamom", label2: "Premium Quality", imageUrl: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=400&q=80", linkUrl: "/category/spices/cardamom" },
@@ -211,6 +222,10 @@
       <div className="flex flex-col gap-10 md:gap-16 pb-12 pt-2 bg-[#fff]">
         <section className="w-full">
           <PromoSlider banners={homeData?.banners} />
+        </section>
+
+        <section className="w-full px-4 md:px-0">
+          <OfferMarquee messages={offerMessages} />
         </section>
 
         <section className="w-full">

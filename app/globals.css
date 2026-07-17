@@ -66,6 +66,19 @@ body {
   }
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 24s linear infinite;
+}
+
 /* Global Form Input Styles */
 input, textarea, select {
   border-color: #9ca3af !important; /* Darker border (gray-400) */
