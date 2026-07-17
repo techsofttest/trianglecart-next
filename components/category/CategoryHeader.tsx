@@ -53,7 +53,6 @@ export default function CategoryHeader({
                             <option value="relevance">Relevance</option>
                             <option value="price-low">Price: Low to High</option>
                             <option value="price-high">Price: High to Low</option>
-                            <option value="rating">Top Rated</option>
                         </select>
                         <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     </div>

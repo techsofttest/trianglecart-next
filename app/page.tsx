@@ -79,6 +79,10 @@
         image_url: string | null;
         url: string | null;
       }>;
+      announcements?: Array<{
+        id: number;
+        text: string;
+      }>;
     }>('/api/storefront/home');
 
     const categoriesData = await fetchStorefront<Array<{
@@ -156,8 +160,8 @@
       link: offer.href,
     })) ?? [];
 
-    const offerMessages: string[] = topOffersData?.length
-      ? topOffersData.map((offer) => `${offer.title}: ${offer.label}`)
+    const offerMessages: string[] = homeData?.announcements?.length
+      ? homeData.announcements.map((announcement) => announcement.text)
       : [
           'Save up to 40% on fresh spices today',
           'Free delivery on orders over $150',
