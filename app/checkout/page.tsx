@@ -470,19 +470,26 @@ function CheckoutContent() {
                 setCheckoutErrors([]);
             } else {
                 // collect and show server-side validation messages
+                const normalizeServerError = (error: string) => {
+                    if (/not available for delivery|delivery is not available|delivery not available/i.test(error)) {
+                        return 'Delivery not available for the selected postcode';
+                    }
+                    return error;
+                };
+
                 const serverErrors: string[] = [];
                 if (data.errors) {
                     // Laravel validation errors shape
                     Object.values(data.errors).forEach((v: any) => {
-                        if (Array.isArray(v)) serverErrors.push(...v.map(String));
-                        else serverErrors.push(String(v));
+                        if (Array.isArray(v)) serverErrors.push(...v.map((err) => normalizeServerError(String(err))));
+                        else serverErrors.push(normalizeServerError(String(v)));
                     });
                 }
-                if (data.message) serverErrors.push(String(data.message));
-                if (data.error) serverErrors.push(String(data.error));
+                if (data.message) serverErrors.push(normalizeServerError(String(data.message)));
+                if (data.error) serverErrors.push(normalizeServerError(String(data.error)));
 
                 if (serverErrors.length > 0) setCheckoutErrors(serverErrors);
-                else setCheckoutErrors([data.message || 'Failed to place order.']);
+                else setCheckoutErrors([normalizeServerError(String(data.message || 'Failed to place order.'))]);
             }
         } catch (e) {
             console.error('Checkout error:', e);
