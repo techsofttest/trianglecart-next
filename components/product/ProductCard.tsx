@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { Trash2, Heart } from 'lucide-react';
+import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { useWishlist } from '@/context/WishlistContext';
 import ProductQuickAddModal from './ProductQuickAddModal';
 import { slugify } from '@/utils/slugify';
@@ -38,6 +39,7 @@ export interface Product {
 export default function ProductCard({ product, showRemoveButton = false }: { product: Product, showRemoveButton?: boolean }) {
     const resolvedSlug = product.slug || slugify(product.title);
     const href = resolvedSlug ? `/product/${resolvedSlug}` : `/product/${product.id}`;
+    const { isAuthenticated } = useCustomerAuth();
     const { isInWishlist, toggleWishlist, removeFromWishlist } = useWishlist();
     const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
     const isWishlisted = isInWishlist(product.id);
@@ -126,20 +128,30 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                                 <span className="font-normal text-sm sm:text-base leading-none mb-0.5">+</span>
                             </button>
 
-                            <button
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    toggleWishlist(product);
-                                }}
-                                className={`w-full flex items-center justify-center gap-2 font-semibold text-xs sm:text-sm px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95 group ${
-                                    isWishlisted
-                                        ? 'bg-red-600 text-white border-2 border-red-600'
-                                        : 'bg-white border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white'
-                                }`}
-                            >
-                                <Heart className={`w-4 h-4 ${isWishlisted ? 'text-white fill-current' : 'text-red-600 group-hover:text-white'}`} />
-                                <span>{isWishlisted ? 'WISHLISTED' : 'WISHLIST'}</span>
-                            </button>
+                            {isAuthenticated ? (
+                                <button
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        toggleWishlist(product);
+                                    }}
+                                    className={`w-full flex items-center justify-center gap-2 font-semibold text-xs sm:text-sm px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95 group ${
+                                        isWishlisted
+                                            ? 'bg-red-600 text-white border-2 border-red-600'
+                                            : 'bg-white border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white'
+                                    }`}
+                                >
+                                    <Heart className={`w-4 h-4 ${isWishlisted ? 'text-white fill-current' : 'text-red-600 group-hover:text-white'}`} />
+                                    <span>{isWishlisted ? 'WISHLISTED' : 'WISHLIST'}</span>
+                                </button>
+                            ) : (
+                                <Link
+                                    href="/login"
+                                    className="w-full flex items-center justify-center gap-2 font-semibold text-xs sm:text-sm px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95 group bg-white border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+                                >
+                                    <Heart className="w-4 h-4 text-red-600 group-hover:text-white" />
+                                    <span>WISHLIST</span>
+                                </Link>
+                            )}
                         </div>
                     </div>
                 </div>

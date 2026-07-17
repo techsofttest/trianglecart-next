@@ -34,14 +34,9 @@ export default function MobileBottomNav() {
 
     const moreLinks = [] as Array<{ label: string; icon: React.ReactNode; href: string }>;
 
-    // These two menus are only shown for authenticated users
     if (isAuthenticated) {
         moreLinks.push({ label: 'My Last Purchase', icon: <ShoppingBag className="w-4 h-4" />, href: '/profile/orders' });
-    }
-
-    moreLinks.push({ label: 'My Wishlist', icon: <Heart className="w-4 h-4" />, href: '/profile/wishlist' });
-
-    if (isAuthenticated) {
+        moreLinks.push({ label: 'My Wishlist', icon: <Heart className="w-4 h-4" />, href: '/profile/wishlist' });
         moreLinks.push({ label: 'My Addresses', icon: <User className="w-4 h-4" />, href: '/profile/addresses' });
     }
 
