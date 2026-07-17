@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Product } from '@/components/product/ProductCard';
+import { apiUrl } from '@/lib/api';
+import { useCustomerAuth } from '@/context/CustomerAuthContext';
 
 interface WishlistContextType {
     wishlist: Product[];
@@ -15,30 +17,121 @@ const WishlistContext = createContext<WishlistContextType | undefined>(undefined
 
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
     const [wishlist, setWishlist] = useState<Product[]>([]);
+    const { isAuthenticated } = useCustomerAuth();
 
-    // Load from localStorage
     useEffect(() => {
-        const saved = localStorage.getItem('wishlist');
-        if (saved) {
+        if (!isAuthenticated) {
             try {
-                setWishlist(JSON.parse(saved));
-            } catch (e) {
-                console.error('Failed to load wishlist', e);
+                const saved = localStorage.getItem('wishlist');
+                if (saved) {
+                    setWishlist(JSON.parse(saved));
+                } else {
+                    setWishlist([]);
+                }
+            } catch (error) {
+                console.error('Failed to load guest wishlist', error);
+                setWishlist([]);
             }
+            return;
         }
-    }, []);
 
-    // Save to localStorage
+        const loadWishlist = async () => {
+            try {
+                const res = await fetch(apiUrl('/api/customer/wishlist'), {
+                    method: 'GET',
+                    headers: {'Accept': 'application/json'},
+                    credentials: 'include',
+                });
+
+                if (!res.ok) {
+                    throw new Error('Failed to load wishlist');
+                }
+
+                const data = await res.json();
+                setWishlist(Array.isArray(data) ? data : []);
+            } catch (error) {
+                console.error('Failed to load wishlist', error);
+                setWishlist([]);
+            }
+        };
+
+        loadWishlist();
+    }, [isAuthenticated]);
+
     useEffect(() => {
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    }, [wishlist]);
+        if (!isAuthenticated) {
+            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        }
+    }, [isAuthenticated, wishlist]);
 
     const addToWishlist = (product: Product) => {
-        setWishlist(prev => [...prev, product]);
+        if (!isAuthenticated) {
+            setWishlist(prev => {
+                const exists = prev.some(item => item.id === product.id);
+                const next = exists ? prev : [...prev, product];
+                localStorage.setItem('wishlist', JSON.stringify(next));
+                return next;
+            });
+            return;
+        }
+
+        const addToWishlistApi = async () => {
+            try {
+                const res = await fetch(apiUrl('/api/customer/wishlist'), {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+                    body: JSON.stringify({ product_id: product.id }),
+                    credentials: 'include',
+                });
+
+                if (!res.ok) {
+                    throw new Error('Failed to add wishlist item');
+                }
+
+                const updated = await res.json();
+                setWishlist(Array.isArray(updated) ? updated : prev => prev);
+            } catch (error) {
+                console.error('Failed to add wishlist item', error);
+            }
+        };
+
+        addToWishlistApi();
     };
 
     const removeFromWishlist = (productId: string | number) => {
-        setWishlist(prev => prev.filter(p => p.id !== productId));
+        if (!isAuthenticated) {
+            setWishlist(prev => {
+                const next = prev.filter(item => item.id !== productId);
+                localStorage.setItem('wishlist', JSON.stringify(next));
+                return next;
+            });
+            return;
+        }
+
+        const removeFromWishlistApi = async () => {
+            try {
+                const res = await fetch(apiUrl(`/api/customer/wishlist/${productId}`), {
+                    method: 'DELETE',
+                    headers: {'Accept': 'application/json'},
+                    credentials: 'include',
+                });
+
+                if (!res.ok) {
+                    throw new Error('Failed to remove wishlist item');
+                }
+
+                const updated = await res.json().catch(() => null);
+                if (Array.isArray(updated)) {
+                    setWishlist(updated);
+                } else {
+                    setWishlist(prev => prev.filter(item => item.id !== productId));
+                }
+            } catch (error) {
+                console.error('Failed to remove wishlist item', error);
+            }
+        };
+
+        removeFromWishlistApi();
     };
 
     const isInWishlist = (productId: string | number) => {

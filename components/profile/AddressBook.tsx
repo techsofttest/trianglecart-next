@@ -71,17 +71,18 @@ export default function AddressBook() {
 
             if (res.ok) {
                 const data = await res.json();
-                setAddresses(data);
-                localStorage.setItem('triangle-saved-addresses', JSON.stringify(data));
-                window.dispatchEvent(new Event('addressUpdate'));
+                setAddresses(Array.isArray(data) ? data : []);
+            } else if (res.status === 401) {
+                setAddresses([]);
+                setErrorMsg('Please sign in again to view your addresses.');
             } else {
-                throw new Error('API returned error');
+                setAddresses([]);
+                setErrorMsg('Unable to load your saved addresses right now.');
             }
         } catch (e) {
-            // Fallback to locally cached addresses
-            const saved = localStorage.getItem('triangle-saved-addresses');
-            const cached: Address[] = saved ? JSON.parse(saved) : [];
-            setAddresses(cached);
+            console.warn('Failed to load addresses from backend:', e);
+            setAddresses([]);
+            setErrorMsg('Unable to load your saved addresses right now.');
         } finally {
             setIsLoading(false);
         }

@@ -8,7 +8,7 @@ export default function ProfileInfo() {
     const [email, setEmail] = useState('');
     const [registeredAt, setRegisteredAt] = useState('');
     const [loading, setLoading] = useState(true);
-    const { customer, isAuthenticated } = useCustomerAuth();
+    const { isAuthenticated } = useCustomerAuth();
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -29,12 +29,12 @@ export default function ProfileInfo() {
                 }
 
                 const data = await res.json();
-                setName(data.name || customer?.name || '');
-                setEmail(data.email || customer?.email || '');
+                setName(data.name || '');
+                setEmail(data.email || '');
                 setRegisteredAt(data.registered_at || '');
             } catch {
-                setName(customer?.name || '');
-                setEmail(customer?.email || '');
+                setName('');
+                setEmail('');
                 setRegisteredAt('');
             } finally {
                 setLoading(false);
@@ -42,7 +42,7 @@ export default function ProfileInfo() {
         };
 
         fetchProfile();
-    }, [customer, isAuthenticated]);
+    }, [isAuthenticated]);
 
     if (!isAuthenticated) {
         return (
