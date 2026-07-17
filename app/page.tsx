@@ -88,6 +88,10 @@
       icon_url: string | null;
     }>>('/api/storefront/categories');
 
+    const sortedCategoriesData = categoriesData?.slice().sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+
     const topOffersData = await fetchStorefront<Array<{
       id: number;
       title: string;
@@ -115,8 +119,7 @@
     });
 
   const prominentCategories: CategoryItem[] =
-    categoriesData?.map((cat, index) => ({
-      id: cat.id,
+    sortedCategoriesData?.map((cat, index) => ({
       name: cat.name,
       link: `/category/${cat.slug}`,
       bgColor: bgColors[index % bgColors.length],
@@ -247,7 +250,7 @@
         )}
 
         <section className="w-full">
-          <ProductRow title="Suggested for you" products={suggestedProducts} viewAllLink="/products" />
+          <ProductRow title="Featured products" products={suggestedProducts} viewAllLink="/products" />
         </section>
 
         <section className="w-full">
