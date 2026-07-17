@@ -101,7 +101,15 @@ export default function OrderHistory() {
                                                 </div>
                                                 <div>
                                                     <p className="text-sm text-gray-500 tracking-widest">Ordered On</p>
-                                                    <p className="text-sm font-bold text-gray-700">{order.order_date}</p>
+                                                    
+                                                    <p className="text-sm font-bold text-gray-700">
+                                                        {new Intl.DateTimeFormat('en-GB', {
+                                                            day: '2-digit',
+                                                            month: 'short',
+                                                            year: 'numeric',
+                                                        }).format(new Date(order.order_date)).replace(/ /g, '-')}
+                                                    </p>
+
                                                 </div>
                                             </div>
 
@@ -133,7 +141,7 @@ export default function OrderHistory() {
                                         <div className="lg:text-right">
                                             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Total Paid</p>
                                             <p className="text-3xl font-bold text-gray-900 tracking-tighter">${displayAmount.toFixed(2)}</p>
-                                            <p className="text-xs text-gray-500 font-medium">Items will be loaded in Phase 2</p>
+                                            
                                         </div>
 
                                         <div className="flex flex-wrap gap-2 w-full sm:w-auto">

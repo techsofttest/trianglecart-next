@@ -237,13 +237,19 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                                             <CheckCircle2 className="w-5 h-5 text-[#0c4a9e] shrink-0 mt-0.5" />
                                             <div>
                                                 <p className="text-sm text-[#0c4a9e] font-bold">Confirmed Delivery</p>
+                                                
                                                 <p className="text-sm text-blue-800 mt-1">
-                                                    Date: {order.delivery_date || 'Standard Courier'}<br />
-                                                    Time Slot: {order.time_slot || 'Standard Business Hours'}
-                                                </p>
-                                                <p className="text-[10px] text-gray-400 mt-2 font-medium italic">
-                                                    (Cannot change once ordered)
-                                                </p>
+                                                Date: {order.delivery_date
+                                                    ? new Intl.DateTimeFormat('en-GB', {
+                                                        day: '2-digit',
+                                                        month: 'short',
+                                                        year: 'numeric',
+                                                    }).format(new Date(order.delivery_date)).replace(/ /g, '-')
+                                                    : 'Standard Courier'}
+                                                <br />
+                                                Time Slot: {order.time_slot || 'Standard Business Hours'}
+                                            </p>
+                                               
                                             </div>
                                         </div>
                                     </div>
