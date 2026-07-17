@@ -97,6 +97,17 @@ export default function Header() {
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
+    const [isScrolledToTop, setIsScrolledToTop] = useState(true);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolledToTop(window.scrollY <= 40);
+        };
+
+        handleScroll();
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
 
     const handleMouseDown = (e: React.MouseEvent) => {
         if (!categoryNavRef.current) return;
@@ -126,6 +137,18 @@ export default function Header() {
             });
         }
     };
+
+    const navItems: HeaderCategory[] = [
+        {
+            id: -1,
+            name: 'All Products',
+            slug: 'products',
+            href: '/products',
+            image_url: null,
+            icon_url: null,
+        },
+        ...categories,
+    ];
 
     return (
         <header className="hidden lg:block bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50" ref={headerRef}>
@@ -304,27 +327,39 @@ export default function Header() {
                         onMouseLeave={handleMouseUpOrLeave}
                         className={`flex items-center gap-2 overflow-x-auto scrollbar-hide scroll-smooth select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
                     >
-                        {categories.map((cat) => {
-                            const isActive = params?.slug === cat.slug;
+                        {navItems.map((cat) => {
+                            const isAllProducts = cat.slug === 'products';
+                            const isActive = isAllProducts
+                                ? pathname === '/products' || pathname.startsWith('/products')
+                                : params?.slug === cat.slug;
+                            const href = isAllProducts ? '/products' : `/category/${cat.slug}`;
 
                             return (
                                 <Link
                                     key={cat.id}
-                                    href={`/category/${cat.slug}`}
-                                    className={`flex flex-col items-center justify-center transition group px-4 border-b-2 pb-1 min-w-[100px] flex-shrink-0 ${isActive
-                                        ? 'border-[#0c4a9e] text-[#0c4a9e]'
-                                        : 'border-transparent text-gray-600 hover:text-[#0c4a9e] hover:border-[#0c4a9e]'
+                                    href={href}
+                                    className={`transition group flex-shrink-0 ${isScrolledToTop
+                                        ? 'flex flex-col items-center justify-center px-4 border-b-2 pb-1 min-w-[100px]'
+                                        : 'flex flex-row items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 bg-gray-50/80'
+                                        } ${isActive
+                                            ? 'border-[#0c4a9e] text-[#0c4a9e]'
+                                            : 'border-transparent text-gray-600 hover:text-[#0c4a9e] hover:border-[#0c4a9e]'
                                         }`}
                                 >
-                                    <div className={`transition p-1.5 rounded-xl ${isActive ? 'bg-blue-50 text-[#0c4a9e]' : 'text-orange-300 group-hover:text-[#0c4a9e] group-hover:bg-blue-50/50'
-                                        }`}>
-                                        {cat.icon_url ? (
-                                            <img src={cat.icon_url} alt={cat.name} className="w-5 h-5 mb-1 object-contain" />
-                                        ) : (
-                                            <Package className="w-5 h-5 mb-1" />
-                                        )}
-                                    </div>
-                                    <span className={`text-[11px] tracking-tight transition whitespace-nowrap ${isActive ? 'font-extrabold text-[#0c4a9e]' : 'font-semibold text-gray-700 group-hover:text-[#0c4a9e]'
+                                    {isScrolledToTop && (
+                                        <div className={`transition p-1.5 rounded-xl ${isActive ? 'bg-blue-50 text-[#0c4a9e]' : 'text-orange-300 group-hover:text-[#0c4a9e] group-hover:bg-blue-50/50'}`}>
+                                            {isAllProducts ? (
+                                                <Store className="w-5 h-5 mb-1" />
+                                            ) : cat.icon_url ? (
+                                                <img src={cat.icon_url} alt={cat.name} className="w-5 h-5 mb-1 object-contain" />
+                                            ) : (
+                                                <Package className="w-5 h-5 mb-1" />
+                                            )}
+                                        </div>
+                                    )}
+                                    <span className={`tracking-tight transition whitespace-nowrap ${isScrolledToTop
+                                        ? `text-[11px] ${isActive ? 'font-extrabold text-[#0c4a9e]' : 'font-semibold text-gray-700 group-hover:text-[#0c4a9e]'}`
+                                        : `text-[11px] font-semibold ${isActive ? 'text-[#0c4a9e]' : 'text-gray-700 group-hover:text-[#0c4a9e]'}`
                                         }`}>
                                         {cat.name}
                                     </span>

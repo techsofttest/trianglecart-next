@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { apiUrl } from '@/lib/api';
-import { MapPin, ChevronDown, Home, Briefcase, Package } from 'lucide-react';
+import { MapPin, ChevronDown, Home, Briefcase, Package, Store } from 'lucide-react';
 import LocationDrawer from './LocationDrawer';
 import HeaderSearch from './HeaderSearch';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
@@ -62,6 +62,18 @@ export default function MobileHeader() {
         };
     }, []);
 
+    const navItems: HeaderCategory[] = [
+        {
+            id: -1,
+            name: 'All Products',
+            slug: 'products',
+            href: '/products',
+            image_url: null,
+            icon_url: null,
+        },
+        ...categories,
+    ];
+
     return (
         <>
             <header className={`lg:hidden fixed top-0 left-0 w-full bg-white z-[60] transition-all duration-300 border-b border-gray-100 ${isScrolled ? 'shadow-md' : ''}`}>
@@ -111,22 +123,24 @@ export default function MobileHeader() {
                 {/* Bottom Row: Categories Carousel */}
                 <div className={`border-t border-gray-50 overflow-x-auto scrollbar-hide bg-white transition-all duration-300 ${isScrolled ? 'py-1.5' : 'py-3'}`}>
                     <div className="flex items-center gap-6 px-4 min-w-max">
-                        {categories.map((cat) => (
+                        {navItems.map((cat) => (
                             <Link 
                                 key={cat.id} 
-                                href={`/category/${cat.slug}`}
-                                className={`flex flex-col items-center transition-all ${isScrolled ? 'flex-row gap-2' : 'gap-1'}`}
+                                href={cat.slug === 'products' ? '/products' : `/category/${cat.slug}`}
+                                className={`flex items-center transition-all ${isScrolled ? 'gap-2 px-3 py-1.5 rounded-full border border-gray-100 bg-gray-50/90' : 'flex-col gap-1'}`}
                             >
                                 {!isScrolled && (
                                     <div className="w-10 h-10 rounded-full bg-orange-50/50 flex items-center justify-center text-orange-400 animate-in zoom-in duration-300">
-                                        {cat.icon_url ? (
+                                        {cat.slug === 'products' ? (
+                                            <Store className="w-5 h-5 text-[#0c4a9e]" />
+                                        ) : cat.icon_url ? (
                                             <img src={cat.icon_url} alt={cat.name} className="w-5 h-5 object-contain" />
                                         ) : (
                                             <Package className="w-5 h-5 text-[#0c4a9e]" />
                                         )}
                                     </div>
                                 )}
-                                <span className={`text-[12px] font-bold text-gray-700 whitespace-nowrap ${isScrolled ? 'px-3 py-1 bg-gray-50 rounded-full border border-gray-100' : ''}`}>
+                                <span className={`text-[12px] font-bold text-gray-700 whitespace-nowrap ${isScrolled ? 'text-[11px] font-semibold' : ''}`}>
                                     {cat.name}
                                 </span>
                             </Link>
