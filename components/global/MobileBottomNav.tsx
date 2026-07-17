@@ -24,25 +24,25 @@ export default function MobileBottomNav() {
     const firstName = customer?.name ? String(customer.name).split(' ')[0] : null;
 
     const navItems = [
-        { label: 'Home', icon: <Home className="w-3 h-3" />, href: '/' },
-        { label: 'Cart', icon: <ShoppingCart className="w-6 h-6" />, href: '/cart', badge: cartCount },
+        { label: 'Home', icon: <Home className="w-4 h-4" />, href: '/' },
+        { label: 'Cart', icon: <ShoppingCart className="w-4 h-4" />, href: '/cart', badge: cartCount },
         isAuthenticated
-            ? { label: firstName || 'Profile', icon: <User className="w-6 h-6" />, href: '/profile/personal' }
-            : { label: 'Login', icon: <User className="w-6 h-6" />, href: '/login' },
-        { label: 'More', icon: <Grid className="w-6 h-6" />, onClick: () => setIsMoreOpen(true) },
+            ? { label: firstName || 'Profile', icon: <User className="w-4 h-4" />, href: '/profile/personal' }
+            : { label: 'Login', icon: <User className="w-4 h-4" />, href: '/login' },
+        { label: 'More', icon: <Grid className="w-4 h-4" />, onClick: () => setIsMoreOpen(true) },
     ];
 
     const moreLinks = [] as Array<{ label: string; icon: React.ReactNode; href: string }>;
 
     // These two menus are only shown for authenticated users
     if (isAuthenticated) {
-        moreLinks.push({ label: 'My Last Purchase', icon: <ShoppingBag className="w-5 h-5" />, href: '/profile/orders' });
-        moreLinks.push({ label: 'My Wishlist', icon: <Heart className="w-5 h-5" />, href: '/profile/wishlist' });
-        moreLinks.push({ label: 'My Addresses', icon: <User className="w-5 h-5" />, href: '/profile/addresses' });
+        moreLinks.push({ label: 'My Last Purchase', icon: <ShoppingBag className="w-4 h-4" />, href: '/profile/orders' });
+        moreLinks.push({ label: 'My Wishlist', icon: <Heart className="w-4 h-4" />, href: '/profile/wishlist' });
+        moreLinks.push({ label: 'My Addresses', icon: <User className="w-4 h-4" />, href: '/profile/addresses' });
     }
 
     // Always available
-    moreLinks.push({ label: 'Request New Product', icon: <PlusCircle className="w-5 h-5" />, href: '/contact' });
+    moreLinks.push({ label: 'Request New Product', icon: <PlusCircle className="w-4 h-4" />, href: '/contact' });
 
     return (
         <>
