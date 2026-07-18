@@ -84,6 +84,8 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         .filter((item) => hasInStockVariant(item))
         .map((item) => toProductCardModel(item));
 
+    const totalProductsCount = (productsPayload as any)?.meta?.total ?? products.length;
+
     const breadcrumbItems: BreadcrumbItem[] = [
         { label: 'Home', href: '/' },
         { label: categoryTitle },
@@ -100,7 +102,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                     <div>
                         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">{categoryTitle}</h1>
                         <p className="text-sm text-gray-500 mt-1">
-                            {products.length} products found in this category
+                            {totalProductsCount} products found in this category
                         </p>
                     </div>
                     <Link
