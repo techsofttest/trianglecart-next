@@ -99,15 +99,21 @@ export default function HeaderSearch() {
         };
     }, [query, focused]);
 
+    const searchQuery = query.trim();
     const hasResults = results.length > 0;
     const showPanel = focused && (query.trim().length >= 2 || loading || hasResults);
 
     const groupedLabel = useMemo(() => 'Search', []);
 
+    const navigateToSearchPage = () => {
+        if (!searchQuery) return;
+        router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+    };
+
     return (
         <div className="flex-1 max-w-xl relative">
             <div className={`flex items-center w-full bg-white rounded-md transition-all duration-200 border border-brand-blue ${focused ? 'shadow-md ring-2 ring-brand-blue/10' : ''}`}>
-                <div className="relative w-full group">
+                <div className="relative flex-1 group">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Search className="h-4 w-4 text-brand-blue transition-colors" />
                     </div>
@@ -120,12 +126,23 @@ export default function HeaderSearch() {
                         onBlur={() => setTimeout(() => setFocused(false), 150)}
                         onChange={(e) => setQuery(e.target.value)}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter' && results[0]) {
-                                router.push(results[0].href);
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                navigateToSearchPage();
                             }
                         }}
                     />
                 </div>
+                <button
+                    type="button"
+                    onMouseDown={(e) => e.preventDefault()}
+                    onClick={navigateToSearchPage}
+                    disabled={!searchQuery}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-r-md bg-[#0c4a9e] text-white text-sm font-semibold transition hover:bg-[#0c4a9e]/90 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500"
+                >
+                    <Search className="w-4 h-4" />
+                    Search
+                </button>
             </div>
 
             {showPanel && (
