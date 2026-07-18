@@ -4,7 +4,7 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Lock, Loader2, Truck, Package, Clock, AlertTriangle, CheckCircle2 } from 'lucide-react';
 
-import { MOCK_CART_ITEMS, MOCK_PRODUCTS, LARGE_MOCK_PRODUCTS } from '@/data/mockData';
+// Using live storefront data; removed mock data usage
 
 import OrderSuccess from '@/components/checkout/OrderSuccess';
 import AddressSection from '@/components/checkout/AddressSection';
@@ -221,27 +221,53 @@ function CheckoutContent() {
         const qty = parseInt(searchParams.get('qty') || '1');
 
         if (checkoutType === 'buynow' && productId) {
-            const allPossibleProducts = [...MOCK_PRODUCTS, ...LARGE_MOCK_PRODUCTS];
-            const directItem = allPossibleProducts.find(p => p.id === productId);
-            const variantIdParam = searchParams.get('variantId');
-            const variantId = variantIdParam ? Number(variantIdParam) : null;
+            (async () => {
+                try {
+                    // Try fetching product by id or slug
+                    const res = await fetch(apiUrl(`/api/storefront/products/${productId}`), { cache: 'no-store' });
+                    let product: any = null;
+                    if (res.ok) product = await res.json();
 
-            if (directItem) {
-                setCheckoutItems([{
-                    id: directItem.id,
-                    product_id: directItem.id,
-                    variant_id: variantId,
-                    selectedVariantId: variantId,
-                    name: directItem.title,
-                    price: directItem.price,
-                    image: directItem.image,
-                    quantity: qty,
-                    weight: directItem.weight,
-                    brand: directItem.brand,
-                    category: directItem.category,
-                    inStock: true
-                }]);
-            }
+                    // Fallback: try homepage product list to resolve slug -> fetch detailed
+                    if (!product) {
+                        try {
+                            const homeRes = await fetch(apiUrl('/api/storefront/home'), { cache: 'no-store' });
+                            if (homeRes.ok) {
+                                const homeData = await homeRes.json();
+                                const fallback = (homeData?.products || []).find((p: any) => String(p.id) === productId || p.slug === productId);
+                                if (fallback?.slug) {
+                                    const pRes = await fetch(apiUrl(`/api/storefront/products/${fallback.slug}`), { cache: 'no-store' });
+                                    if (pRes.ok) product = await pRes.json();
+                                }
+                            }
+                        } catch (e) {
+                            // ignore
+                        }
+                    }
+
+                    if (product) {
+                        const variantIdParam = searchParams.get('variantId');
+                        const variantId = variantIdParam ? Number(variantIdParam) : null;
+                        setCheckoutItems([{
+                            id: product.id,
+                            product_id: product.id,
+                            variant_id: variantId,
+                            selectedVariantId: variantId,
+                            name: product.name || product.title || '',
+                            price: (product.variants?.[0]?.price ?? product.price) || 0,
+                            image: product.featured_image || product.image || '',
+                            quantity: qty,
+                            weight: product.variants?.[0] ? `${product.variants[0].size || ''} ${product.variants[0].unit || ''}`.trim() : '1 unit',
+                            brand: product.brand?.name || '',
+                            category: product.category?.slug || '',
+                            inStock: Boolean(product.variants && product.variants.some((v: any) => (v.stock ?? 0) > 0))
+                        }]);
+                        return;
+                    }
+                } catch (e) {
+                    // ignore and fallback to cart
+                }
+            })();
         } else {
             setCheckoutItems(cartItems);
         }

@@ -14,7 +14,8 @@ import { FilterOption } from '@/components/category/SubCategoryFilter';
 import { Product } from '@/components/product/ProductCard';
 
 // Data Imports
-import { MOCK_BRANDS, LARGE_MOCK_PRODUCTS, MOCK_VISUAL_SUBCATEGORIES } from '@/data/mockData';
+import { fetchStorefront } from '@/lib/storefront';
+import { StorefrontProduct, toProductCardModel } from '@/lib/product';
 
 interface ProductListingTemplateProps {
     title: string;
@@ -57,19 +58,75 @@ export default function ProductListingTemplate({
     const loaderRef = useRef<HTMLDivElement>(null);
 
     // 4. Dynamic Data Calculation & Initial Filtering
+    const [fetchedProducts, setFetchedProducts] = useState<Product[] | null>(null);
+    const [fetchedSubCategories, setFetchedSubCategories] = useState<string[] | null>(null);
+    useEffect(() => {
+        let cancelled = false;
+        const loadProducts = async () => {
+            try {
+                let url = `/api/storefront/products?per_page=48&page=1`;
+                if (currentCategorySlug) url += `&category=${currentCategorySlug}`;
+                const resp = await fetchStorefront<{ data: StorefrontProduct[] }>(url);
+                if (!cancelled && resp && Array.isArray(resp.data)) {
+                    const mapped = resp.data
+                        .filter(p => p.variants && p.variants.length > 0)
+                        .map(toProductCardModel)
+                        .map(pc => ({
+                            id: pc.id,
+                            slug: pc.slug,
+                            brand: pc.brand,
+                            title: pc.title,
+                            image: pc.image,
+                            weight: pc.weight,
+                            price: pc.price,
+                            originalPrice: pc.originalPrice,
+                            discount: pc.discount,
+                            rating: pc.rating,
+                            reviews: pc.reviews,
+                            category: pc.category,
+                            subCategory: (pc as any).subCategory || (pc as any).sub_category || undefined,
+                            variants: pc.variants || undefined
+                        }));
+                    setFetchedProducts(mapped);
+                }
+            } catch (err) {
+                console.error('Failed to load products for listing template', err);
+                setFetchedProducts([]);
+            }
+        };
+        loadProducts();
+        // Load subcategories for this category
+        const loadSubcats = async () => {
+            try {
+                if (!currentCategorySlug) return setFetchedSubCategories([]);
+                const remote = await fetchStorefront<any>(`/api/storefront/subcategories?category=${currentCategorySlug}`);
+                if (Array.isArray(remote) && remote.length > 0) return setFetchedSubCategories(remote.map((s: any) => typeof s === 'string' ? s : s.name || s.title || s.slug));
+
+                // derive from fetched products if available
+                if (resp && Array.isArray(resp?.data)) {
+                    const set = new Set<string>();
+                    resp.data.forEach((p: any) => {
+                        const sc = p.subCategory || p.sub_category || p.subcategory;
+                        if (sc) set.add(typeof sc === 'string' ? sc : sc.name || sc.title || '');
+                    });
+                    setFetchedSubCategories(Array.from(set));
+                } else {
+                    setFetchedSubCategories([]);
+                }
+            } catch (e) {
+                setFetchedSubCategories([]);
+            }
+        };
+        loadSubcats();
+        return () => { cancelled = true; };
+    }, [currentCategorySlug, subCategorySlug]);
+
     const baseProducts = useMemo(() => {
-        let products = initialProducts || LARGE_MOCK_PRODUCTS;
-        
-        if (subCategorySlug) {
-            return products.filter(p => p.subCategory === subCategorySlug);
-        }
-        
-        if (currentCategorySlug) {
-            return products.filter(p => p.category === currentCategorySlug);
-        }
-        
+        const products = initialProducts || fetchedProducts || [];
+        if (subCategorySlug) return products.filter(p => p.subCategory === subCategorySlug || slugify((p.subCategory || '') as string) === subCategorySlug);
+        if (currentCategorySlug) return products.filter(p => p.category === currentCategorySlug);
         return products;
-    }, [initialProducts, currentCategorySlug, subCategorySlug]);
+    }, [initialProducts, fetchedProducts, currentCategorySlug, subCategorySlug]);
 
     const { dynamicBrands, maxProductPrice } = useMemo(() => {
         const brands = new Set<string>();
@@ -179,7 +236,12 @@ export default function ProductListingTemplate({
                                 <SubCategories
                                     sectionTitle={`Shop ${title} by Category`}
                                     mainLink="#"
-                                    items={MOCK_VISUAL_SUBCATEGORIES}
+                                    items={(fetchedSubCategories || []).map((s) => ({
+                                        imageUrl: '',
+                                        label1: s,
+                                        label2: s,
+                                        linkUrl: currentCategorySlug ? `/category/${currentCategorySlug}/${slugify(s)}` : '#'
+                                    }))}
                                     sectionBgColor="bg-[#0c4a9e]"
                                     showViewAll={false}
                                 />
