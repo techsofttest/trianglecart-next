@@ -19,7 +19,7 @@ function titleFromSlug(slug: string) {
         .join(' ');
 }
 
-async function loadSubCategoriesFromApi(categorySlug: string, categoriesList: any[] | undefined, productsPayload: any) {
+async function loadSubCategoriesFromApi(categorySlug: string, categoriesList: any[] | null | undefined, productsPayload: any) {
     // Try to read subcategories from the categories API object (common shapes)
     const categoryObj = categoriesList?.find((c: any) => c.slug === categorySlug || slugify(c.name) === categorySlug) || null;
 
