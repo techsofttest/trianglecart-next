@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, Lock, Loader2, Truck, Package, Clock, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { useCustomerAuth } from '@/context/CustomerAuthContext';
 
 // Using live storefront data; removed mock data usage
 
@@ -57,6 +58,7 @@ function CheckoutContent() {
 
     const [placedOrderNumber, setPlacedOrderNumber] = useState<string>('');
     const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+    const { customer, isAuthenticated } = useCustomerAuth();
     const [paymentClientSecret, setPaymentClientSecret] = useState<string | null>(null);
     const [createdOrderNumber, setCreatedOrderNumber] = useState<string>('');
     const [checkoutErrors, setCheckoutErrors] = useState<string[]>([]);
@@ -457,6 +459,7 @@ function CheckoutContent() {
                 variant_id: item.variant_id ?? item.selectedVariantId ?? null,
                 price: item.price
             })),
+            ...(isAuthenticated && customer?.id ? { customer_id: customer.id } : {}),
             customer_type: savedAddresses.length > 0 || localStorage.getItem('user') ? 'customer' : 'guest',
             customer_name: addressForm.contact_name || addressForm.name,
             customer_email: addressForm.email,
