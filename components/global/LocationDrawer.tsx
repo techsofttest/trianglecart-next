@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { X, MapPin, Search, Navigation, Home, Briefcase, Plus } from 'lucide-react';
 
-import { MOCK_ADDRESSES } from '@/data/mockData';
+// using live saved addresses from localStorage or API
 
 interface LocationDrawerProps {
     isOpen: boolean;
@@ -45,16 +45,31 @@ export default function LocationDrawer({ isOpen, onClose, onSelectLocation }: Lo
     const router = useRouter();
 
     useEffect(() => {
-        const loadAddresses = () => {
+        const loadAddresses = async () => {
             const saved = localStorage.getItem('triangle-saved-addresses');
             if (saved) {
-                setSavedAddresses(JSON.parse(saved));
+                try { setSavedAddresses(JSON.parse(saved)); } catch (e) { setSavedAddresses([]); }
+                return;
+            }
+
+            // fallback: try fetching from API
+            try {
+                const res = await fetch('/api/customer/addresses', { credentials: 'include' });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (Array.isArray(data)) {
+                        setSavedAddresses(data);
+                        try { localStorage.setItem('triangle-saved-addresses', JSON.stringify(data)); } catch (e) {}
+                    }
+                }
+            } catch (e) {
+                setSavedAddresses([]);
             }
         };
 
         loadAddresses();
-        window.addEventListener('addressUpdate', loadAddresses);
-        return () => window.removeEventListener('addressUpdate', loadAddresses);
+        window.addEventListener('addressUpdate', loadAddresses as any);
+        return () => window.removeEventListener('addressUpdate', loadAddresses as any);
     }, []);
 
     const filteredLocations = AUSTRALIAN_LOCATIONS.filter(location =>

@@ -15,6 +15,7 @@ import { Product } from '@/components/product/ProductCard';
 
 // Data Imports
 import { fetchStorefront } from '@/lib/storefront';
+import { slugify } from '@/utils/slugify';
 import { StorefrontProduct, toProductCardModel } from '@/lib/product';
 
 interface ProductListingTemplateProps {
@@ -62,11 +63,14 @@ export default function ProductListingTemplate({
     const [fetchedSubCategories, setFetchedSubCategories] = useState<string[] | null>(null);
     useEffect(() => {
         let cancelled = false;
-        const loadProducts = async () => {
+
+        (async () => {
             try {
+                // 1) Load products from storefront
                 let url = `/api/storefront/products?per_page=48&page=1`;
                 if (currentCategorySlug) url += `&category=${currentCategorySlug}`;
                 const resp = await fetchStorefront<{ data: StorefrontProduct[] }>(url);
+
                 if (!cancelled && resp && Array.isArray(resp.data)) {
                     const mapped = resp.data
                         .filter(p => p.variants && p.variants.length > 0)
@@ -88,36 +92,46 @@ export default function ProductListingTemplate({
                             variants: pc.variants || undefined
                         }));
                     setFetchedProducts(mapped);
-                }
-            } catch (err) {
-                console.error('Failed to load products for listing template', err);
-                setFetchedProducts([]);
-            }
-        };
-        loadProducts();
-        // Load subcategories for this category
-        const loadSubcats = async () => {
-            try {
-                if (!currentCategorySlug) return setFetchedSubCategories([]);
-                const remote = await fetchStorefront<any>(`/api/storefront/subcategories?category=${currentCategorySlug}`);
-                if (Array.isArray(remote) && remote.length > 0) return setFetchedSubCategories(remote.map((s: any) => typeof s === 'string' ? s : s.name || s.title || s.slug));
-
-                // derive from fetched products if available
-                if (resp && Array.isArray(resp?.data)) {
-                    const set = new Set<string>();
-                    resp.data.forEach((p: any) => {
-                        const sc = p.subCategory || p.sub_category || p.subcategory;
-                        if (sc) set.add(typeof sc === 'string' ? sc : sc.name || sc.title || '');
-                    });
-                    setFetchedSubCategories(Array.from(set));
                 } else {
-                    setFetchedSubCategories([]);
+                    setFetchedProducts([]);
                 }
-            } catch (e) {
+
+                // 2) Try dedicated subcategories endpoint
+                if (!currentCategorySlug) {
+                    setFetchedSubCategories([]);
+                    return;
+                }
+
+                try {
+                    const remote = await fetchStorefront<any>(`/api/storefront/subcategories?category=${currentCategorySlug}`);
+                    if (Array.isArray(remote) && remote.length > 0) {
+                        setFetchedSubCategories(remote.map((s: any) => (typeof s === 'string' ? s : s.name || s.title || s.slug)));
+                        return;
+                    }
+                } catch (e) {
+                    // ignore and derive from product response
+                }
+
+                // 3) Derive subcategories from products response
+                const derived = new Set<string>();
+                if (resp && Array.isArray(resp.data)) {
+                    resp.data.forEach((p: any) => {
+                        const sc = p.subCategory || p.sub_category || p.subcategory || (p.category && (p.category.sub_category || p.category.subcategory));
+                        if (sc) {
+                            if (typeof sc === 'string') derived.add(sc);
+                            else if (sc && (sc.name || sc.title)) derived.add(sc.name || sc.title);
+                        }
+                    });
+                }
+                setFetchedSubCategories(Array.from(derived));
+
+            } catch (err) {
+                console.error('Failed to load products or subcategories for listing template', err);
+                setFetchedProducts([]);
                 setFetchedSubCategories([]);
             }
-        };
-        loadSubcats();
+        })();
+
         return () => { cancelled = true; };
     }, [currentCategorySlug, subCategorySlug]);
 

@@ -13,7 +13,6 @@ import CartItemCard from '@/components/cart/CartItemCard';
 import CartSummary from '@/components/cart/CartSummary';
 import CouponSection from '@/components/cart/CouponSection';
 import { useCart } from '@/context/CartContext';
-import { MOCK_ADDRESSES } from '@/data/mockData';
 import { apiUrl } from '@/lib/api';
 
 export default function CartPage() {
@@ -68,22 +67,43 @@ export default function CartPage() {
             setIsLoggedIn(JSON.parse(userStr).isLoggedIn);
         }
 
-        const loadLocation = () => {
+        const loadLocation = async () => {
             const checkoutLocStr = localStorage.getItem('checkoutLocation');
             const globalLocStr = localStorage.getItem('selectedLocation');
 
             if (checkoutLocStr) {
                 setSelectedLocation(JSON.parse(checkoutLocStr));
-            } else if (globalLocStr) {
-                setSelectedLocation(JSON.parse(globalLocStr));
-            } else {
-                const savedStr = localStorage.getItem('triangle-saved-addresses');
-                const savedAddresses = savedStr ? JSON.parse(savedStr) : [];
-                const defaultAddr = savedAddresses.length > 0 ? savedAddresses[0] : MOCK_ADDRESSES[0];
+                return;
+            }
 
-                if (defaultAddr) {
-                    setSelectedLocation({ title: defaultAddr.type, subtitle: defaultAddr.address });
+            if (globalLocStr) {
+                setSelectedLocation(JSON.parse(globalLocStr));
+                return;
+            }
+
+            // Try saved addresses in localStorage first
+            const savedStr = localStorage.getItem('triangle-saved-addresses');
+            let savedAddresses: any[] = savedStr ? JSON.parse(savedStr) : [];
+
+            // If none in localStorage, attempt to fetch from storefront API
+            if ((!savedAddresses || savedAddresses.length === 0)) {
+                try {
+                    const res = await fetch(apiUrl('/api/customer/addresses'), { credentials: 'include' });
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (Array.isArray(data)) {
+                            savedAddresses = data;
+                            try { localStorage.setItem('triangle-saved-addresses', JSON.stringify(data)); } catch (e) {}
+                        }
+                    }
+                } catch (e) {
+                    // ignore fetch errors
                 }
+            }
+
+            const defaultAddr = savedAddresses && savedAddresses.length > 0 ? savedAddresses[0] : null;
+            if (defaultAddr) {
+                setSelectedLocation({ title: defaultAddr.type || defaultAddr.label || 'Home', subtitle: defaultAddr.address || defaultAddr.address_line_1 || '' });
             }
         };
 
