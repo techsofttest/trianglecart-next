@@ -344,6 +344,16 @@ function CheckoutContent() {
         validatePostcode();
     }, [addressForm.postcode, checkoutItems]);
 
+    // Auto-hide checkout errors after 4 seconds
+    useEffect(() => {
+        if (checkoutErrors.length > 0) {
+            const timer = setTimeout(() => {
+                setCheckoutErrors([]);
+            }, 4000);
+            return () => clearTimeout(timer);
+        }
+    }, [checkoutErrors]);
+
     const updateQuantity = (id: string, delta: number) => {
         setCheckoutItems(prev => prev.map(item =>
             item.id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
@@ -814,6 +824,7 @@ function CheckoutContent() {
                         isAddressComplete={isAddressComplete}
                         appliedCoupon={appliedCoupon}
                         checkoutErrors={checkoutErrors}
+                        isPlacingOrder={isPlacingOrder}
                         onApplyCoupon={(code, discount) => {
                             setAppliedCoupon(code);
                             setCouponDiscount(discount ?? 0);

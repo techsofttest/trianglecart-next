@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Lock, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { Lock, AlertTriangle, ShieldCheck, Loader2 } from 'lucide-react';
 import CouponSection from '@/components/cart/CouponSection';
 
 interface OrderSummarySidebarProps {
@@ -16,6 +16,7 @@ interface OrderSummarySidebarProps {
     onRemoveCoupon: () => void;
     onPlaceOrder: () => void;
     checkoutErrors?: string[];
+    isPlacingOrder?: boolean;
 }
 
 export default function OrderSummarySidebar({
@@ -28,8 +29,9 @@ export default function OrderSummarySidebar({
     appliedCoupon,
     onApplyCoupon,
     onRemoveCoupon,
-    onPlaceOrder
-    , checkoutErrors = []
+    onPlaceOrder,
+    checkoutErrors = [],
+    isPlacingOrder = false
 }: OrderSummarySidebarProps) {
     return (
         <div className="space-y-4">
@@ -70,9 +72,18 @@ export default function OrderSummarySidebar({
 
                 <button
                     onClick={onPlaceOrder}
-                    className={`w-full text-white font-medium py-4 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2 mb-4 active:scale-[0.98] ${!isAddressComplete ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0c4a9e] shadow-blue-900/10 hover:bg-blue-800'}`}
+                    disabled={!isAddressComplete || isPlacingOrder}
+                    className={`w-full text-white font-medium py-4 rounded-2xl shadow-xl transition-all flex items-center justify-center gap-2 mb-4 active:scale-[0.98] ${!isAddressComplete || isPlacingOrder ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#0c4a9e] shadow-blue-900/10 hover:bg-blue-800'}`}
                 >
-                    <Lock className="w-4 h-4" /> Pay Now
+                    {isPlacingOrder ? (
+                        <>
+                            <Loader2 className="w-4 h-4 animate-spin" /> Processing...
+                        </>
+                    ) : (
+                        <>
+                            <Lock className="w-4 h-4" /> Pay Now
+                        </>
+                    )}
                 </button>
 
                 {checkoutErrors && checkoutErrors.length > 0 && (
