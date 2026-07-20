@@ -49,7 +49,7 @@ function CheckoutContent() {
     const [isEligible, setIsEligible] = useState<boolean | null>(null);
     const [eligibilityMessage, setEligibilityMessage] = useState<string>('');
     const [deliveryType, setDeliveryType] = useState<'direct' | 'courier' | null>(null);
-    
+
     // Dynamic Slots and Shipping Cost States
     const [availableDates, setAvailableDates] = useState<any[]>([]);
     const [selectedDateString, setSelectedDateString] = useState<string | null>(null);
@@ -141,7 +141,7 @@ function CheckoutContent() {
                         markViewed();
                     }
                 })
-                .catch(() => {})
+                .catch(() => { })
                 .finally(() => setIsPaymentStatusLoading(false));
             return;
         }
@@ -277,7 +277,7 @@ function CheckoutContent() {
 
     // Load customer addresses
     useEffect(() => {
-        const loadCustomerAddresses = async () => { 
+        const loadCustomerAddresses = async () => {
             try {
                 const res = await fetch(apiUrl('/api/customer/addresses'), {
                     method: 'GET',
@@ -341,7 +341,7 @@ function CheckoutContent() {
                 if (res.ok && data.valid) {
                     setIsEligible(true);
                     setDeliveryType(data.delivery_type);
-                    setEligibilityMessage(data.delivery_type === 'direct' ? 'Direct delivery is available!' : 'Courier delivery is available.');
+                    setEligibilityMessage(data.delivery_type === 'direct' ? 'Fast Delivery Eligible!' : 'Courier Delivery Eligible');
                     setShipping(data.shipping_cost ?? 0);
                     setAvailableDates(data.available_dates || []);
                     if (data.available_dates && data.available_dates.length > 0) {
@@ -400,18 +400,18 @@ function CheckoutContent() {
                 body: JSON.stringify({ coupon_code: savedCoupon, subtotal }),
                 credentials: 'include',
             })
-            .then(res => res.json())
-            .then(data => {
-                if (data.valid) {
-                    setAppliedCoupon(data.coupon.coupon_code);
-                    setCouponDiscount(Number(data.discount || 0));
-                } else {
-                    setAppliedCoupon(null);
-                    setCouponDiscount(0);
-                    sessionStorage.removeItem('appliedCoupon');
-                }
-            })
-            .catch(() => {});
+                .then(res => res.json())
+                .then(data => {
+                    if (data.valid) {
+                        setAppliedCoupon(data.coupon.coupon_code);
+                        setCouponDiscount(Number(data.discount || 0));
+                    } else {
+                        setAppliedCoupon(null);
+                        setCouponDiscount(0);
+                        sessionStorage.removeItem('appliedCoupon');
+                    }
+                })
+                .catch(() => { });
         }
     }, [subtotal]);
 
@@ -694,7 +694,7 @@ function CheckoutContent() {
                     <AddressSection
                         addressForm={addressForm}
                         setAddressForm={setAddressForm}
-                        onOpenLocation={() => {}}
+                        onOpenLocation={() => { }}
                         isConfirmed={isAddressConfirmed}
                         setIsConfirmed={setIsAddressConfirmed}
                         selectedAddressId={selectedAddressId}
@@ -703,15 +703,14 @@ function CheckoutContent() {
 
                     {/* Delivery Eligibility Banner */}
                     {isAddressConfirmed && addressForm.postcode && (
-                        <div className={`rounded-2xl border p-4 transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 ${
-                            isCheckingEligibility
-                                ? 'bg-gray-50 border-gray-200'
-                                : isEligible === true
-                                    ? 'bg-green-50/60 border-green-200'
-                                    : isEligible === false
-                                        ? 'bg-red-50/60 border-red-200'
-                                        : 'bg-gray-50 border-gray-200'
-                        }`}>
+                        <div className={`rounded-2xl border p-4 transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 ${isCheckingEligibility
+                            ? 'bg-gray-50 border-gray-200'
+                            : isEligible === true
+                                ? 'bg-green-50/60 border-green-200'
+                                : isEligible === false
+                                    ? 'bg-red-50/60 border-red-200'
+                                    : 'bg-gray-50 border-gray-200'
+                            }`}>
                             <div className="flex items-center gap-3">
                                 {isCheckingEligibility ? (
                                     <>
@@ -770,11 +769,10 @@ function CheckoutContent() {
                                                     setSelectedDateString(dateObj.date);
                                                     setSelectedSlotId(null);
                                                 }}
-                                                className={`px-4 py-2.5 rounded-xl border-2 text-xs font-bold whitespace-nowrap transition-all duration-200 ${
-                                                    selectedDateString === dateObj.date
-                                                        ? 'border-[#0c4a9e] bg-blue-50/30 text-[#0c4a9e]'
-                                                        : 'border-gray-100 hover:border-gray-200 bg-white text-gray-600'
-                                                }`}
+                                                className={`px-4 py-2.5 rounded-xl border-2 text-xs font-bold whitespace-nowrap transition-all duration-200 ${selectedDateString === dateObj.date
+                                                    ? 'border-[#0c4a9e] bg-blue-50/30 text-[#0c4a9e]'
+                                                    : 'border-gray-100 hover:border-gray-200 bg-white text-gray-600'
+                                                    }`}
                                             >
                                                 {dateObj.formatted_date}
                                             </button>
@@ -787,11 +785,11 @@ function CheckoutContent() {
                             {selectedDateString && (
                                 <div className="pt-2 border-t border-gray-100">
                                     <h4 className="text-xs font-bold text-gray-700 mb-3 uppercase tracking-wider">Available Slots</h4>
-                                    
+
                                     {(() => {
                                         const dateObj = availableDates.find(d => d.date === selectedDateString);
                                         const slots = dateObj?.slots || [];
-                                        
+
                                         if (slots.length === 0) {
                                             return (
                                                 <p className="text-xs text-amber-600 font-semibold flex items-center gap-1.5">
@@ -807,11 +805,10 @@ function CheckoutContent() {
                                                         key={slot.id}
                                                         type="button"
                                                         onClick={() => setSelectedSlotId(slot.id)}
-                                                        className={`p-3 rounded-xl border-2 text-center transition-all duration-200 ${
-                                                            selectedSlotId === slot.id
-                                                                ? 'border-[#0c4a9e] bg-blue-50/30 ring-2 ring-[#0c4a9e]/10'
-                                                                : 'border-gray-100 hover:border-gray-200 bg-white'
-                                                        }`}
+                                                        className={`p-3 rounded-xl border-2 text-center transition-all duration-200 ${selectedSlotId === slot.id
+                                                            ? 'border-[#0c4a9e] bg-blue-50/30 ring-2 ring-[#0c4a9e]/10'
+                                                            : 'border-gray-100 hover:border-gray-200 bg-white'
+                                                            }`}
                                                     >
                                                         <Clock className={`w-4 h-4 mx-auto mb-1.5 ${selectedSlotId === slot.id ? 'text-[#0c4a9e]' : 'text-gray-400'}`} />
                                                         <span className={`text-xs font-bold block ${selectedSlotId === slot.id ? 'text-[#0c4a9e]' : 'text-gray-600'}`}>
@@ -825,7 +822,7 @@ function CheckoutContent() {
                                             </div>
                                         );
                                     })()}
-                                    
+
                                     {!selectedSlotId && (
                                         <p className="text-xs text-amber-600 font-semibold mt-3 flex items-center gap-1.5">
                                             <AlertTriangle className="w-3.5 h-3.5" /> Please select a delivery slot to proceed
