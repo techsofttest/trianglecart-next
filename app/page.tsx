@@ -1,18 +1,19 @@
-  import PromoSlider from "@/components/ui/PromoSlider";
-  import OfferMarquee from "@/components/ui/OfferMarquee";
-  import CategoryGrid, { CategoryItem } from "@/components/product/CategoryGrid";
-  import SubCategories, { SubCategoryItem } from "@/components/product/SubCategories";
-  import ProductRow from "@/components/product/ProductRow";
-  import { Product } from "@/components/product/ProductCard";
-  import OurBrands, { BrandItem } from "@/components/product/OurBrands";
-  import TopOffersCarousel, { OfferItem } from "@/components/product/TopOffersCarousel";
-  import BuyItAgainRow from "@/components/product/BuyItAgainRow";
-  import Link from "next/link";
-  import { fetchStorefront } from "@/lib/storefront";
-  import { DEFAULT_PRODUCT_IMAGE, resolveProductImageUrl, toProductCardModel } from "@/lib/product";
+import PromoSlider from "@/components/ui/PromoSlider";
+import OfferMarquee from "@/components/ui/OfferMarquee";
+import CategoryGrid, { CategoryItem } from "@/components/product/CategoryGrid";
+import SubCategories, { SubCategoryItem } from "@/components/product/SubCategories";
+import ProductRow from "@/components/product/ProductRow";
+import { Product } from "@/components/product/ProductCard";
+import OurBrands, { BrandItem } from "@/components/product/OurBrands";
+import TopOffersCarousel, { OfferItem } from "@/components/product/TopOffersCarousel";
+import BuyItAgainRow from "@/components/product/BuyItAgainRow";
+import Link from "next/link";
+import { fetchStorefront } from "@/lib/storefront";
+import { DEFAULT_PRODUCT_IMAGE, StorefrontProduct, resolveProductImageUrl, toProductCardModel } from "@/lib/product";
 
-  export default async function Home() {
-    const homeData = await fetchStorefront<{
+export default async function Home() {
+  const [homeData, categoriesData, topOffersData, latestProductsData] = await Promise.all([
+    fetchStorefront<{
       products: Array<{
         id: number;
         name: string;
@@ -83,29 +84,31 @@
         id: number;
         text: string;
       }>;
-    }>('/api/storefront/home');
-
-    const categoriesData = await fetchStorefront<Array<{
+    }>('/api/storefront/home'),
+    fetchStorefront<Array<{
       id: number;
       name: string;
       slug: string;
       image_url: string | null;
       icon_url: string | null;
-    }>>('/api/storefront/categories');
-
-    const sortedCategoriesData = categoriesData?.slice().sort((a, b) =>
-      a.name.localeCompare(b.name)
-    );
-
-    const topOffersData = await fetchStorefront<Array<{
+    }>>('/api/storefront/categories'),
+    fetchStorefront<Array<{
       id: number;
       title: string;
       label: string;
       image_url: string | null;
       href: string;
-    }>>('/api/storefront/top-offers');
+    }>>('/api/storefront/top-offers'),
+    fetchStorefront<{ data: StorefrontProduct[]; meta?: unknown }>(
+      '/api/storefront/products?per_page=12&sort=latest&featured=false'
+    ),
+  ]);
 
-    const bgColors = [
+  const sortedCategoriesData = categoriesData?.slice().sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+
+  const bgColors = [
       "bg-red-50/60", "bg-yellow-50/60", "bg-green-50/60", "bg-orange-50/60",
       "bg-pink-50/60", "bg-blue-50/60", "bg-purple-50/60", "bg-gray-50/60",
     ];
@@ -142,6 +145,7 @@
     })) ?? [];
 
     const suggestedProducts: Product[] = homeData?.products.map((p) => toProductCardModel(p)) ?? [];
+    const latestProducts: Product[] = latestProductsData?.data.map((p) => toProductCardModel(p)) ?? [];
 
     const featuredBrands: BrandItem[] = homeData?.brands.map((brand) => ({
       id: brand.id,
@@ -283,7 +287,7 @@
         </section>
 
         <section className="w-full">
-          <ProductRow title="20+ Trending Everyday Deals" products={suggestedProducts.slice(0, 12)} viewAllLink="/products" />
+          <ProductRow title="our latest products" products={latestProducts} viewAllLink="/products" />
         </section>
 
         {false && (
