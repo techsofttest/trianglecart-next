@@ -8,15 +8,15 @@ import { useCustomerAuth } from '@/context/CustomerAuthContext';
 
 export default function AddressesPage() {
   const router = useRouter();
-  const { isAuthenticated } = useCustomerAuth();
+  const { isAuthenticated, isLoaded } = useCustomerAuth();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (isLoaded && !isAuthenticated) {
       router.replace('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [isLoaded, isAuthenticated, router]);
 
-  if (!isAuthenticated) {
+  if (!isLoaded || !isAuthenticated) {
     return null;
   }
 

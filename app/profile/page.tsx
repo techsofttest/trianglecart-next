@@ -11,12 +11,13 @@ import { apiUrl } from '@/lib/api';
 
 export default function ProfilePage() {
   const [summary, setSummary] = useState<DashboardSummaryPayload | null>(null);
-
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const { isAuthenticated } = useCustomerAuth();
+  const { isAuthenticated, isLoaded } = useCustomerAuth();
 
   useEffect(() => {
+    if (!isLoaded) return;
+
     if (!isAuthenticated) {
       router.replace('/login');
       return;
@@ -46,9 +47,9 @@ export default function ProfilePage() {
     };
 
     loadSummary();
-  }, [isAuthenticated, router]);
+  }, [isLoaded, isAuthenticated, router]);
 
-  if (!isAuthenticated) {
+  if (!isLoaded || !isAuthenticated) {
     return null;
   }
 
@@ -75,4 +76,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-

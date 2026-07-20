@@ -7,7 +7,7 @@ import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { apiUrl } from '@/lib/api';
 
 export default function ResetPasswordPage() {
-  const { isAuthenticated } = useCustomerAuth();
+  const { isAuthenticated, isLoaded } = useCustomerAuth();
   const router = useRouter();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
@@ -17,12 +17,12 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (isLoaded && !isAuthenticated) {
       router.replace('/login');
     }
-  }, [isAuthenticated, router]);
+  }, [isLoaded, isAuthenticated, router]);
 
-  if (!isAuthenticated) {
+  if (!isLoaded || !isAuthenticated) {
     return null;
   }
 

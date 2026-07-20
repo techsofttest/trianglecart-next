@@ -16,6 +16,7 @@ export type CustomerProfile = {
 type CustomerAuthContextType = {
   customer: CustomerProfile;
   isAuthenticated: boolean;
+  isLoaded: boolean;
   login: (customer: Record<string, any>) => void;
   logout: () => void;
   refresh: () => void;
@@ -39,6 +40,7 @@ function readStoredCustomer(): CustomerProfile {
 
 export function CustomerAuthProvider({ children }: { children: React.ReactNode }) {
   const [customer, setCustomer] = useState<CustomerProfile>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const refresh = () => {
     setCustomer(readStoredCustomer());
@@ -61,6 +63,7 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
 
   useEffect(() => {
     refresh();
+    setIsLoaded(true);
 
     const onCustomerUpdate = () => refresh();
     const onStorage = () => refresh();
@@ -118,11 +121,12 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
     () => ({
       customer,
       isAuthenticated: !!customer?.isLoggedIn,
+      isLoaded,
       login,
       logout,
       refresh,
     }),
-    [customer]
+    [customer, isLoaded]
   );
 
   return <CustomerAuthContext.Provider value={value}>{children}</CustomerAuthContext.Provider>;
