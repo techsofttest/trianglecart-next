@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { fetchStorefront } from '@/lib/storefront';
 import { hasInStockVariant, StorefrontProduct } from '@/lib/product';
@@ -21,14 +21,14 @@ type SearchResult =
 export default function HeaderSearch() {
     const router = useRouter();
     const pathname = usePathname();
-    const searchParams = useSearchParams();
     const [query, setQuery] = useState('');
     const [focused, setFocused] = useState(false);
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState<SearchResult[]>([]);
 
     useEffect(() => {
-        const pageSearchQuery = (searchParams?.get('q') || searchParams?.get('search') || '').trim();
+        const params = new URLSearchParams(window.location.search);
+        const pageSearchQuery = (params.get('q') || params.get('search') || '').trim();
 
         if (pathname === '/search' && pageSearchQuery) {
             setQuery(pageSearchQuery);
@@ -42,7 +42,7 @@ export default function HeaderSearch() {
         setResults([]);
         setLoading(false);
         setFocused(false);
-    }, [pathname, searchParams]);
+    }, [pathname]);
 
     useEffect(() => {
         const term = query.trim();
