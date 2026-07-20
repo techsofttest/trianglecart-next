@@ -24,13 +24,25 @@ export const metadata = {
     description: 'Search products, brands, and categories on Triangle Cart.',
 };
 
+export const dynamic = 'force-dynamic';
+
+type SearchPageSearchParams = {
+    q?: string | string[];
+    search?: string | string[];
+};
+
 function normalizeSearchParam(value: string | string[] | undefined): string {
     if (!value) return '';
     return Array.isArray(value) ? value[0] : value;
 }
 
-export default async function SearchPage({ searchParams }: { searchParams?: { q?: string | string[] } }) {
-    const query = normalizeSearchParam(searchParams?.q).trim();
+function getSearchQuery(searchParams?: SearchPageSearchParams): string {
+    const query = normalizeSearchParam(searchParams?.q ?? searchParams?.search);
+    return query.trim();
+}
+
+export default async function SearchPage({ searchParams }: { searchParams?: SearchPageSearchParams }) {
+    const query = getSearchQuery(searchParams);
     const searchPayload = query
         ? await fetchStorefront<{ products: StorefrontProduct[]; categories: CategoryResponse[]; brands: BrandResponse[] }>(
             `/api/storefront/search?q=${encodeURIComponent(query)}&per_page=48`
@@ -62,6 +74,7 @@ export default async function SearchPage({ searchParams }: { searchParams?: { q?
                         <div className="relative flex-1">
                             <Search className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                             <input
+                                key={query}
                                 id="q"
                                 name="q"
                                 type="text"
