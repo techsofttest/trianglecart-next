@@ -41,8 +41,9 @@ function getSearchQuery(searchParams?: SearchPageSearchParams): string {
     return query.trim();
 }
 
-export default async function SearchPage({ searchParams }: { searchParams?: SearchPageSearchParams }) {
-    const query = getSearchQuery(searchParams);
+export default async function SearchPage({ searchParams }: { searchParams?: Promise<SearchPageSearchParams> }) {
+    const resolvedParams = await searchParams;
+    const query = getSearchQuery(resolvedParams);
     const searchPayload = query
         ? await fetchStorefront<{ products: StorefrontProduct[]; categories: CategoryResponse[]; brands: BrandResponse[] }>(
             `/api/storefront/search?q=${encodeURIComponent(query)}&per_page=48`

@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+import { Suspense, useEffect, useMemo, useState } from 'react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { fetchStorefront } from '@/lib/storefront';
 import { hasInStockVariant, StorefrontProduct } from '@/lib/product';
@@ -18,17 +18,17 @@ type SearchResult =
     | { type: 'category'; id: string; title: string; subtitle?: string; href: string }
     | { type: 'brand'; id: string; title: string; subtitle?: string; href: string };
 
-export default function HeaderSearch() {
+function HeaderSearchInner() {
     const router = useRouter();
     const pathname = usePathname();
+    const searchParams = useSearchParams();
     const [query, setQuery] = useState('');
     const [focused, setFocused] = useState(false);
     const [loading, setLoading] = useState(false);
     const [results, setResults] = useState<SearchResult[]>([]);
 
     useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const pageSearchQuery = (params.get('q') || params.get('search') || '').trim();
+        const pageSearchQuery = (searchParams.get('q') || searchParams.get('search') || '').trim();
 
         if (pathname === '/search' && pageSearchQuery) {
             setQuery(pageSearchQuery);
@@ -42,7 +42,7 @@ export default function HeaderSearch() {
         setResults([]);
         setLoading(false);
         setFocused(false);
-    }, [pathname]);
+    }, [pathname, searchParams]);
 
     useEffect(() => {
         const term = query.trim();
@@ -186,5 +186,29 @@ export default function HeaderSearch() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function HeaderSearch() {
+    return (
+        <Suspense fallback={
+            <div className="flex-1 max-w-xl relative">
+                <div className="flex items-center w-full bg-white rounded-md border border-brand-blue">
+                    <div className="relative flex-1 group">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <Search className="h-4 w-4 text-brand-blue" />
+                        </div>
+                        <input
+                            type="text"
+                            placeholder="Search for groceries, spices, brands..."
+                            className="w-full bg-transparent py-2.5 pl-10 pr-4 outline-none text-sm text-gray-800 placeholder-gray-500"
+                            disabled
+                        />
+                    </div>
+                </div>
+            </div>
+        }>
+            <HeaderSearchInner />
+        </Suspense>
     );
 }
