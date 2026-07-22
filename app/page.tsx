@@ -240,11 +240,7 @@ export default async function Home() {
           <BuyItAgainRow fallbackProducts={buyItAgainProducts} />
         </section>
 
-        {topOffers.length > 0 && (
-          <section className="w-full">
-            <TopOffersCarousel offers={topOffers} />
-          </section>
-        )}
+        
 
         <section className="w-full">
           <CategoryGrid title="Explore Categories" categories={prominentCategories} />
