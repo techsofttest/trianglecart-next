@@ -31,7 +31,7 @@ export default function StripePaymentForm({ orderNumber, totalAmount, onPaymentS
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                return_url: `${window.location.origin}/checkout?orderNumber=${orderNumber}`,
+                return_url: `${window.location.origin}/checkout/status?orderNumber=${orderNumber}`,
             },
         });
 

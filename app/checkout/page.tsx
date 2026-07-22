@@ -7,7 +7,7 @@ import { useCustomerAuth } from '@/context/CustomerAuthContext';
 
 // Using live storefront data; removed mock data usage
 
-import OrderSuccess from '@/components/checkout/OrderSuccess';
+
 import AddressSection from '@/components/checkout/AddressSection';
 import CheckoutItemsList from '@/components/checkout/CheckoutItemsList';
 import OrderSummarySidebar from '@/components/checkout/OrderSummarySidebar';
@@ -36,9 +36,6 @@ function CheckoutContent() {
     const { cartItems, clearCart } = useCart();
     const [checkoutItems, setCheckoutItems] = useState<any[]>([]);
     const [paymentMethod, setPaymentMethod] = useState('card');
-    const [isOrderPlaced, setIsOrderPlaced] = useState(false);
-    const [paymentFailed, setPaymentFailed] = useState(false);
-    const [paymentFailureMessage, setPaymentFailureMessage] = useState<string | null>(null);
     const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
     const [couponDiscount, setCouponDiscount] = useState(0);
     const [isAddressConfirmed, setIsAddressConfirmed] = useState(false);
@@ -56,121 +53,17 @@ function CheckoutContent() {
     const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
     const [shipping, setShipping] = useState<number | null>(null);
 
-    const [placedOrderNumber, setPlacedOrderNumber] = useState<string>('');
     const [isPlacingOrder, setIsPlacingOrder] = useState(false);
     const { customer, isAuthenticated } = useCustomerAuth();
     const [paymentClientSecret, setPaymentClientSecret] = useState<string | null>(null);
     const [createdOrderNumber, setCreatedOrderNumber] = useState<string>('');
     const [checkoutErrors, setCheckoutErrors] = useState<string[]>([]);
-    const [showPaymentStatusPage, setShowPaymentStatusPage] = useState(false);
-    const [isPaymentStatusLoading, setIsPaymentStatusLoading] = useState(false);
-
-    // Check url search params for payment redirect success or status-only redirect
-    useEffect(() => {
-        const status = searchParams.get('status');
-        const redirectStatus = searchParams.get('redirect_status');
-        const orderNumber = searchParams.get('orderNumber');
-        const stripeError = searchParams.get('error') || searchParams.get('error_description');
-        const statusKey = orderNumber ? `payment_status_viewed_${orderNumber}` : null;
-        const hasViewed = statusKey ? sessionStorage.getItem(statusKey) === 'true' : false;
-
-        const markViewed = () => {
-            if (statusKey) {
-                sessionStorage.setItem(statusKey, 'true');
-            }
-        };
-
-        const showOrderStatus = (success: boolean, failed: boolean, message: string | null) => {
-            if (orderNumber) {
-                setPlacedOrderNumber(orderNumber);
-            }
-            setIsOrderPlaced(success);
-            setPaymentFailed(failed);
-            setPaymentFailureMessage(message);
-            setShowPaymentStatusPage(true);
-            if (success || failed) {
-                clearCart();
-                sessionStorage.removeItem('appliedCoupon');
-            }
-            markViewed();
-        };
-
-        if (redirectStatus !== null && orderNumber) {
-            if (redirectStatus === 'succeeded') {
-                showOrderStatus(true, false, null);
-            } else {
-                showOrderStatus(false, true, stripeError || 'Payment could not be completed. Please try again.');
-            }
-            window.history.replaceState({}, '', window.location.pathname);
-            return;
-        }
-
-        if (status === 'success' && orderNumber) {
-            showOrderStatus(true, false, null);
-            window.history.replaceState({}, '', window.location.pathname);
-            return;
-        }
-
-        if (status === 'failed' && orderNumber) {
-            showOrderStatus(false, true, stripeError || 'Payment could not be completed. Please try again.');
-            window.history.replaceState({}, '', window.location.pathname);
-            return;
-        }
-
-        if (orderNumber && !hasViewed) {
-            setIsPaymentStatusLoading(true);
-            fetch(apiUrl('/api/checkout/payment-status'), {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ order_number: orderNumber }),
-                credentials: 'include',
-            })
-                .then(async res => {
-                    const data = await res.json();
-                    if (res.ok && data.order_id) {
-                        setCreatedOrderNumber(data.order_number);
-                        setPlacedOrderNumber(data.order_number);
-                        setShowPaymentStatusPage(true);
-                        setIsOrderPlaced(data.is_success);
-                        setPaymentFailed(data.is_failed);
-                        setPaymentFailureMessage(data.is_failed ? data.message : null);
-                        if (data.is_success || data.is_failed) {
-                            clearCart();
-                            sessionStorage.removeItem('appliedCoupon');
-                        }
-                        markViewed();
-                    }
-                })
-                .catch(() => { })
-                .finally(() => setIsPaymentStatusLoading(false));
-            return;
-        }
-
-        if (!paymentClientSecret) {
-            // If we are currently displaying a status page (success or failure),
-            // do not reset these states when the URL query parameters are cleared.
-            setShowPaymentStatusPage(prev => {
-                if (prev) return prev;
-
-                setIsOrderPlaced(false);
-                setPaymentFailed(false);
-                setPaymentFailureMessage(null);
-                setPlacedOrderNumber('');
-                setCreatedOrderNumber('');
-                return false;
-            });
-        }
-    }, [searchParams, clearCart, paymentClientSecret]);
 
     // Redirect if cart is empty and not in payment flow
     useEffect(() => {
         if (!isMounted) return;
 
         if (
-            !showPaymentStatusPage &&
-            !isOrderPlaced &&
-            !paymentFailed &&
-            !isPaymentStatusLoading &&
             !paymentClientSecret &&
             checkoutItems.length === 0
         ) {
@@ -189,7 +82,7 @@ function CheckoutContent() {
                 router.push('/cart');
             }
         }
-    }, [isMounted, checkoutItems, showPaymentStatusPage, isOrderPlaced, paymentFailed, isPaymentStatusLoading, paymentClientSecret, router, searchParams]);
+    }, [isMounted, checkoutItems, paymentClientSecret, router, searchParams]);
 
 
     // Form state for address completion
@@ -503,8 +396,7 @@ function CheckoutContent() {
                     setCreatedOrderNumber(data.order_number);
                     setPaymentClientSecret(data.payment_intent.client_secret);
                 } else {
-                    setPlacedOrderNumber(data.order_number);
-                    setIsOrderPlaced(true);
+                    router.push(`/checkout/status?orderNumber=${data.order_number}&status=success`);
                 }
                 setCheckoutErrors([]);
             } else {
@@ -552,105 +444,7 @@ function CheckoutContent() {
 
     if (!isMounted) return null;
 
-    if (showPaymentStatusPage) {
-        if (isOrderPlaced) {
-            return <OrderSuccess orderNumber={placedOrderNumber} />;
-        }
 
-        if (paymentFailed) {
-            return (
-                <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center animate-in zoom-in-95 duration-500">
-                    <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
-                        <AlertTriangle className="w-12 h-12 text-red-500" />
-                    </div>
-                    <h1 className="text-3xl font-medium text-gray-900 mb-2">Payment Failed</h1>
-                    <p className="text-gray-500 max-w-md mb-4 font-medium">
-                        {paymentFailureMessage || 'Your payment could not be completed. Please try again.'}
-                    </p>
-                    <button
-                        type="button"
-                        onClick={() => {
-                            setPaymentFailed(false);
-                            setPaymentFailureMessage(null);
-                            setPlacedOrderNumber('');
-                            setShowPaymentStatusPage(false);
-                            router.push('/checkout');
-                        }}
-                        className="bg-[#0c4a9e] text-white px-8 py-3 rounded-xl font-medium hover:bg-blue-800 transition-all"
-                    >
-                        Try Again
-                    </button>
-                </div>
-            );
-        }
-
-        if (isPaymentStatusLoading) {
-            return (
-                <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center animate-in zoom-in-95 duration-500">
-                    <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6">
-                        <Loader2 className="w-12 h-12 text-gray-500 animate-spin" />
-                    </div>
-                    <h1 className="text-3xl font-medium text-gray-900 mb-2">Checking Payment Status...</h1>
-                    <p className="text-gray-500 max-w-md mb-4 font-medium">Please wait while we confirm your payment.</p>
-                </div>
-            );
-        }
-
-        return (
-            <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center animate-in zoom-in-95 duration-500">
-                <div className="w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center mb-6">
-                    <Clock className="w-12 h-12 text-yellow-500" />
-                </div>
-                <h1 className="text-3xl font-medium text-gray-900 mb-2">Payment Pending</h1>
-                <p className="text-gray-500 max-w-md mb-4 font-medium">
-                    We are verifying your payment. Please wait and do not refresh this page.
-                </p>
-                <button
-                    type="button"
-                    onClick={() => {
-                        setShowPaymentStatusPage(false);
-                        setPlacedOrderNumber('');
-                        setPaymentFailureMessage(null);
-                        setPaymentFailed(false);
-                        router.push('/');
-                    }}
-                    className="bg-[#0c4a9e] text-white px-8 py-3 rounded-xl font-medium hover:bg-blue-800 transition-all"
-                >
-                    Continue Shopping
-                </button>
-            </div>
-        );
-    }
-
-    if (isOrderPlaced) {
-        return <OrderSuccess orderNumber={placedOrderNumber} />;
-    }
-
-    if (paymentFailed) {
-        return (
-            <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center animate-in zoom-in-95 duration-500">
-                <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mb-6">
-                    <AlertTriangle className="w-12 h-12 text-red-500" />
-                </div>
-                <h1 className="text-3xl font-medium text-gray-900 mb-2">Payment Failed</h1>
-                <p className="text-gray-500 max-w-md mb-4 font-medium">
-                    {paymentFailureMessage || 'Your payment could not be completed. Please try again.'}
-                </p>
-                <button
-                    type="button"
-                    onClick={() => {
-                        setPaymentFailed(false);
-                        setPaymentFailureMessage(null);
-                        setPlacedOrderNumber('');
-                        router.push('/checkout');
-                    }}
-                    className="bg-[#0c4a9e] text-white px-8 py-3 rounded-xl font-medium hover:bg-blue-800 transition-all"
-                >
-                    Try Again
-                </button>
-            </div>
-        );
-    }
 
     // Show Stripe Payment Element when client secret is available
     if (paymentClientSecret) {
