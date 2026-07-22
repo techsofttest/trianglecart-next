@@ -18,6 +18,8 @@ function CheckoutStatusContent() {
     const [paymentFailureMessage, setPaymentFailureMessage] = useState<string | null>(null);
     const [isPaymentStatusLoading, setIsPaymentStatusLoading] = useState(true);
 
+    const processedRef = React.useRef(false);
+
     useEffect(() => {
         const status = searchParams.get('status');
         const redirectStatus = searchParams.get('redirect_status');
@@ -28,6 +30,9 @@ function CheckoutStatusContent() {
             router.push('/');
             return;
         }
+
+        if (processedRef.current) return;
+        processedRef.current = true;
 
         setPlacedOrderNumber(orderNumber);
 
