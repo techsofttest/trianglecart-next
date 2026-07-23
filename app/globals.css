@@ -80,12 +80,14 @@ body {
 }
 
 /* Global Form Input Styles */
-input, textarea, select {
-  border-color: #9ca3af; /* Darker border (gray-400) */
-}
+@layer base {
+  input, textarea, select {
+    border-color: #9ca3af; /* Darker border (gray-400) */
+  }
 
-input:focus, textarea:focus, select:focus {
-  border-color: #0c4a9e;
+  input:focus, textarea:focus, select:focus {
+    border-color: #0c4a9e;
+  }
 }
 
 /* Global Button Styles */
