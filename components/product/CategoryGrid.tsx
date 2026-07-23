@@ -26,13 +26,13 @@ export default function CategoryGrid({ title, categories }: CategoryGridProps) {
                 </div>
             )}
 
-            {/* Grid Layout: Responsive columns */}
-            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3 md:gap-4">
+            {/* Horizontal scroll on mobile, Grid Layout on desktop */}
+            <div className="flex overflow-x-auto gap-3 pb-3 scrollbar-thin px-1 sm:grid sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 sm:gap-4 sm:overflow-x-visible sm:pb-0">
                 {categories.map((category) => (
                     <Link
                         key={category.id}
                         href={category.link}
-                        className="flex flex-col items-center group cursor-pointer"
+                        className="flex flex-col items-center group cursor-pointer shrink-0 w-[24%] sm:w-auto"
                     >
                         {/* Card / Image Container */}
                         <div className={`w-full aspect-square rounded-xl md:rounded-2xl flex items-center justify-center mb-2 md:mb-3 transition-transform duration-300 group-hover:-translate-y-1 overflow-hidden relative ${category.bgColor || 'bg-white'}`}>
