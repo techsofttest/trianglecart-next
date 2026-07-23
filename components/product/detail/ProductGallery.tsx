@@ -32,6 +32,7 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
     };
 
     return (
+        <div className="flex flex-col gap-4">
             {/* Main Image */}
             <div className="w-full">
                 <div 
