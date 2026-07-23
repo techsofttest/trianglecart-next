@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { Heart } from 'lucide-react';
+import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { resolveProductImageUrl } from '@/lib/product';
 
@@ -20,6 +22,7 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
     // Zoom state
     const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
     const [isZooming, setIsZooming] = useState(false);
+    const { isAuthenticated } = useCustomerAuth();
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -29,7 +32,6 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
     };
 
     return (
-        <div className="flex flex-col gap-4">
             {/* Main Image */}
             <div className="w-full">
                 <div 
@@ -47,14 +49,23 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
                             transform: isZooming ? 'scale(2.5)' : 'scale(1)'
                         }}
                     />
-                    <button 
-                        onClick={() => toggleWishlist(product)}
-                        className={`absolute top-4 right-4 p-2.5 rounded-full shadow-lg transition-all active:scale-125 border-2 z-10 ${
-                            isWishlisted ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-400 hover:text-red-600 border-gray-100 hover:border-red-600'
-                        }`}
-                    >
-                        <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
-                    </button>
+                    {isAuthenticated ? (
+                        <button 
+                            onClick={() => toggleWishlist(product)}
+                            className={`absolute top-4 right-4 p-2.5 rounded-full shadow-lg transition-all active:scale-125 border-2 z-10 ${
+                                isWishlisted ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-400 hover:text-red-600 border-gray-100 hover:border-red-600'
+                            }`}
+                        >
+                            <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
+                        </button>
+                    ) : (
+                        <Link
+                            href="/login"
+                            className="absolute top-4 right-4 p-2.5 rounded-full shadow-lg transition-all border-2 z-10 bg-white text-gray-400 hover:text-red-600 border-gray-100 hover:border-red-600"
+                        >
+                            <Heart className="w-5 h-5" />
+                        </Link>
+                    )}
                 </div>
             </div>
 

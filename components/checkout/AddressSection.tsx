@@ -591,7 +591,7 @@ export default function AddressSection({
                                                 setNewAddress({ ...newAddress, phone: `+61${digitsOnly}` });
                                             }}
                                             onFocus={() => setFieldErrors(prev => ({ ...prev, phone: false }))}
-                                            placeholder="4XX XXX XXX"
+                                            placeholder="XXX XXX XXX"
                                             inputMode="numeric"
                                             className={`w-full bg-gray-50 border rounded-2xl pl-14 pr-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all ${fieldErrors.phone ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
                                         />
@@ -605,8 +605,21 @@ export default function AddressSection({
                                         value={newAddress.email}
                                         onChange={(e) => setNewAddress({ ...newAddress, email: e.target.value })}
                                         onFocus={() => setFieldErrors(prev => ({ ...prev, email: false }))}
-                                        placeholder="your@email.com"
+                                        placeholder=""
                                         className={`w-full bg-gray-50 border rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all ${fieldErrors.email ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
+                                    />
+                                </div>
+
+
+                                <div className="space-y-1.5">
+                                    <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Apartment/Suite/Unit*</label>
+                                    <input
+                                        type="text"
+                                        value={newAddress.address_line_2}
+                                        onChange={(e) => setNewAddress({ ...newAddress, address_line_2: e.target.value })}
+                                        onFocus={() => setFieldErrors(prev => ({ ...prev, address_line_2: false }))}
+                                        placeholder="Apartment, suite, unit"
+                                        className={`w-full bg-gray-50 border rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all ${fieldErrors.address_line_2 ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
                                     />
                                 </div>
 
@@ -620,18 +633,7 @@ export default function AddressSection({
                                         className={`w-full bg-gray-100 border rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500 ${fieldErrors.address_line_1 ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
                                     />
                                 </div>
-
-                                <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Address Line 2*</label>
-                                    <input
-                                        type="text"
-                                        value={newAddress.address_line_2}
-                                        onChange={(e) => setNewAddress({ ...newAddress, address_line_2: e.target.value })}
-                                        onFocus={() => setFieldErrors(prev => ({ ...prev, address_line_2: false }))}
-                                        placeholder="Apartment, suite, unit"
-                                        className={`w-full bg-gray-50 border rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-blue-200 transition-all ${fieldErrors.address_line_2 ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
-                                    />
-                                </div>
+            
 
                                 <div className="space-y-1.5">
                                     <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Suburb</label>
@@ -651,7 +653,7 @@ export default function AddressSection({
                                         value={newAddress.city}
                                         readOnly={true}
                                         placeholder="Auto-filled via search"
-                                        className={`w-full bg-gray-100 border rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500 ${fieldErrors.city ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
+                                        className={`w-full bg-gray-100 border rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500 border-gray-300`}
                                     />
                                 </div>
 
@@ -662,7 +664,7 @@ export default function AddressSection({
                                         value={newAddress.state}
                                         readOnly={true}
                                         placeholder="Auto-filled via search"
-                                        className={`w-full bg-gray-100 border rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500 ${fieldErrors.state ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
+                                        className={`w-full bg-gray-100 border rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500 border-gray-300`}
                                     />
                                 </div>
 
@@ -673,7 +675,7 @@ export default function AddressSection({
                                         value={newAddress.postcode}
                                         readOnly={true}
                                         placeholder="Auto-filled via search"
-                                        className={`w-full bg-gray-100 border rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500 ${fieldErrors.postcode ? 'border-red-400 bg-red-50/30' : 'border-gray-300'}`}
+                                        className={`w-full bg-gray-100 border rounded-2xl px-4 py-3 text-sm focus:outline-none cursor-not-allowed font-medium text-gray-500 border-gray-300`}
                                     />
                                 </div>
 

@@ -98,16 +98,25 @@ export default function Header() {
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
     const [isScrolledToTop, setIsScrolledToTop] = useState(true);
+    const prevScrollY = useRef(0);
 
     useEffect(() => {
         const handleScroll = () => {
-            setIsScrolledToTop(window.scrollY <= 40);
+            const currentScrollY = window.scrollY;
+            // Add hysteresis: only update if scrolled past 60px or back to 20px
+            // This prevents flickering when slowly scrolling near the threshold
+            if (currentScrollY > 60 && isScrolledToTop) {
+                setIsScrolledToTop(false);
+            } else if (currentScrollY < 20 && !isScrolledToTop) {
+                setIsScrolledToTop(true);
+            }
+            prevScrollY.current = currentScrollY;
         };
 
         handleScroll();
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
-    }, []);
+    }, [isScrolledToTop]);
 
     const handleMouseDown = (e: React.MouseEvent) => {
         if (!categoryNavRef.current) return;

@@ -55,7 +55,7 @@ export default function PriceRangeSlider({ min, max, step, value, onChange }: Pr
     // Pass data up to parent
     useEffect(() => {
         onChange({ min: minVal, max: maxVal });
-    }, [minVal, maxVal, onChange]);
+    }, [minVal, maxVal]);
 
     // Formatter for price
     const formatPrice = (value: number) => {
