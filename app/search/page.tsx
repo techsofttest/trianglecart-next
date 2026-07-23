@@ -69,7 +69,7 @@ export default async function SearchPage({ searchParams }: { searchParams?: Prom
                     <Breadcrumbs items={breadcrumbItems} />
                 </div>
 
-                <div className="rounded-3xl border border-gray-200 bg-gray-50 p-4 sm:p-5 mb-8">
+                {/* <div className="rounded-3xl border border-gray-200 bg-gray-50 p-4 sm:p-5 mb-8">
                     <form action="/search" method="get" className="flex flex-col sm:flex-row gap-3 items-stretch">
                         <label htmlFor="q" className="sr-only">Search keyword</label>
                         <div className="relative flex-1">
@@ -92,13 +92,11 @@ export default async function SearchPage({ searchParams }: { searchParams?: Prom
                             Search
                         </button>
                     </form>
-                </div>
+                </div> */}
 
                 <div className="mb-8">
-                    <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">Search results for “{query || '...' }”</h1>
-                    <p className="mt-2 text-sm text-gray-500">
-                        Search products by name, SKU, brand, or category.
-                    </p>
+                    <h2 className="text-2xl font-extrabold text-gray-900 tracking-tight">Search results for “{query || '...' }”</h2>
+                   
                 </div>
 
                 {!query ? (
@@ -109,7 +107,9 @@ export default async function SearchPage({ searchParams }: { searchParams?: Prom
                     </div>
                 ) : (
                     <div className="space-y-10">
-                        <div className="rounded-3xl border border-gray-200 bg-white p-6">
+
+
+                       {/* <div className="rounded-3xl border border-gray-200 bg-white p-6">
                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                                 <div>
                                     <p className="text-sm text-gray-500">Search keyword</p>
@@ -135,7 +135,7 @@ export default async function SearchPage({ searchParams }: { searchParams?: Prom
                                     <p className="mt-2 text-sm text-gray-500">Try searching for a different keyword or browse other categories.</p>
                                 </div>
                             )}
-                        </div>
+                        </div> */}
 
                         {categories.length > 0 && (
                             <section className="rounded-3xl border border-gray-200 bg-white p-6">

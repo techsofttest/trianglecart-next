@@ -49,8 +49,8 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
                     />
                     <button 
                         onClick={() => toggleWishlist(product)}
-                        className={`absolute top-4 right-4 p-2.5 rounded-full shadow-lg transition-all active:scale-125 border border-gray-100 z-10 ${
-                            isWishlisted ? 'bg-red-50 text-red-500' : 'bg-white text-gray-400 hover:text-red-500'
+                        className={`absolute top-4 right-4 p-2.5 rounded-full shadow-lg transition-all active:scale-125 border-2 z-10 ${
+                            isWishlisted ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-400 hover:text-red-600 border-gray-100 hover:border-red-600'
                         }`}
                     >
                         <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
