@@ -9,7 +9,7 @@ import ProductInfo from './ProductInfo';
 
 type ProductDetailClientProps = {
     product: {
-        id: number;
+        id: string | number;
         slug: string;
         title: string;
         brand: string;
