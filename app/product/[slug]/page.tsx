@@ -113,7 +113,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
 
                 <ProductDetailClient
                     product={{
-                        id: product.id,
+                        id: String(product.id),
                         slug: product.slug,
                         title: product.name,
                         brand: product.brand?.name || 'Triangle Cart',
