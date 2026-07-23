@@ -6,6 +6,7 @@ import { CustomerAuthProvider } from "@/context/CustomerAuthContext";
 import { WishlistProvider } from "@/context/WishlistContext";
 import { CartProvider } from "@/context/CartContext";
 import ScrollToTop from "@/components/ui/ScrollToTop";
+import RegisterSW from "@/components/ui/RegisterSW";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,6 +21,15 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Triangle Cart | Indian Groceries in Australia",
   description: "Shop premium Indian and South Asian groceries, fresh produce, and spices. Delivering across Australia.",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Triangle Cart",
+  },
+};
+
+export const viewport = {
+  themeColor: "#00723D",
 };
 
 export default function RootLayout({
@@ -31,6 +41,7 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
       <body className="min-h-screen flex flex-col bg-white">
         <ScrollToTop />
+        <RegisterSW />
         <CartProvider>
           <CustomerAuthProvider>
             <WishlistProvider>
