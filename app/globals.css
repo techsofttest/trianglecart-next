@@ -81,11 +81,11 @@ body {
 
 /* Global Form Input Styles */
 input, textarea, select {
-  border-color: #9ca3af !important; /* Darker border (gray-400) */
+  border-color: #9ca3af; /* Darker border (gray-400) */
 }
 
 input:focus, textarea:focus, select:focus {
-  border-color: #0c4a9e !important;
+  border-color: #0c4a9e;
 }
 
 /* Global Button Styles */
