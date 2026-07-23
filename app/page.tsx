@@ -199,29 +199,35 @@ export default async function Home() {
       featuredCategoryFallbackImages.set(category.slug, fallbackImage);
     });
 
-    const featuredSpicesItems: SubCategoryItem[] = featuredCategories[0]
-      ? featuredCategories[0].products.map((p) => ({
-          label1: p.brand?.name || "Triangle Choice",
-          label2: p.name,
-          imageUrl: resolveProductImageUrl(p.featured_image) || featuredCategoryFallbackImages.get(featuredCategories[0].slug) || "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80",
-          linkUrl: `/product/${p.slug}`
-        }))
-      : premiumSpicesItems;
-
-    const spicesTitle = featuredCategories[0]?.name || "Aromatic Spices & Masalas";
-    const spicesLink = featuredCategories[0] ? `/category/${featuredCategories[0].slug}` : "/category/spices";
-
-    const featuredSweetsItems: SubCategoryItem[] = featuredCategories[1]
-      ? featuredCategories[1].products.map((p) => ({
-          label1: p.brand?.name || "Triangle Choice",
-          label2: p.name,
-          imageUrl: resolveProductImageUrl(p.featured_image) || featuredCategoryFallbackImages.get(featuredCategories[1].slug) || "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=400&q=80",
-          linkUrl: `/product/${p.slug}`
-        }))
-      : sweetsItems;
-
-    const sweetsTitle = featuredCategories[1]?.name || "Festival Sweet Packs";
-    const sweetsLink = featuredCategories[1] ? `/category/${featuredCategories[1].slug}` : "/category/sweets";
+    const categoriesToRender = featuredCategories.length > 0
+      ? featuredCategories.map((category, index) => {
+          const items: SubCategoryItem[] = category.products.map((p) => ({
+            label1: p.brand?.name || "Triangle Choice",
+            label2: p.name,
+            imageUrl: resolveProductImageUrl(p.featured_image) || featuredCategoryFallbackImages.get(category.slug) || DEFAULT_PRODUCT_IMAGE,
+            linkUrl: `/product/${p.slug}`
+          }));
+          return {
+            title: category.name,
+            link: `/category/${category.slug}`,
+            items,
+            sectionBgColor: index % 2 === 0 ? "bg-green-700" : "bg-blue-700",
+          };
+        })
+      : [
+          {
+            title: "Aromatic Spices & Masalas",
+            link: "/category/spices",
+            items: premiumSpicesItems,
+            sectionBgColor: "bg-green-700",
+          },
+          {
+            title: "Festival Sweet Packs",
+            link: "/category/sweets",
+            items: sweetsItems,
+            sectionBgColor: "bg-blue-700",
+          }
+        ];
 
     const buyItAgainProducts: Product[] = suggestedProducts.slice(0, 6);
     const homeAdvertisement = homeData?.home_advertisement;
@@ -274,32 +280,25 @@ export default async function Home() {
         </section>
 
         <section className="w-full">
-          <SubCategories
-            sectionTitle={spicesTitle}
-            mainLink={spicesLink}
-            items={featuredSpicesItems}
-            sectionBgColor="bg-[#bf360c]"
-          />
-        </section>
-
-        <section className="w-full">
           <ProductRow title="our latest products" products={latestProducts} viewAllLink="/products" />
         </section>
+
+        {categoriesToRender.map((cat, idx) => (
+          <section key={idx} className="w-full">
+            <SubCategories
+              sectionTitle={cat.title}
+              mainLink={cat.link}
+              items={cat.items}
+              sectionBgColor={cat.sectionBgColor}
+            />
+          </section>
+        ))}
 
         {false && (
           <section className="w-full">
             <OurBrands title="Top Brands" brands={featuredBrands} />
           </section>
         )}
-
-        <section className="w-full">
-          <SubCategories
-            sectionTitle={sweetsTitle}
-            mainLink={sweetsLink}
-            items={featuredSweetsItems}
-            sectionBgColor="bg-green-700"
-          />
-        </section>
 
         <section className="w-full">
           <ProductRow title="Top Trending Essentials" products={suggestedProducts.slice(12, 24)} viewAllLink="/products" />

@@ -68,7 +68,7 @@ export default function SubCategories({
                             <img
                                 src={item.imageUrl}
                                 alt={item.label1}
-                                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                className="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
                             />
                         </div>
 
