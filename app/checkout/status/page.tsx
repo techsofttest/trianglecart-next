@@ -19,6 +19,8 @@ function CheckoutStatusContent() {
     const [isPaymentStatusLoading, setIsPaymentStatusLoading] = useState(true);
 
     const processedRef = React.useRef(false);
+    const pollTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+    const pollIntervalMs = 5000;
 
     useEffect(() => {
         const status = searchParams.get('status');
@@ -47,34 +49,16 @@ function CheckoutStatusContent() {
             }
         };
 
-        if (redirectStatus !== null) {
-            if (redirectStatus === 'succeeded') {
-                showOrderStatus(true, false, null);
-            } else {
-                showOrderStatus(false, true, stripeError || 'Payment could not be completed. Please try again.');
-            }
-            return;
-        }
+        const fetchPaymentStatus = async () => {
+            setIsPaymentStatusLoading(true);
+            try {
+                const res = await fetch(apiUrl('/api/checkout/payment-status'), {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ order_number: orderNumber }),
+                    credentials: 'include',
+                });
 
-        if (status === 'success') {
-            showOrderStatus(true, false, null);
-            return;
-        }
-
-        if (status === 'failed') {
-            showOrderStatus(false, true, stripeError || 'Payment could not be completed. Please try again.');
-            return;
-        }
-
-        // Fetch status from API
-        setIsPaymentStatusLoading(true);
-        fetch(apiUrl('/api/checkout/payment-status'), {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ order_number: orderNumber }),
-            credentials: 'include',
-        })
-            .then(async res => {
                 const data = await res.json();
                 if (res.ok && data.order_id) {
                     setIsOrderPlaced(data.is_success);
@@ -84,18 +68,56 @@ function CheckoutStatusContent() {
                         clearCart();
                         sessionStorage.removeItem('appliedCoupon');
                     }
-                } else {
-                    // Default fallback if order exists but payment status isn't confirmed yet
-                    setIsOrderPlaced(false);
-                    setPaymentFailed(false);
+                    return data;
                 }
-            })
-            .catch(() => {
+
                 setIsOrderPlaced(false);
                 setPaymentFailed(false);
-            })
-            .finally(() => setIsPaymentStatusLoading(false));
+                return null;
+            } catch (error) {
+                setIsOrderPlaced(false);
+                setPaymentFailed(false);
+                return null;
+            } finally {
+                setIsPaymentStatusLoading(false);
+            }
+        };
 
+        const scheduleNextPoll = () => {
+            if (pollTimeoutRef.current) {
+                clearTimeout(pollTimeoutRef.current);
+            }
+            pollTimeoutRef.current = setTimeout(async () => {
+                const data = await fetchPaymentStatus();
+                if (data && !data.is_success && !data.is_failed) {
+                    scheduleNextPoll();
+                }
+            }, pollIntervalMs);
+        };
+
+        if (status === 'success' && !redirectStatus) {
+            showOrderStatus(true, false, null);
+            return;
+        }
+
+        if (status === 'failed' || redirectStatus === 'failed') {
+            showOrderStatus(false, true, stripeError || 'Payment could not be completed. Please try again.');
+            return;
+        }
+
+        // Async payment flows may redirect back before the backend receives the final status.
+        // Poll the backend until the Stripe webhook confirms success or failure.
+        fetchPaymentStatus().then((data) => {
+            if (data && !data.is_success && !data.is_failed) {
+                scheduleNextPoll();
+            }
+        });
+
+        return () => {
+            if (pollTimeoutRef.current) {
+                clearTimeout(pollTimeoutRef.current);
+            }
+        };
     }, [searchParams, clearCart, router]);
 
     if (isPaymentStatusLoading) {
