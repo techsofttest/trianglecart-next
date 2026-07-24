@@ -40,6 +40,7 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
             weight: selectedWeight,
             selectedVariantId: selectedVariant?.id,
             selectedVariant,
+            price: selectedPrice,
         }, quantity);
         onClose();
     };
