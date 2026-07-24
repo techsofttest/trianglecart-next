@@ -32,9 +32,17 @@ export default function MobileHeader() {
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const data = await fetchStorefront<{ brand: { logo: string }; categories: HeaderCategory[] }>('/api/storefront/header');
+            const data = await fetchStorefront<{ brand: { logo: string }; categories: { main: HeaderCategory[]; all: HeaderCategory[] } }>('/api/storefront/header');
             if (data?.categories) {
-                setCategories(data.categories);
+                // Combine main categories first, then all categories
+                const mainCategories = data.categories.main || [];
+                const allCategories = data.categories.all || [];
+                
+                // Remove duplicates: keep main categories, then add any from all that aren't already included
+                const mainIds = new Set(mainCategories.map(c => c.id));
+                const additionalCategories = allCategories.filter(c => !mainIds.has(c.id));
+                
+                setCategories([...mainCategories, ...additionalCategories]);
             }
             if (data?.brand?.logo) {
                 setBrandLogo(data.brand.logo);

@@ -233,7 +233,7 @@ export default async function Home() {
     const homeAdvertisement = homeData?.home_advertisement;
 
     return (
-      <div className="flex flex-col gap-10 md:gap-16 pb-12 pt-2 bg-[#fff]">
+      <div className="flex flex-col gap-10 md:gap-10 pb-12 pt-2 bg-[#fff]">
         <section className="w-full">
           <PromoSlider banners={homeData?.banners} />
         </section>
@@ -248,8 +248,16 @@ export default async function Home() {
 
         
 
-        <section className="w-full">
+        {/*<section className="w-full">
           <CategoryGrid title="Explore Categories" categories={prominentCategories} />
+        </section>*/}
+
+        <section className="w-full">
+          <ProductRow title="Featured products" products={suggestedProducts} viewAllLink="/products" />
+        </section>
+
+        <section className="w-full">
+          <ProductRow title="Our latest products" products={latestProducts} viewAllLink="/products" />
         </section>
 
         {homeAdvertisement && (
@@ -274,14 +282,6 @@ export default async function Home() {
             </Link>
           </section>
         )}
-
-        <section className="w-full">
-          <ProductRow title="Featured products" products={suggestedProducts} viewAllLink="/products" />
-        </section>
-
-        <section className="w-full">
-          <ProductRow title="our latest products" products={latestProducts} viewAllLink="/products" />
-        </section>
 
         {categoriesToRender.map((cat, idx) => (
           <section key={idx} className="w-full">
