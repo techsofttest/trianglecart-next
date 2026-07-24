@@ -1,5 +1,4 @@
 import { Filter } from 'lucide-react';
-import { useState } from 'react';
 import PriceRangeSlider from './PriceRangeSlider';
 
 interface CategorySidebarProps {
@@ -40,10 +39,6 @@ export default function CategorySidebar({
         }
     };
 
-    const [showAll, setShowAll] = useState(false);
-    const visibleLimit = 8;
-    const visibleBrands = showAll ? brands : brands.slice(0, visibleLimit);
-
     return (
         <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 sticky top-24">
@@ -68,7 +63,7 @@ export default function CategorySidebar({
                 <div className="mb-6">
                     <h4 className="text-[12px] font-semibold text-gray-400 uppercase tracking-wider mb-3">Brand</h4>
                     <div className="flex flex-col gap-2 pr-2">
-                        {visibleBrands.map((brand, idx) => (
+                        {brands.map((brand, idx) => (
                             <label key={idx} className="flex items-center gap-3 cursor-pointer group">
                                 <input
                                     type="checkbox"
@@ -79,15 +74,6 @@ export default function CategorySidebar({
                                 <span className="text-sm text-gray-600 group-hover:text-gray-900 font-medium">{brand}</span>
                             </label>
                         ))}
-                        {brands.length > visibleLimit && (
-                            <button
-                                type="button"
-                                onClick={() => setShowAll(s => !s)}
-                                className="mt-2 text-sm font-semibold text-[#0c4a9e] hover:underline"
-                            >
-                                {showAll ? 'Show less' : `Show all ${brands.length}`}
-                            </button>
-                        )}
                     </div>
                 </div>
 
