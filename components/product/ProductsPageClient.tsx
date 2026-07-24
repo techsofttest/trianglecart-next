@@ -213,7 +213,7 @@ export default function ProductsPageClient() {
 
     return (
         <div className="bg-[#fff] min-h-screen pb-8">
-            <div className="mx-auto px-1 sm:px-2 md:px-3">
+            <div className="w-full py-6">
                 <div className="flex flex-col lg:flex-row gap-4">
                     {/* LEFT SIDEBAR */}
                     <CategorySidebar 

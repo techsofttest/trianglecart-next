@@ -330,7 +330,7 @@ export default function Header() {
                     {/* Left Scroll Button */}
                     <button
                         onClick={() => scrollCategories('left')}
-                        className="absolute left-2 z-10 p-1.5 bg-white border border-gray-200 rounded-full shadow-md text-gray-600 hover:text-[#0c4a9e] opacity-0 group-hover/carousel:opacity-100 transition-opacity"
+                        className="absolute left-2 z-10 p-1.5 bg-white border border-gray-200 rounded-full shadow-md text-brand-orange hover:text-brand-orange/80 opacity-0 group-hover/carousel:opacity-100 transition-opacity"
                     >
                         <ChevronLeft className="w-5 h-5" />
                     </button>
@@ -388,7 +388,7 @@ export default function Header() {
                     {/* Right Scroll Button */}
                     <button
                         onClick={() => scrollCategories('right')}
-                        className="absolute right-2 z-10 p-1.5 bg-white border border-gray-200 rounded-full shadow-md text-gray-600 hover:text-[#0c4a9e] opacity-0 group-hover/carousel:opacity-100 transition-opacity"
+                        className="absolute right-2 z-10 p-1.5 bg-white border border-gray-200 rounded-full shadow-md text-brand-orange hover:text-brand-orange/80 opacity-0 group-hover/carousel:opacity-100 transition-opacity"
                     >
                         <ChevronRight className="w-5 h-5" />
                     </button>

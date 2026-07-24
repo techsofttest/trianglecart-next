@@ -41,7 +41,7 @@ export default function CategorySidebar({
 
     return (
         <aside className="hidden lg:block w-64 flex-shrink-0">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 sticky top-24">
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
                     <h3 className="text-lg font-semibold text-gray-900">Filters</h3>
                     <Filter className="w-5 h-5 text-gray-400" />
