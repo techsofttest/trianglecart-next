@@ -364,7 +364,7 @@ export default function Header() {
                                         }`}
                                 >
                                     {isScrolledToTop && (
-                                        <div className={`transition p-1.5 rounded-xl ${isActive ? 'bg-blue-50 text-[#0c4a9e]' : 'text-orange-300 group-hover:text-[#0c4a9e] group-hover:bg-blue-50/50'}`}>
+                                        <div className={`transition p-1.5 rounded-xl ${isActive ? 'bg-blue-50 text-[#0c4a9e]' : 'bg-brand-orange/10 text-brand-orange group-hover:text-[#0c4a9e] group-hover:bg-blue-50/50'}`}>
                                             {isAllProducts ? (
                                                 <Store className="w-5 h-5 mb-1" />
                                             ) : cat.icon_url ? (
