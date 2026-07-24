@@ -20,7 +20,9 @@ function CheckoutStatusContent() {
 
     const processedRef = React.useRef(false);
     const pollTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
+    const pollAttemptsRef = React.useRef(0);
     const pollIntervalMs = 5000;
+    const maxPollAttempts = 24;
 
     useEffect(() => {
         const status = searchParams.get('status');
@@ -59,24 +61,26 @@ function CheckoutStatusContent() {
                     credentials: 'include',
                 });
 
-                const data = await res.json();
-                if (res.ok && data.order_id) {
-                    setIsOrderPlaced(data.is_success);
-                    setPaymentFailed(data.is_failed);
-                    setPaymentFailureMessage(data.is_failed ? data.message : null);
-                    if (data.is_success || data.is_failed) {
-                        clearCart();
-                        sessionStorage.removeItem('appliedCoupon');
-                    }
-                    return data;
+                if (!res.ok) {
+                    return null;
                 }
 
-                setIsOrderPlaced(false);
-                setPaymentFailed(false);
-                return null;
+                const data = await res.json();
+                if (!data || !data.order_id) {
+                    return null;
+                }
+
+                setIsOrderPlaced(Boolean(data.is_success));
+                setPaymentFailed(Boolean(data.is_failed));
+                setPaymentFailureMessage(data.is_failed ? data.message : null);
+
+                if (data.is_success || data.is_failed) {
+                    clearCart();
+                    sessionStorage.removeItem('appliedCoupon');
+                }
+
+                return data;
             } catch (error) {
-                setIsOrderPlaced(false);
-                setPaymentFailed(false);
                 return null;
             } finally {
                 setIsPaymentStatusLoading(false);
@@ -87,9 +91,15 @@ function CheckoutStatusContent() {
             if (pollTimeoutRef.current) {
                 clearTimeout(pollTimeoutRef.current);
             }
+
+            if (pollAttemptsRef.current >= maxPollAttempts) {
+                return;
+            }
+
             pollTimeoutRef.current = setTimeout(async () => {
+                pollAttemptsRef.current += 1;
                 const data = await fetchPaymentStatus();
-                if (data && !data.is_success && !data.is_failed) {
+                if (!data || (!data.is_success && !data.is_failed)) {
                     scheduleNextPoll();
                 }
             }, pollIntervalMs);
@@ -105,10 +115,8 @@ function CheckoutStatusContent() {
             return;
         }
 
-        // Async payment flows may redirect back before the backend receives the final status.
-        // Poll the backend until the Stripe webhook confirms success or failure.
         fetchPaymentStatus().then((data) => {
-            if (data && !data.is_success && !data.is_failed) {
+            if (!data || (!data.is_success && !data.is_failed)) {
                 scheduleNextPoll();
             }
         });
@@ -119,18 +127,6 @@ function CheckoutStatusContent() {
             }
         };
     }, [searchParams, clearCart, router]);
-
-    if (isPaymentStatusLoading) {
-        return (
-            <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center animate-in zoom-in-95 duration-500">
-                <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6">
-                    <Loader2 className="w-12 h-12 text-gray-500 animate-spin" />
-                </div>
-                <h1 className="text-3xl font-medium text-gray-900 mb-2">Checking Payment Status...</h1>
-                <p className="text-gray-500 max-w-md mb-4 font-medium">Please wait while we confirm your payment.</p>
-            </div>
-        );
-    }
 
     if (isOrderPlaced) {
         return <OrderSuccess orderNumber={placedOrderNumber} />;
@@ -161,22 +157,13 @@ function CheckoutStatusContent() {
 
     return (
         <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center animate-in zoom-in-95 duration-500">
-            <div className="w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center mb-6">
-                <Clock className="w-12 h-12 text-yellow-500" />
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mb-6">
+                <Loader2 className="w-12 h-12 text-gray-500 animate-spin" />
             </div>
-            <h1 className="text-3xl font-medium text-gray-900 mb-2">Payment Pending</h1>
+            <h1 className="text-3xl font-medium text-gray-900 mb-2">Confirming your payment</h1>
             <p className="text-gray-500 max-w-md mb-4 font-medium">
-                We are verifying your payment. Please wait and do not refresh this page.
+                Please wait while we finalize the payment and update your order status.
             </p>
-            <button
-                type="button"
-                onClick={() => {
-                    router.push('/');
-                }}
-                className="bg-[#0c4a9e] text-white px-8 py-3 rounded-xl font-medium hover:bg-blue-800 transition-all"
-            >
-                Continue Shopping
-            </button>
         </div>
     );
 }
