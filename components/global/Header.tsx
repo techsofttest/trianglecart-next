@@ -171,7 +171,7 @@ export default function Header() {
         <header className="hidden lg:block bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50" ref={headerRef}>
 
             {/* Top Row: Logo, Search, Actions */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-6">
+            <div className="mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-6">
 
                 {/* Logo & Location */}
                 <div className="flex items-center gap-6 flex-shrink-0">
@@ -325,12 +325,12 @@ export default function Header() {
 
             {/* Bottom Row: Categories Carousel */}
             <div className="border-t border-gray-100 bg-white hidden md:block relative group/carousel">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 relative flex items-center justify-center">
+                <div className="mx-auto px-4 sm:px-6 lg:px-8 py-2 relative flex items-center justify-center">
 
                     {/* Left Scroll Button */}
                     <button
                         onClick={() => scrollCategories('left')}
-                        className="absolute left-2 z-10 p-1.5 bg-white border border-gray-200 rounded-full shadow-md text-brand-orange hover:text-brand-orange/80 opacity-0 group-hover/carousel:opacity-100 transition-opacity"
+                        className="absolute left-2 z-10 p-1.5 bg-orange border border-gray-200 rounded-full shadow-md text-brand-white hover:text-brand-orange/80 opacity-0 group-hover/carousel:opacity-100 transition-opacity"
                     >
                         <ChevronLeft className="w-5 h-5" />
                     </button>
@@ -364,7 +364,7 @@ export default function Header() {
                                         }`}
                                 >
                                     {isScrolledToTop && (
-                                        <div className={`transition p-1.5 rounded-xl ${isActive ? 'bg-blue-50 text-[#0c4a9e]' : 'bg-brand-orange/10 text-brand-orange group-hover:text-[#0c4a9e] group-hover:bg-blue-50/50'}`}>
+                                        <div className={`transition p-1.5 rounded-xl ${isActive ? 'bg-blue-50 text-[#0c4a9e]' : 'bg-brand-green/10 text-brand-green group-hover:text-[#0c4a9e] group-hover:bg-blue-50/50'}`}>
                                             {isAllProducts ? (
                                                 <Store className="w-5 h-5 mb-1" />
                                             ) : cat.icon_url ? (
@@ -375,8 +375,8 @@ export default function Header() {
                                         </div>
                                     )}
                                     <span className={`tracking-tight transition whitespace-nowrap ${isScrolledToTop
-                                        ? `text-[11px] ${isActive ? 'font-extrabold text-[#0c4a9e]' : 'font-semibold text-gray-700 group-hover:text-[#0c4a9e]'}`
-                                        : `text-[11px] font-semibold ${isActive ? 'text-[#0c4a9e]' : 'text-gray-700 group-hover:text-[#0c4a9e]'}`
+                                        ? `text-[11px] ${isActive ? 'font-extrabold text-[#0c4a9e]' : 'font-semibold text-gray-700 group-hover:text-[#008446]'}`
+                                        : `text-[11px] font-semibold ${isActive ? 'text-[#0c4a9e]' : 'text-gray-700 group-hover:text-[#008446]'}`
                                         }`}>
                                         {cat.name}
                                     </span>
