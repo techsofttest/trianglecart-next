@@ -110,7 +110,7 @@ export default function PromoSlider({ banners }: PromoSliderProps) {
                             <img
                                 src={slide.image_url}
                                 alt={`Promo Banner ${slide.id}`}
-                                className="object-cover w-full h-full"
+                                className="object-contain w-full h-full"
                             />
                         </div>
 

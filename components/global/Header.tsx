@@ -362,7 +362,7 @@ export default function Header() {
                                             : 'flex flex-row items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 bg-gray-50/80 text-brand-orange'
                                             } ${isActive
                                                 ? 'border-[#0c4a9e] text-[#0c4a9e]'
-                                                : 'border-transparent text-white hover:text-[#0c4a9e] hover:border-[#0c4a9e]'
+                                                : 'border-transparent text-white hover:text-brand-blue hover:border-brand-blue'
                                             }`}
                                     >
                                         {isScrolledToTop && (
@@ -377,8 +377,8 @@ export default function Header() {
                                             </div>
                                         )}
                                         <span className={`tracking-tight transition whitespace-nowrap ${isScrolledToTop
-                                            ? `text-[11px] ${isActive ? 'font-extrabold text-[#0c4a9e]' : 'font-semibold text-brand-orange group-hover:text-[#008446]'}`
-                                            : `text-[11px] font-semibold ${isActive ? 'text-[#0c4a9e]' : 'text-brand-orange group-hover:text-[#008446]'}`
+                                            ? `text-[11px] ${isActive ? 'font-extrabold text-brand-blue' : 'text-brand-blue font-semibold '}`
+                                            : `text-[11px] font-semibold ${isActive ? 'text-brand-blue' : 'text-brand-blue '}`
                                             }`}>
                                             {cat.name}
                                         </span>
