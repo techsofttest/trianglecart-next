@@ -11,6 +11,7 @@ import CartDrawer from '../cart/CartDrawer';
 export default function LayoutWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
     const isAuthPage = pathname === '/signup';
+    const isHome = pathname === '/';
 
     if (isAuthPage) {
         return <>{children}</>;
@@ -20,7 +21,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
         <>
             <Header />
             <MobileHeader />
-            <main className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8 pt-4 lg:pt-8 pb-4">
+            <main className={`flex-1 w-full mx-auto ${isHome ? 'pt-0 pb-4' : 'px-4 sm:px-6 lg:px-8 pt-4 lg:pt-8 pb-4'}`}>
                 {children}
             </main>
             <Footer />

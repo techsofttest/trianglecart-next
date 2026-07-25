@@ -47,6 +47,7 @@ export default function Header() {
     const router = useRouter();
     const params = useParams();
     const pathname = usePathname();
+    const isHome = pathname === '/';
 
     // Check location state on mount
     useEffect(() => {
@@ -87,11 +88,11 @@ export default function Header() {
                 // Combine main categories first, then all categories
                 const mainCategories = data.categories.main || [];
                 const allCategories = data.categories.all || [];
-                
+
                 // Remove duplicates: keep main categories, then add any from all that aren't already included
                 const mainIds = new Set(mainCategories.map(c => c.id));
                 const additionalCategories = allCategories.filter(c => !mainIds.has(c.id));
-                
+
                 setCategories([...mainCategories, ...additionalCategories]);
             }
             if (data?.brand?.logo) {
@@ -229,7 +230,7 @@ export default function Header() {
                 {/* Right: Actions (Login, More, Cart) */}
                 <div className="flex items-center gap-2 md:gap-6 flex-shrink-0">
 
-                    <Link href="/" className="flex items-center gap-1.5 text-gray-800 hover:text-[#0c4a9e] px-4 py-2 rounded-md transition font-semibold text-sm">
+                    <Link href="/" className="flex items-center gap-1.5 text-green-800 hover:text-[#0c4a9e] px-4 py-2 rounded-md transition font-semibold text-sm">
                         <Home className="w-5 h-5" />
                         <span>Home</span>
                     </Link>
@@ -238,7 +239,7 @@ export default function Header() {
                     {isAuthenticated ? (
                         <div className="relative">
                             <button
-                                className="flex items-center gap-1.5 hover:bg-[#0c4a9e] hover:text-white text-gray-800 px-4 py-2 rounded-md transition duration-200 group"
+                                className="flex items-center gap-1.5 hover:bg-[#0c4a9e] hover:text-white text-green-800 px-4 py-2 rounded-md transition duration-200 group"
                                 onMouseEnter={() => setIsLoginOpen(true)}
                                 onClick={() => setIsLoginOpen(!isLoginOpen)}
                             >
@@ -277,7 +278,7 @@ export default function Header() {
                         </div>
                     ) : (
                         <div className="flex items-center gap-2">
-                            <Link href="/login" className="flex items-center gap-1.5 text-gray-800 hover:text-[#0c4a9e] px-4 py-2 rounded-md transition font-semibold text-sm">
+                            <Link href="/login" className="flex items-center gap-1.5 text-green-800 hover:text-[#0c4a9e] px-4 py-2 rounded-md transition font-semibold text-sm">
                                 <User className="w-5 h-5" />
                                 <span>Login</span>
                             </Link>
@@ -308,7 +309,7 @@ export default function Header() {
                     </div> */}
 
                     {/* Cart */}
-                    <Link href="/cart" className="flex items-center gap-2 text-gray-800 hover:text-[#0c4a9e] transition font-semibold text-sm relative group">
+                    <Link href="/cart" className="flex items-center gap-2 text-green-800 hover:text-[#0c4a9e] transition font-semibold text-sm relative group">
                         <div className="relative">
                             <ShoppingCart className="w-5 h-5" />
                             {cartCount > 0 && (
@@ -324,76 +325,78 @@ export default function Header() {
             </div>
 
             {/* Bottom Row: Categories Carousel */}
-            <div className="border-t border-gray-100 bg-white hidden md:block relative group/carousel">
-                <div className="mx-auto px-4 sm:px-6 lg:px-8 py-2 relative flex items-center justify-center">
+            {!isHome && (
+                <div className="border-t border-green-100 hidden md:block relative group/carousel bg-white">
+                    <div className="mx-auto px-4 sm:px-6 lg:px-8 py-2 relative flex items-center justify-center">
 
-                    {/* Left Scroll Button */}
-                    <button
-                        onClick={() => scrollCategories('left')}
-                        className="absolute left-2 z-10 p-1.5 bg-orange border border-gray-200 rounded-full shadow-md text-brand-white hover:text-brand-orange/80 opacity-0 group-hover/carousel:opacity-100 transition-opacity"
-                    >
-                        <ChevronLeft className="w-5 h-5" />
-                    </button>
+                        {/* Left Scroll Button */}
+                        <button
+                            onClick={() => scrollCategories('left')}
+                            className="absolute left-2 z-10 p-1.5 bg-orange border border-gray-200 rounded-full shadow-md text-brand-blue hover:text-brand-orange/80 opacity-0 group-hover/carousel:opacity-100 transition-opacity"
+                        >
+                            <ChevronLeft className="w-5 h-5" />
+                        </button>
 
-                    {/* Draggable Carousel Container */}
-                    <div
-                        ref={categoryNavRef}
-                        onMouseDown={handleMouseDown}
-                        onMouseMove={handleMouseMove}
-                        onMouseUp={handleMouseUpOrLeave}
-                        onMouseLeave={handleMouseUpOrLeave}
-                        className={`flex items-center gap-2 overflow-x-auto scrollbar-hide scroll-smooth select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
-                    >
-                        {navItems.map((cat) => {
-                            const isAllProducts = cat.slug === 'products';
-                            const isActive = isAllProducts
-                                ? pathname === '/products' || pathname.startsWith('/products')
-                                : params?.slug === cat.slug;
-                            const href = isAllProducts ? '/products' : `/category/${cat.slug}`;
+                        {/* Draggable Carousel Container */}
+                        <div
+                            ref={categoryNavRef}
+                            onMouseDown={handleMouseDown}
+                            onMouseMove={handleMouseMove}
+                            onMouseUp={handleMouseUpOrLeave}
+                            onMouseLeave={handleMouseUpOrLeave}
+                            className={`flex items-center gap-2 overflow-x-auto scrollbar-hide scroll-smooth select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+                        >
+                            {navItems.map((cat) => {
+                                const isAllProducts = cat.slug === 'products';
+                                const isActive = isAllProducts
+                                    ? pathname === '/products' || pathname.startsWith('/products')
+                                    : params?.slug === cat.slug;
+                                const href = isAllProducts ? '/products' : `/category/${cat.slug}`;
 
-                            return (
-                                <Link
-                                    key={cat.id}
-                                    href={href}
-                                    className={`transition group flex-shrink-0 ${isScrolledToTop
-                                        ? 'flex flex-col items-center justify-center px-4 border-b-2 pb-1 min-w-[100px]'
-                                        : 'flex flex-row items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 bg-gray-50/80'
-                                        } ${isActive
-                                            ? 'border-[#0c4a9e] text-[#0c4a9e]'
-                                            : 'border-transparent text-gray-600 hover:text-[#0c4a9e] hover:border-[#0c4a9e]'
-                                        }`}
-                                >
-                                    {isScrolledToTop && (
-                                        <div className={`transition p-1.5 rounded-xl ${isActive ? 'bg-blue-50 text-[#0c4a9e]' : 'bg-brand-green/10 text-brand-green group-hover:text-[#0c4a9e] group-hover:bg-blue-50/50'}`}>
-                                            {isAllProducts ? (
-                                                <Store className="w-5 h-5 mb-1" />
-                                            ) : cat.icon_url ? (
-                                                <img src={cat.icon_url} alt={cat.name} className="w-5 h-5 mb-1 object-contain" />
-                                            ) : (
-                                                <Package className="w-5 h-5 mb-1" />
-                                            )}
-                                        </div>
-                                    )}
-                                    <span className={`tracking-tight transition whitespace-nowrap ${isScrolledToTop
-                                        ? `text-[11px] ${isActive ? 'font-extrabold text-[#0c4a9e]' : 'font-semibold text-gray-700 group-hover:text-[#008446]'}`
-                                        : `text-[11px] font-semibold ${isActive ? 'text-[#0c4a9e]' : 'text-gray-700 group-hover:text-[#008446]'}`
-                                        }`}>
-                                        {cat.name}
-                                    </span>
-                                </Link>
-                            );
-                        })}
+                                return (
+                                    <Link
+                                        key={cat.id}
+                                        href={href}
+                                        className={`transition group flex-shrink-0 ${isScrolledToTop
+                                            ? 'flex flex-col items-center justify-center px-4 border-b-2 pb-1 min-w-[100px]'
+                                            : 'flex flex-row items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 bg-gray-50/80 text-brand-orange'
+                                            } ${isActive
+                                                ? 'border-[#0c4a9e] text-[#0c4a9e]'
+                                                : 'border-transparent text-white hover:text-[#0c4a9e] hover:border-[#0c4a9e]'
+                                            }`}
+                                    >
+                                        {isScrolledToTop && (
+                                            <div className={`transition p-1.5 rounded-xl ${isActive ? 'bg-blue-50 text-[#0c4a9e]' : 'text-brand-orange group-hover:text-[#0c4a9e] group-hover:bg-blue-50/50'}`}>
+                                                {isAllProducts ? (
+                                                    <Store className="w-5 h-5 mb-1" />
+                                                ) : cat.icon_url ? (
+                                                    <img src={cat.icon_url} alt={cat.name} className="w-5 h-5 mb-1 object-contain" />
+                                                ) : (
+                                                    <Package className="w-5 h-5 mb-1" />
+                                                )}
+                                            </div>
+                                        )}
+                                        <span className={`tracking-tight transition whitespace-nowrap ${isScrolledToTop
+                                            ? `text-[11px] ${isActive ? 'font-extrabold text-[#0c4a9e]' : 'font-semibold text-brand-orange group-hover:text-[#008446]'}`
+                                            : `text-[11px] font-semibold ${isActive ? 'text-[#0c4a9e]' : 'text-brand-orange group-hover:text-[#008446]'}`
+                                            }`}>
+                                            {cat.name}
+                                        </span>
+                                    </Link>
+                                );
+                            })}
+                        </div>
+
+                        {/* Right Scroll Button */}
+                        <button
+                            onClick={() => scrollCategories('right')}
+                            className="absolute right-2 z-10 p-1.5 bg-white border border-gray-200 rounded-full shadow-md text-brand-orange hover:text-brand-orange/80 opacity-20 group-hover/carousel:opacity-100 transition-opacity"
+                        >
+                            <ChevronRight className="w-5 h-5" />
+                        </button>
                     </div>
-
-                    {/* Right Scroll Button */}
-                    <button
-                        onClick={() => scrollCategories('right')}
-                        className="absolute right-2 z-10 p-1.5 bg-white border border-gray-200 rounded-full shadow-md text-brand-orange hover:text-brand-orange/80 opacity-0 group-hover/carousel:opacity-100 transition-opacity"
-                    >
-                        <ChevronRight className="w-5 h-5" />
-                    </button>
                 </div>
-            </div>
+            )}
 
             {/* Location Selection Drawer */}
             <LocationDrawer

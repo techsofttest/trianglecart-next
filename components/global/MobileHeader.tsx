@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { apiUrl } from '@/lib/api';
 import { MapPin, ChevronDown, Home, Briefcase, Package, Store } from 'lucide-react';
 import LocationDrawer from './LocationDrawer';
@@ -19,6 +20,8 @@ type HeaderCategory = {
 };
 
 export default function MobileHeader() {
+    const pathname = usePathname();
+    const isHome = pathname === '/';
     const [isScrolled, setIsScrolled] = useState(false);
     const [isLocationOpen, setIsLocationOpen] = useState(false);
     const { isAuthenticated } = useCustomerAuth();
@@ -129,6 +132,7 @@ export default function MobileHeader() {
                 </div>
 
                 {/* Bottom Row: Categories Carousel */}
+                {!isHome && (
                 <div className={`border-t border-gray-50 overflow-x-auto scrollbar-hide bg-white transition-all duration-300 ${isScrolled ? 'py-1.5' : 'py-3'}`}>
                     <div className="flex items-center gap-6 px-4 min-w-max">
                         {navItems.map((cat) => (
@@ -155,6 +159,7 @@ export default function MobileHeader() {
                         ))}
                     </div>
                 </div>
+                )}
             </header>
 
             <LocationDrawer 
@@ -168,7 +173,9 @@ export default function MobileHeader() {
             />
 
             {/* Spacer to prevent content overlap */}
-            <div className={`lg:hidden ${isScrolled ? 'h-[100px]' : 'h-[180px]'}`} />
+            <div className={`lg:hidden ${isHome 
+                ? (isScrolled ? 'h-[60px]' : 'h-[120px]') 
+                : (isScrolled ? 'h-[100px]' : 'h-[180px]')}`} />
         </>
     );
 }

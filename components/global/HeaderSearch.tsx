@@ -123,16 +123,16 @@ function HeaderSearchInner() {
 
     return (
         <div className="flex-1 max-w-xl relative">
-            <div className={`flex items-center w-full bg-white rounded-md transition-all duration-200 border border-brand-blue ${focused ? 'shadow-md ring-2 ring-brand-blue/10' : ''}`}>
+            <div className={`flex items-center w-full bg-white rounded-md transition-all duration-200 border border-brand-green ${focused ? 'shadow-md ring-2 ring-brand-green/10' : ''}`}>
                 <div className="relative flex-1 group">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                        <Search className="h-4 w-4 text-brand-blue transition-colors" />
+                        <Search className="h-4 w-4 text-brand-green transition-colors" />
                     </div>
                     <input
                         type="text"
                         value={query}
                         placeholder="Search for groceries, spices, brands..."
-                        className="w-full bg-transparent py-2.5 pl-10 pr-4 outline-none text-sm text-gray-800 placeholder-gray-500"
+                        className="w-full bg-transparent py-2.5 pl-10 pr-4 outline-none text-sm text-white-800 placeholder-gray-500"
                         onFocus={() => setFocused(true)}
                         onBlur={() => setTimeout(() => setFocused(false), 150)}
                         onChange={(e) => setQuery(e.target.value)}
@@ -149,7 +149,7 @@ function HeaderSearchInner() {
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={navigateToSearchPage}
                     disabled={!searchQuery}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-r-md bg-[#0c4a9e] text-white text-sm font-semibold transition hover:bg-[#0c4a9e]/90 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-500"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-r-md bg-green-600 text-white text-sm font-semibold transition hover:bg-[#0c4a9e]/90 disabled:cursor-not-allowed disabled:bg-green-700 disabled:text-white-500"
                 >
                     <Search className="w-4 h-4" />
                     Search

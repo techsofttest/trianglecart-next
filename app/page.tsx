@@ -1,5 +1,6 @@
 import PromoSlider from "@/components/ui/PromoSlider";
 import OfferMarquee from "@/components/ui/OfferMarquee";
+import CategoryStrip from "@/components/ui/CategoryStrip";
 import CategoryGrid, { CategoryItem } from "@/components/product/CategoryGrid";
 import SubCategories, { SubCategoryItem } from "@/components/product/SubCategories";
 import ProductRow from "@/components/product/ProductRow";
@@ -233,76 +234,80 @@ export default async function Home() {
     const homeAdvertisement = homeData?.home_advertisement;
 
     return (
-      <div className="flex flex-col gap-10 md:gap-10 pb-12 pt-2 bg-[#fff]">
+      <div className="flex flex-col gap-10 md:gap-10 pb-12 bg-[#fff]">
         <section className="w-full">
           <PromoSlider banners={homeData?.banners} />
         </section>
 
-        <section className="w-full px-4 md:px-0">
-          <OfferMarquee messages={offerMessages} />
-        </section>
-
-        <section className="w-full">
-          <BuyItAgainRow fallbackProducts={buyItAgainProducts} />
-        </section>
-
-        
-
-        {/*<section className="w-full">
-          <CategoryGrid title="Explore Categories" categories={prominentCategories} />
-        </section>*/}
-
-        <section className="w-full">
-          <ProductRow title="Featured products" products={suggestedProducts} viewAllLink="/products" />
-        </section>
-
-        <section className="w-full">
-          <ProductRow title="Our latest products" products={latestProducts} viewAllLink="/products" />
-        </section>
-
-        {homeAdvertisement && (
-          <section className="w-full px-4 md:px-0">
-            <Link
-              href={homeAdvertisement.url || '#'}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group block overflow-hidden rounded-3xl border border-gray-100 shadow-sm transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-lg"
-            >
-              {homeAdvertisement.banner_url ? (
-                <img
-                  src={homeAdvertisement.banner_url}
-                  alt={homeAdvertisement.title || homeAdvertisement.name}
-                  className="w-full h-auto object-cover block"
-                />
-              ) : (
-                <div className="relative min-h-[120px] bg-gradient-to-r from-[#0c4a9e] to-[#0f7bd7] flex items-center justify-center p-6 text-center text-white font-bold text-lg md:text-xl">
-                  {homeAdvertisement.title || homeAdvertisement.name}
-                </div>
-              )}
-            </Link>
+        <div className="px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-10 md:gap-10 mx-auto">
+          <section className="w-full relative z-10 -mt-[45px] sm:-mt-[55px] md:-mt-[65px]">
+            <CategoryStrip categories={categoriesData || []} />
           </section>
-        )}
 
-        {categoriesToRender.map((cat, idx) => (
-          <section key={idx} className="w-full">
-            <SubCategories
-              sectionTitle={cat.title}
-              mainLink={cat.link}
-              items={cat.items}
-              sectionBgColor={cat.sectionBgColor}
-            />
-          </section>
-        ))}
-
-        {false && (
           <section className="w-full">
-            <OurBrands title="Top Brands" brands={featuredBrands} />
+            <OfferMarquee messages={offerMessages} />
           </section>
-        )}
 
-        <section className="w-full">
-          <ProductRow title="Top Trending Essentials" products={suggestedProducts.slice(12, 24)} viewAllLink="/products" />
-        </section>
+          <section className="w-full">
+            <BuyItAgainRow fallbackProducts={buyItAgainProducts} />
+          </section>
+
+          {/*<section className="w-full">
+            <CategoryGrid title="Explore Categories" categories={prominentCategories} />
+          </section>*/}
+
+          <section className="w-full">
+            <ProductRow title="Featured products" products={suggestedProducts} viewAllLink="/products" />
+          </section>
+
+          <section className="w-full">
+            <ProductRow title="Our latest products" products={latestProducts} viewAllLink="/products" />
+          </section>
+
+          {homeAdvertisement && (
+            <section className="w-full">
+              <Link
+                href={homeAdvertisement.url || '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block overflow-hidden rounded-3xl border border-gray-100 shadow-sm transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+              >
+                {homeAdvertisement.banner_url ? (
+                  <img
+                    src={homeAdvertisement.banner_url}
+                    alt={homeAdvertisement.title || homeAdvertisement.name}
+                    className="w-full h-auto object-cover block"
+                  />
+                ) : (
+                  <div className="relative min-h-[120px] bg-gradient-to-r from-[#0c4a9e] to-[#0f7bd7] flex items-center justify-center p-6 text-center text-white font-bold text-lg md:text-xl">
+                    {homeAdvertisement.title || homeAdvertisement.name}
+                  </div>
+                )}
+              </Link>
+            </section>
+          )}
+
+          {categoriesToRender.map((cat, idx) => (
+            <section key={idx} className="w-full">
+              <SubCategories
+                sectionTitle={cat.title}
+                mainLink={cat.link}
+                items={cat.items}
+                sectionBgColor={cat.sectionBgColor}
+              />
+            </section>
+          ))}
+
+          {false && (
+            <section className="w-full">
+              <OurBrands title="Top Brands" brands={featuredBrands} />
+            </section>
+          )}
+
+          <section className="w-full">
+            <ProductRow title="Top Trending Essentials" products={suggestedProducts.slice(12, 24)} viewAllLink="/products" />
+          </section>
+        </div>
       </div>
     );
   }
