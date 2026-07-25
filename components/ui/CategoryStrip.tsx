@@ -95,11 +95,11 @@ export default function CategoryStrip({ categories }: CategoryStripProps) {
                             >
                                 <div className="transition p-2 rounded-xl text-brand-orange group-hover:text-green-800 group-hover:bg-white bg-white/10 mb-1">
                                     {isAllProducts ? (
-                                        <Store className="w-5 h-5" />
+                                        <Store className="w-10 h-10" />
                                     ) : cat.icon_url ? (
-                                        <img src={cat.icon_url} alt={cat.name} className="w-5 h-5 object-contain filter brightness-100 group-hover:brightness-100" />
+                                        <img src={cat.icon_url} alt={cat.name} className="w-10 h-10 object-contain filter brightness-100 group-hover:brightness-100" />
                                     ) : (
-                                        <Package className="w-5 h-5" />
+                                        <Package className="w-10 h-10" />
                                     )}
                                 </div>
                                 <span className="tracking-tight transition whitespace-nowrap text-[12px] font-bold">
