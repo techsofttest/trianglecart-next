@@ -14,7 +14,7 @@ export default function OfferMarquee({ messages }: { messages: string[] }) {
           {trackItems.map((text, index) => (
             <span
               key={`${text}-${index}`}
-              className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-2 py-2 md:px-4 md:py-2 text-[7px] md:text-sm font-semibold uppercase tracking-[0.1em] text-white shadow-sm shadow-white/10"
+              className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-2 py-2 md:px-4 md:py-2 text-[9px] md:text-sm font-semibold uppercase tracking-[0.1em] text-white shadow-sm shadow-white/10"
             >
               {text}
             </span>

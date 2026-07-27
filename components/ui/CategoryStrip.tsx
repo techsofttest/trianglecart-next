@@ -69,7 +69,7 @@ export default function CategoryStrip({ categories }: CategoryStripProps) {
                     onClick={() => scrollCategories('left')}
                     className="absolute left-0 z-10 p-1.5 bg-brand-orange hover:bg-white border border-brand-orange rounded-full shadow-md text-white hover:text-brand-orange opacity-10 group-hover/carousel:opacity-100 transition-opacity"
                 >
-                    <ChevronLeft className="w-5 h-5" />
+                    <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
 
                 {/* Draggable Carousel Container */}
@@ -95,14 +95,14 @@ export default function CategoryStrip({ categories }: CategoryStripProps) {
                             >
                                 <div className="transition p-2 rounded-xl text-brand-orange group-hover:text-green-800 group-hover:bg-white bg-white/10 mb-1">
                                     {isAllProducts ? (
-                                        <Store className="w-4 h-4 md:w-10 md:h-10" />
+                                        <Store className="w-6 h-6 md:w-10 md:h-10" />
                                     ) : cat.icon_url ? (
-                                        <img src={cat.icon_url} alt={cat.name} className="w-10 h-10 object-contain filter brightness-100 group-hover:brightness-100" />
+                                        <img src={cat.icon_url} alt={cat.name} className="w-6 h-6 md:w-10 md:h-10 object-contain filter brightness-100 group-hover:brightness-100" />
                                     ) : (
-                                        <Package className="w-4 h-4 md:w-10 md:h-10" />
+                                        <Package className="w-6 h-6 md:w-10 md:h-10" />
                                     )}
                                 </div>
-                                <span className="tracking-tight transition whitespace-nowrap text-[8px] md:text-[12px] font-bold">
+                                <span className="tracking-tight transition whitespace-nowrap text-[9px] md:text-[12px] font-bold">
                                     {cat.name}
                                 </span>
                             </Link>
@@ -115,7 +115,7 @@ export default function CategoryStrip({ categories }: CategoryStripProps) {
                     onClick={() => scrollCategories('right')}
                     className="absolute right-0 z-10 p-1.5 bg-brand-orange hover:bg-white border border-brand-orange rounded-full shadow-md text-white hover:text-brand-orange opacity-10 group-hover/carousel:opacity-100 transition-opacity"
                 >
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
                 </button>
             </div>
         </div>

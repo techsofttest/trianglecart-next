@@ -96,7 +96,7 @@ export default function MobileHeader() {
                             <img
                                 src={brandLogo}
                                 alt="Logo"
-                                className="h-4 md:h-8 w-auto object-contain"
+                                className="h-6 md:h-8 w-auto object-contain"
                             />
                         </Link>
                         

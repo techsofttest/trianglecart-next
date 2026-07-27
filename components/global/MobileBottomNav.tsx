@@ -24,24 +24,24 @@ export default function MobileBottomNav() {
     const firstName = customer?.name ? String(customer.name).split(' ')[0] : null;
 
     const navItems = [
-        { label: 'Home', icon: <Home className="w-3 h-3" />, href: '/' },
-        { label: 'Cart', icon: <ShoppingCart className="w-3 h-3" />, href: '/cart', badge: cartCount },
+        { label: 'Home', icon: <Home className="w-4 h-4" />, href: '/' },
+        { label: 'Cart', icon: <ShoppingCart className="w-4 h-4" />, href: '/cart', badge: cartCount },
         isAuthenticated
             ? { label: firstName || 'Profile', icon: <User className="w-4 h-4" />, href: '/profile/personal' }
-            : { label: 'Login', icon: <User className="w-3 h-3" />, href: '/login' },
-        { label: 'More', icon: <Grid className="w-3 h-3" />, onClick: () => setIsMoreOpen(true) },
+            : { label: 'Login', icon: <User className="w-4 h-4" />, href: '/login' },
+        { label: 'More', icon: <Grid className="w-4 h-4" />, onClick: () => setIsMoreOpen(true) },
     ];
 
     const moreLinks = [] as Array<{ label: string; icon: React.ReactNode; href: string }>;
 
     if (isAuthenticated) {
-        moreLinks.push({ label: 'My Last Purchase', icon: <ShoppingBag className="w-3 h-3" />, href: '/profile/orders' });
-        moreLinks.push({ label: 'My Wishlist', icon: <Heart className="w-3 h-3" />, href: '/profile/wishlist' });
-        moreLinks.push({ label: 'My Addresses', icon: <User className="w-3 h-3" />, href: '/profile/addresses' });
+        moreLinks.push({ label: 'My Last Purchase', icon: <ShoppingBag className="w-4 h-4" />, href: '/profile/orders' });
+        moreLinks.push({ label: 'My Wishlist', icon: <Heart className="w-4 h-4" />, href: '/profile/wishlist' });
+        moreLinks.push({ label: 'My Addresses', icon: <User className="w-4 h-4" />, href: '/profile/addresses' });
     }
 
     // Always available
-    moreLinks.push({ label: 'Request New Product', icon: <PlusCircle className="w-3 h-3" />, href: '/contact' });
+    moreLinks.push({ label: 'Request New Product', icon: <PlusCircle className="w-4 h-4" />, href: '/contact' });
 
     return (
         <>
@@ -60,7 +60,7 @@ export default function MobileBottomNav() {
                                         </span>
                                     )}
                                 </div>
-                                <span className={`text-[8px] font-bold uppercase tracking-wider ${isActive ? 'text-brand-blue' : 'text-brand-green'}`}>
+                                <span className={`text-[9px] font-bold uppercase tracking-wider ${isActive ? 'text-brand-blue' : 'text-brand-green'}`}>
                                     {item.label}
                                 </span>
                             </div>
