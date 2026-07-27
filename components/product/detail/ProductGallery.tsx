@@ -1,10 +1,10 @@
 'use client';
 
 import React, { useState } from 'react';
-import Link from 'next/link';
 import { Heart } from 'lucide-react';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { showLoginRequiredToast } from '@/utils/toast';
 import { resolveProductImageUrl } from '@/lib/product';
 import ProductNotice from './ProductNotice';
 
@@ -18,12 +18,12 @@ interface ProductGalleryProps {
 export default function ProductGallery({ images, title, id, product }: ProductGalleryProps) {
     const [selectedImage, setSelectedImage] = useState(0);
     const { isInWishlist, toggleWishlist } = useWishlist();
-    const isWishlisted = isInWishlist(id);
+    const { isAuthenticated } = useCustomerAuth();
+    const isWishlisted = isAuthenticated && isInWishlist(id);
     
     // Zoom state
     const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
     const [isZooming, setIsZooming] = useState(false);
-    const { isAuthenticated } = useCustomerAuth();
 
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -53,6 +53,7 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
                     />
                     {isAuthenticated ? (
                         <button 
+                            type="button"
                             onClick={() => toggleWishlist(product)}
                             className={`absolute top-4 right-4 p-2.5 rounded-full shadow-lg transition-all active:scale-125 border-2 z-10 ${
                                 isWishlisted ? 'bg-red-600 text-white border-red-600' : 'bg-white text-gray-400 hover:text-red-600 border-gray-100 hover:border-red-600'
@@ -61,12 +62,13 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
                             <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-current' : ''}`} />
                         </button>
                     ) : (
-                        <Link
-                            href="/login"
-                            className="absolute top-4 right-4 p-2.5 rounded-full shadow-lg transition-all border-2 z-10 bg-white text-gray-400 hover:text-red-600 border-gray-100 hover:border-red-600"
+                        <button
+                            type="button"
+                            onClick={() => showLoginRequiredToast()}
+                            className="absolute top-4 right-4 p-2.5 rounded-full shadow-lg transition-all active:scale-125 border-2 z-10 bg-white text-gray-400 hover:text-red-600 border-gray-100 hover:border-red-600"
                         >
                             <Heart className="w-5 h-5" />
-                        </Link>
+                        </button>
                     )}
                 </div>
             </div>

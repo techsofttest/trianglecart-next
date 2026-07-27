@@ -14,6 +14,7 @@ export interface StorefrontProduct {
     max_price?: number;
     rating?: number;
     review_count?: number;
+    is_featured?: boolean;
     variants?: Array<{
         id: number;
         sku: string | null;
@@ -41,6 +42,7 @@ export interface ProductCardModel {
     rating?: number;
     reviews?: number;
     isSponsored?: boolean;
+    isFeatured?: boolean;
     promoText?: string;
     expiryDate?: string;
     category?: string;
@@ -118,6 +120,7 @@ export function toProductCardModel(product: StorefrontProduct): ProductCardModel
             : undefined,
         rating: product.rating || 0,
         reviews: product.review_count || 0,
+        isFeatured: Boolean(product.is_featured),
         category: product.category?.slug,
         variants: product.variants,
     };

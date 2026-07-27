@@ -8,6 +8,7 @@ import { useWishlist } from '@/context/WishlistContext';
 import ProductQuickAddModal from './ProductQuickAddModal';
 import { slugify } from '@/utils/slugify';
 import { resolveProductImageUrl } from '@/lib/product';
+import { showLoginRequiredToast } from '@/utils/toast';
 
 export interface Product {
     id: string;
@@ -21,6 +22,7 @@ export interface Product {
     discount?: string;
     rating?: number;
     reviews?: number;
+    isFeatured?: boolean;
     isSponsored?: boolean;
     promoText?: string;
     expiryDate?: string;
@@ -42,21 +44,19 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
     const { isAuthenticated } = useCustomerAuth();
     const { isInWishlist, toggleWishlist, removeFromWishlist } = useWishlist();
     const [isQuickAddOpen, setIsQuickAddOpen] = useState(false);
-    const isWishlisted = isInWishlist(product.id);
+    const isWishlisted = isAuthenticated && isInWishlist(product.id);
 
     return (
         <>
             <div className="group relative flex flex-col bg-white rounded-2xl p-2.5 sm:p-3 border border-gray-100 hover:border-[#0c4a9e]/30 hover:shadow-lg transition-all duration-300">
                 {/* Top Actions/Badges */}
                 <div className="absolute top-2.5 left-2.5 right-2.5 flex justify-between items-start z-10 pointer-events-none">
-                    {/* {product.discount ? (
-                        <div className="bg-red-500 text-white text-[10px] sm:text-[11px] font-bold px-2 py-1 rounded-lg shadow-sm uppercase tracking-wider animate-in fade-in zoom-in duration-300">
-                            {product.discount} OFF
-                        </div>
-                    ) : <div />}
-                     */}
-
                     <div className="flex flex-col gap-2 pointer-events-auto">
+                        {product.isFeatured && (
+                            <div className="bg-[#0c4a9e] text-white text-[10px] sm:text-[11px] font-bold px-2 py-1 rounded-lg shadow-sm uppercase tracking-wider animate-in fade-in zoom-in duration-300">
+                                FEATURED
+                            </div>
+                        )}
                         {showRemoveButton && (
                             <button
                                 onClick={(e) => {
@@ -144,13 +144,17 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                                     <span>{isWishlisted ? 'WISHLISTED' : 'WISHLIST'}</span>
                                 </button>
                             ) : (
-                                <Link
-                                    href="/login"
+                                <button
+                                    type="button"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        showLoginRequiredToast();
+                                    }}
                                     className="w-full flex items-center justify-center gap-2 font-semibold text-xs sm:text-sm px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-sm sm:text-sm transition-all duration-200 shadow-sm active:scale-95 group bg-white border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
                                 >
                                     <Heart className="w-4 h-4 text-red-600 group-hover:text-white" />
                                     <span>WISHLIST</span>
-                                </Link>
+                                </button>
                             )}
                         </div>
                     </div>

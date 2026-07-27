@@ -5,9 +5,11 @@ import { X, ShoppingCart } from 'lucide-react';
 import { Product } from './ProductCard';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { useRouter } from 'next/navigation';
 import VariantSelector, { ProductVariant } from './VariantSelector';
 import { resolveProductImageUrl } from '@/lib/product';
+import { showLoginRequiredToast } from '@/utils/toast';
 
 interface ProductQuickAddModalProps {
     product: Product;
@@ -20,6 +22,7 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(product.variants?.[0] ?? null);
     const { addToCart } = useCart();
     const { toggleWishlist, isInWishlist } = useWishlist();
+    const { isAuthenticated } = useCustomerAuth();
     const router = useRouter();
 
     if (!isOpen) return null;
@@ -29,7 +32,7 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
         ? [selectedVariant.size, selectedVariant.unit].filter(Boolean).join(' ')
         : product.weight;
     const isOutOfStock = selectedVariant ? selectedVariant.stock <= 0 : false;
-    const isWishlisted = isInWishlist(product.id);
+    const isWishlisted = isAuthenticated && isInWishlist(product.id);
 
     const handleAddToCart = () => {
         if (isOutOfStock) return;
@@ -126,7 +129,14 @@ export default function ProductQuickAddModal({ product, isOpen, onClose }: Produ
 
 
                         <button
-                            onClick={() => toggleWishlist(product)}
+                            type="button"
+                            onClick={() => {
+                                if (!isAuthenticated) {
+                                    showLoginRequiredToast();
+                                    return;
+                                }
+                                toggleWishlist(product);
+                            }}
                             className={`w-full font-bold py-4 rounded-2xl transition-all flex items-center justify-center gap-2 text-sm ${
                                 isWishlisted
                                     ? 'bg-red-600 text-white border-2 border-red-600'
