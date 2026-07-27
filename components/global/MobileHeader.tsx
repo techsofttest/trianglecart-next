@@ -132,7 +132,7 @@ export default function MobileHeader() {
                 </div>
 
                 {/* Bottom Row: Categories Carousel */}
-                {!isHome && (
+                {!isHome && !pathname.startsWith('/product/') && (
                 <div className={`border-t border-gray-50 overflow-x-auto scrollbar-hide bg-white transition-all duration-300 ${isScrolled ? 'py-1.5' : 'py-3'}`}>
                     <div className="flex items-center gap-6 px-4 min-w-max">
                         {navItems.map((cat) => (
@@ -173,7 +173,7 @@ export default function MobileHeader() {
             />
 
             {/* Spacer to prevent content overlap */}
-            <div className={`lg:hidden ${isHome 
+            <div className={`lg:hidden ${(isHome || pathname.startsWith('/product/'))
                 ? (isScrolled ? 'h-[60px]' : 'h-[120px]') 
                 : (isScrolled ? 'h-[100px]' : 'h-[180px]')}`} />
         </>

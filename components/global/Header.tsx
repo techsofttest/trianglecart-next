@@ -85,14 +85,15 @@ export default function Header() {
         const fetchCategories = async () => {
             const data = await fetchStorefront<{ brand: { logo: string }; categories: { main: HeaderCategory[]; all: HeaderCategory[] } }>('/api/storefront/header');
             if (data?.categories) {
-                // Combine main categories first, then all categories
+                // Combine main categories first, then all categories (subcategories)
                 const mainCategories = data.categories.main || [];
                 const allCategories = data.categories.all || [];
 
-                // Remove duplicates: keep main categories, then add any from all that aren't already included
+                // Remove duplicates: filter out any subcategories that are already in main
                 const mainIds = new Set(mainCategories.map(c => c.id));
                 const additionalCategories = allCategories.filter(c => !mainIds.has(c.id));
 
+                // API returns them in correct order: main first, then alphabetically sorted subcategories
                 setCategories([...mainCategories, ...additionalCategories]);
             }
             if (data?.brand?.logo) {

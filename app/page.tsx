@@ -106,10 +106,6 @@ export default async function Home() {
     ),
   ]);
 
-  const sortedCategoriesData = categoriesData?.slice().sort((a, b) =>
-    a.name.localeCompare(b.name)
-  );
-
   const bgColors = [
       "bg-red-50/60", "bg-yellow-50/60", "bg-green-50/60", "bg-orange-50/60",
       "bg-pink-50/60", "bg-blue-50/60", "bg-purple-50/60", "bg-gray-50/60",
@@ -129,7 +125,7 @@ export default async function Home() {
     });
 
   const prominentCategories: CategoryItem[] =
-    sortedCategoriesData?.map((cat, index) => ({
+    categoriesData?.map((cat, index) => ({
       id: cat.id,
       name: cat.name,
       link: `/category/${cat.slug}`,
