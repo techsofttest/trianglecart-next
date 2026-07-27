@@ -156,9 +156,9 @@ function HeaderSearchInner() {
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={navigateToSearchPage}
                     disabled={!searchQuery}
-                    className="inline-flex items-center gap-2 px-4 py-2 rounded-r-md bg-green-600 text-white text-sm font-semibold transition hover:bg-[#0c4a9e]/90 disabled:cursor-not-allowed disabled:bg-green-700 disabled:text-white-500"
+                    className="inline-flex items-center gap-2 px-2 py-2 md:px-4 md:py-2 rounded-r-md bg-green-600 text-white text-[10px] md:text-sm font-semibold transition hover:bg-[#0c4a9e]/90 disabled:cursor-not-allowed disabled:bg-green-700 disabled:text-white-500"
                 >
-                    <Search className="w-4 h-4" />
+                    <Search className="w-4 h-4 md:w-4 md:h-4" />
                     Search
                 </button>
             </div>

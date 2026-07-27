@@ -63,12 +63,12 @@ export default function PWAInstallStrip() {
     setDismissed(true);
   };
 
-  if (!showInstall || dismissed) {
+  if (!showInstall) {
     return null;
   }
 
   return (
-    <div className="w-full bg-brand-blue text-white py-4 px-4 sm:px-6 lg:px-8">
+    <div className="w-full bg-brand-blue text-white px-2 py-2 rounded-[5px]">
       <div className="mx-auto flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 flex-1">
           <Download className="w-5 h-5 flex-shrink-0" />

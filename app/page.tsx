@@ -235,13 +235,13 @@ export default async function Home() {
     const homeAdvertisement = homeData?.home_advertisement;
 
     return (
-      <div className="flex flex-col gap-10 md:gap-10 pb-12 bg-[#fff]">
+      <div className="flex flex-col gap-4 md:gap-10 pb-12 bg-[#fff]">
         <section className="w-full">
           <PromoSlider banners={homeData?.banners} />
         </section>
 
-        <div className="px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-10 md:gap-10 mx-auto">
-          <section className="w-full relative z-10 -mt-[45px] sm:-mt-[55px] md:-mt-[65px]">
+        <div className="px-2 sm:px-6 lg:px-8 w-full flex flex-col gap-4 md:gap-10 mx-auto">
+          <section className="w-full relative z-10 sm:-mt-[55px] md:-mt-[65px]">
             <CategoryStrip categories={categoriesData || []} />
           </section>
 
