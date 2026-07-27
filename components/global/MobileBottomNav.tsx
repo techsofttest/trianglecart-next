@@ -52,7 +52,7 @@ export default function MobileBottomNav() {
                         const isActive = pathname === item.href;
                         const content = (
                             <div className="flex flex-col items-center gap-1 min-w-[64px] py-1 transition-all">
-                                <div className={`relative ${isActive ? 'text-[#0c4a9e] scale-110' : 'text-gray-400'}`}>
+                                <div className={`relative ${isActive ? 'text-brand-blue scale-110' : 'text-brand-green'}`}>
                                     {item.icon}
                                     {item.badge !== undefined && item.badge > 0 && (
                                         <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white animate-in zoom-in duration-300">
@@ -60,7 +60,7 @@ export default function MobileBottomNav() {
                                         </span>
                                     )}
                                 </div>
-                                <span className={`text-[8px] font-bold uppercase tracking-wider ${isActive ? 'text-[#0c4a9e]' : 'text-gray-400'}`}>
+                                <span className={`text-[8px] font-bold uppercase tracking-wider ${isActive ? 'text-brand-blue' : 'text-brand-green'}`}>
                                     {item.label}
                                 </span>
                             </div>
@@ -96,13 +96,13 @@ export default function MobileBottomNav() {
                                 <Link 
                                     key={idx} 
                                     href={link.href}
-                                    className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:bg-blue-50 transition-all group"
+                                    className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100 bg-brand-green hover:bg-blue-50 transition-all group"
                                 >
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-[#0c4a9e] shadow-sm group-hover:bg-[#0c4a9e] group-hover:text-white transition-all">
+                                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-brand-green shadow-sm group-hover:bg-brand-blue group-hover:text-white transition-all">
                                             {link.icon}
                                         </div>
-                                        <span className="font-bold text-gray-700 text-sm">{link.label}</span>
+                                        <span className="font-bold text-brand-green text-sm">{link.label}</span>
                                     </div>
                                     <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0c4a9e] transition-all" />
                                 </Link>
