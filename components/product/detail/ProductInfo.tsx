@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { Truck, RotateCcw } from "lucide-react";
+import { Truck, RotateCcw, BadgeDollarSign } from "lucide-react";
 
 interface ProductInfoProps {
     brand: string;
@@ -25,7 +25,7 @@ export default function ProductInfo({ brand, title, rating, reviews, price, orig
                     {title}
                 </h3>
 
-                <div className="flex items-center flex-wrap gap-3">
+                <div className="flex items-center flex-wrap gap-2">
                     <span className="text-2xl font-semibold text-gray-900 tracking-tight">$ {price}</span>
                     <span className="inline-flex items-center rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700">
                         In Stock
@@ -34,7 +34,7 @@ export default function ProductInfo({ brand, title, rating, reviews, price, orig
 
 
 
-                <div className="mt-4 space-y-4 border-t border-gray-200 pt-5">
+                <div className="mt-1 space-y-3 border-t border-gray-200 pt-4">
 
                     <div className="flex items-start gap-4">
                         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-blue-50">
@@ -54,7 +54,7 @@ export default function ProductInfo({ brand, title, rating, reviews, price, orig
 
                     <div className="flex items-start gap-4">
                         <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-green-50">
-                            <RotateCcw className="h-5 w-5 text-green-700" />
+                            <BadgeDollarSign className="h-5 w-5 text-green-700" />
                         </div>
 
                         <div>

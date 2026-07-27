@@ -5,12 +5,12 @@ import { ShieldCheck, Truck, RotateCcw, Zap } from 'lucide-react';
 
 interface ProductFeaturesProps {
     highlights: string[];
-    description: string;
+    description?: string | null;
 }
 
 export default function ProductFeatures({ highlights, description }: ProductFeaturesProps) {
     const normalizedHighlights = (highlights || []).filter(Boolean);
-    const normalizedDescription = (description || '').trim();
+    const normalizedDescription = description?.trim() || '';
 
     return (
         <div className="space-y-8">

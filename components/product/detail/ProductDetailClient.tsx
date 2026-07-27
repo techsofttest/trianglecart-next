@@ -64,7 +64,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 </div>
             </div>
 
-            <div className="lg:col-span-6 space-y-8">
+            <div className="lg:col-span-6 space-y-4">
                 <ProductInfo
                     brand={product.brand}
                     title={product.title}
@@ -81,7 +81,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                     onSelectVariant={setSelectedVariant}
                 />
 
-                <div className="space-y-3 pt-2">
+                <div className="space-y-4">
                     <label className="text-[11px] font-bold text-gray-400 uppercase tracking-wider ml-1">Quantity</label>
                     <div className="flex items-center gap-4 w-max bg-gray-50/50 p-1 rounded-xl border border-gray-100">
                         <button

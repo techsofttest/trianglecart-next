@@ -121,7 +121,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                         originalPrice,
                         rating: product.rating || 0,
                         reviews: product.review_count || 0,
-                        description: product.description || 'No product description is available yet.',
+                        description: product.description?.trim() ? product.description : undefined,
                         highlights: splitHighlights(product.key_features),
                         images: gallery.length > 0 ? gallery : [DEFAULT_PRODUCT_IMAGE],
                         variants,
