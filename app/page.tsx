@@ -8,6 +8,7 @@ import { Product } from "@/components/product/ProductCard";
 import OurBrands, { BrandItem } from "@/components/product/OurBrands";
 import TopOffersCarousel, { OfferItem } from "@/components/product/TopOffersCarousel";
 import BuyItAgainRow from "@/components/product/BuyItAgainRow";
+import PWAInstallStrip from "@/components/PWAInstallStrip";
 import Link from "next/link";
 import { fetchStorefront } from "@/lib/storefront";
 import { DEFAULT_PRODUCT_IMAGE, StorefrontProduct, resolveProductImageUrl, toProductCardModel } from "@/lib/product";
@@ -286,6 +287,10 @@ export default async function Home() {
               </Link>
             </section>
           )}
+
+          <section className="w-full -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
+            <PWAInstallStrip />
+          </section>
 
           {categoriesToRender.map((cat, idx) => (
             <section key={idx} className="w-full">
