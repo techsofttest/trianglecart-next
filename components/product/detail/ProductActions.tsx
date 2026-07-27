@@ -72,8 +72,7 @@ export default function ProductActions({ product, quantity }: ProductActionsProp
 
     return (
         <div className="space-y-4">
-            {/* Main Action Section (Reference for Sticky) */}
-            <div ref={triggerRef} className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
                 <button
                     onClick={handleAddToCart}
                     disabled={isOutOfStock}
