@@ -5,6 +5,7 @@ import Breadcrumbs from '@/components/ui/Breadcrumbs';
 import { Mail, Phone, MapPin, Send, CheckCircle2,Building2 } from 'lucide-react';
 
 import * as Config from "@/lib/config"
+import { apiUrl } from '@/lib/api';
 
 export default function ContactPage() {
     const breadcrumbItems = [
@@ -51,11 +52,35 @@ export default function ContactPage() {
         if (!validate()) return;
 
         setIsSubmitting(true);
-        // Simulate API request
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        setIsSubmitting(false);
-        setSubmitSuccess(true);
-        setFormData({ name: '', email: '', subject: '', message: '' });
+        try {
+            const res = await fetch(apiUrl('/contact'), {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData),
+                credentials: 'include',
+            });
+
+            if (res.ok) {
+                setSubmitSuccess(true);
+                setFormData({ name: '', email: '', subject: '', message: '' });
+                setErrors({});
+            } else if (res.status === 422) {
+                const json = await res.json();
+                const fieldErrors: Record<string, string> = {};
+                if (json.errors) {
+                    for (const key in json.errors) {
+                        fieldErrors[key] = json.errors[key][0];
+                    }
+                }
+                setErrors(fieldErrors);
+            } else {
+                setErrors({ message: 'Failed to send message. Please try again later.' });
+            }
+        } catch (err) {
+            setErrors({ message: 'Network error. Please try again later.' });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
