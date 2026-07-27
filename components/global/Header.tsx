@@ -48,6 +48,7 @@ export default function Header() {
     const params = useParams();
     const pathname = usePathname();
     const isHome = pathname === '/';
+    const hideHeaderCategories = ['/login', '/checkout', '/checkout/status'].some((route) => pathname.startsWith(route));
 
     // Check location state on mount
     useEffect(() => {
@@ -326,7 +327,7 @@ export default function Header() {
             </div>
 
             {/* Bottom Row: Categories Carousel */}
-            {!isHome && (
+            {!isHome && !hideHeaderCategories && (
                 <div className="border-t border-green-100 hidden md:block relative group/carousel bg-white">
                     <div className="mx-auto px-4 sm:px-6 lg:px-8 py-2 relative flex items-center justify-center">
 

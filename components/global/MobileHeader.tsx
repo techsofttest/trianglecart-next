@@ -22,6 +22,7 @@ type HeaderCategory = {
 export default function MobileHeader() {
     const pathname = usePathname();
     const isHome = pathname === '/';
+    const hideHeaderCategories = ['/login', '/checkout', '/checkout/status'].some((route) => pathname.startsWith(route));
     const [isScrolled, setIsScrolled] = useState(false);
     const [isLocationOpen, setIsLocationOpen] = useState(false);
     const { isAuthenticated } = useCustomerAuth();
@@ -132,7 +133,7 @@ export default function MobileHeader() {
                 </div>
 
                 {/* Bottom Row: Categories Carousel */}
-                {!isHome && !pathname.startsWith('/product/') && (
+                {!isHome && !pathname.startsWith('/product/') && !hideHeaderCategories && (
                 <div className={`border-t border-gray-50 overflow-x-auto scrollbar-hide bg-white transition-all duration-300 ${isScrolled ? 'py-1.5' : 'py-3'}`}>
                     <div className="flex items-center gap-6 px-4 min-w-max">
                         {navItems.map((cat) => (
