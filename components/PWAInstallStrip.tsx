@@ -68,13 +68,13 @@ export default function PWAInstallStrip() {
   }
 
   return (
-    <div className="w-full bg-gradient-to-r from-brand-green to-brand-blue text-white py-4 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+    <div className="w-full bg-brand-blue text-white py-4 px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 flex-1">
           <Download className="w-5 h-5 flex-shrink-0" />
           <div className="flex-1">
-            <p className="font-semibold text-sm sm:text-base">Install Triangle Cart App</p>
-            <p className="text-xs sm:text-sm opacity-90">Get instant notifications & exclusive app-only offers</p>
+            <p className="font-semibold text-sm sm:text-base">Install Triangle Cart Web App</p>
+            <p className="text-xs sm:text-sm opacity-90">Easier access, quick bookings</p>
           </div>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
