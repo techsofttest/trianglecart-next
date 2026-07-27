@@ -18,6 +18,8 @@ type SearchResult =
     | { type: 'category'; id: string; title: string; subtitle?: string; href: string }
     | { type: 'brand'; id: string; title: string; subtitle?: string; href: string };
 
+const safeArray = <T,>(value: T[] | unknown): T[] => (Array.isArray(value) ? value : []);
+
 function HeaderSearchInner() {
     const router = useRouter();
     const pathname = usePathname();
@@ -56,13 +58,13 @@ function HeaderSearchInner() {
             setLoading(true);
             const [productsPayload, headerData, homeData] = await Promise.all([
                 fetchStorefront<{ data: SearchProduct[] }>(`/api/storefront/products?search=${encodeURIComponent(term)}&per_page=8`),
-                fetchStorefront<{ categories: SearchCategory[] }>('/api/storefront/header'),
+                fetchStorefront<{ categories: { main: SearchCategory[]; all: SearchCategory[] } }>('/api/storefront/header'),
                 fetchStorefront<{ brands: SearchBrand[] }>('/api/storefront/home'),
             ]);
 
             if (cancelled) return;
 
-            const productResults: SearchResult[] = (productsPayload?.data ?? [])
+            const productResults: SearchResult[] = safeArray<SearchProduct>(productsPayload?.data ?? [])
                 .filter((product) => hasInStockVariant(product))
                 .map((product) => ({
                 type: 'product',
@@ -72,7 +74,12 @@ function HeaderSearchInner() {
                 href: `/product/${product.slug}`,
             }));
 
-            const categoryResults: SearchResult[] = (headerData?.categories ?? [])
+            const headerCategories: SearchCategory[] = [
+                ...safeArray<SearchCategory>(headerData?.categories?.main ?? []),
+                ...safeArray<SearchCategory>(headerData?.categories?.all ?? []),
+            ];
+
+            const categoryResults: SearchResult[] = headerCategories
                 .filter((category) =>
                     category.name.toLowerCase().includes(term.toLowerCase()) ||
                     category.slug.toLowerCase().includes(term.toLowerCase())
@@ -86,7 +93,7 @@ function HeaderSearchInner() {
                     href: `/category/${category.slug}`,
                 }));
 
-            const brandResults: SearchResult[] = (homeData?.brands ?? [])
+            const brandResults: SearchResult[] = safeArray<SearchBrand>(homeData?.brands ?? [])
                 .filter((brand) =>
                     brand.name.toLowerCase().includes(term.toLowerCase()) ||
                     brand.slug.toLowerCase().includes(term.toLowerCase())
