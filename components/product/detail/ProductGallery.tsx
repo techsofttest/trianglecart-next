@@ -6,6 +6,7 @@ import { Heart } from 'lucide-react';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { resolveProductImageUrl } from '@/lib/product';
+import ProductNotice from './ProductNotice';
 
 interface ProductGalleryProps {
     images: string[];
@@ -71,29 +72,27 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
             </div>
 
             {/* Thumbnails */}
-            <div className="flex gap-2 overflow-x-auto pb-1 min-w-0">
-			
-                {images.map((img, idx) => (
-                    <button 
-                        key={idx}
-                        onClick={() => setSelectedImage(idx)}
-                        className={`w-16 h-16 sm:w-20 sm:h-20 min-w-[4rem] min-h-[4rem] rounded-xl border-2 overflow-hidden transition-all flex-shrink-0 ${
-                            selectedImage === idx ? 'border-[#0c4a9e]' : 'border-gray-100 hover:border-gray-200'
-                        }`}
-                    >
-                        <img src={resolveProductImageUrl(img)} alt="" className="w-full h-full object-cover" />
-                    </button>
-                ))}
+            {images.length > 1 && (
+                <div className="flex gap-2 overflow-x-auto pb-1 min-w-0">
+                    {images.map((img, idx) => (
+                        <button 
+                            key={idx}
+                            onClick={() => setSelectedImage(idx)}
+                            className={`w-16 h-16 sm:w-20 sm:h-20 min-w-[4rem] min-h-[4rem] rounded-xl border-2 overflow-hidden transition-all flex-shrink-0 ${
+                                selectedImage === idx ? 'border-[#0c4a9e]' : 'border-gray-100 hover:border-gray-200'
+                            }`}
+                        >
+                            <img src={resolveProductImageUrl(img)} alt="" className="w-full h-full object-cover" />
+                        </button>
+                    ))}
+                </div>
+            )}
+
+            {/* Product Notice - Desktop only */}
+            <div className="hidden md:block">
+                <ProductNotice />
             </div>
-			
-			{/* Product Notice */}
-			<div className="mt-2 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
-				<p className="text-sm font-medium text-red-700">
-					Actual product packaging and materials may contain more and different information than what is shown on our website. We recommend that you do not rely solely on the information presented and that you always read labels, warnings and directions before using or consuming a product
-				</p>
-			</div>
-			
-			
+            
         </div>
     );
 }

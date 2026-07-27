@@ -6,6 +6,8 @@ import VariantSelector, { ProductVariant } from '../VariantSelector';
 import ProductFeatures from './ProductFeatures';
 import ProductGallery from './ProductGallery';
 import ProductInfo from './ProductInfo';
+import ProductDeliveryReturnsInfo from './ProductDeliveryReturnsInfo';
+import ProductNotice from './ProductNotice';
 
 type ProductDetailClientProps = {
     product: {
@@ -106,6 +108,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 />
 
                 <ProductActions product={productForActions} quantity={quantity} />
+
+                <div className="md:hidden space-y-4">
+                    <ProductDeliveryReturnsInfo />
+                    <ProductNotice />
+                </div>
             </div>
         </div>
     );
