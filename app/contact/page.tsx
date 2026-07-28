@@ -101,7 +101,7 @@ export default function ContactPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
                     
                     {/* Contact Details (col-span-5) */}
-                    <div className="lg:col-span-5 space-y-10">
+                    <div className="order-2 lg:order-1 lg:col-span-5 space-y-10">
                         <div className="space-y-4">
                             <h2 className="text-xl font-bold text-gray-900 tracking-tight">Get in Touch</h2>
                             <p className="text-sm text-gray-500 leading-relaxed font-medium">
@@ -112,7 +112,7 @@ export default function ContactPage() {
 
                         {/* Company Details */}
                     <div className="flex gap-4">
-                        <div className="p-3 bg-blue-50/50 text-[#0c4a9e] rounded-xl h-fit border border-blue-50">
+                        <div className="order-1 lg:order-2 p-3 bg-blue-50/50 text-[#0c4a9e] rounded-xl h-fit border border-blue-50">
                             <Building2 className="w-5 h-5" />
                         </div>
 
