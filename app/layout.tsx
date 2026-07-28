@@ -7,6 +7,7 @@ import { WishlistProvider } from "@/context/WishlistContext";
 import { CartProvider } from "@/context/CartContext";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import RegisterSW from "@/components/ui/RegisterSW";
+import { CookieConsentProvider } from "@/components/CookieConsentProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -42,13 +43,15 @@ export default function RootLayout({
       <body className="min-h-screen flex flex-col bg-white">
         <ScrollToTop />
         <RegisterSW />
-        <CartProvider>
-          <CustomerAuthProvider>
-            <WishlistProvider>
-              <LayoutWrapper>{children}</LayoutWrapper>
-            </WishlistProvider>
-          </CustomerAuthProvider>
-        </CartProvider>
+        <CookieConsentProvider>
+          <CartProvider>
+            <CustomerAuthProvider>
+              <WishlistProvider>
+                <LayoutWrapper>{children}</LayoutWrapper>
+              </WishlistProvider>
+            </CustomerAuthProvider>
+          </CartProvider>
+        </CookieConsentProvider>
       </body>
     </html>
   );

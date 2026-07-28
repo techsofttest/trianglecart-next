@@ -130,6 +130,11 @@ export default function Footer() {
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/cookie-policy" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
+                                    Cookie Policy
+                                </Link>
+                            </li>
+                            <li>
                                 <Link href="/product-expiry-rules" className="hover:text-white hover:underline transition-colors block py-0.5 text-gray-400 font-medium">
                                     Product Expiry Rules
                                 </Link>

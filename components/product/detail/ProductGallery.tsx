@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Heart } from 'lucide-react';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { useWishlist } from '@/context/WishlistContext';
@@ -21,11 +21,21 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
     const { isAuthenticated } = useCustomerAuth();
     const isWishlisted = isAuthenticated && isInWishlist(id);
     
-    // Zoom state
+    const [isMobile, setIsMobile] = useState(false);
     const [zoomPos, setZoomPos] = useState({ x: 50, y: 50 });
     const [isZooming, setIsZooming] = useState(false);
 
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(max-width: 767.98px)');
+        const updateIsMobile = () => setIsMobile(mediaQuery.matches);
+
+        updateIsMobile();
+        mediaQuery.addEventListener('change', updateIsMobile);
+        return () => mediaQuery.removeEventListener('change', updateIsMobile);
+    }, []);
+
     const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        if (isMobile) return;
         const rect = e.currentTarget.getBoundingClientRect();
         const x = ((e.clientX - rect.left) / rect.width) * 100;
         const y = ((e.clientY - rect.top) / rect.height) * 100;
@@ -37,9 +47,9 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
             {/* Main Image */}
             <div className="w-full">
                 <div 
-                    className="relative aspect-[5/4] md:aspect-[4/3] lg:aspect-[5/4] bg-gray-50 rounded-2xl overflow-hidden group border border-gray-100 cursor-zoom-in"
-                    onMouseEnter={() => setIsZooming(true)}
-                    onMouseLeave={() => setIsZooming(false)}
+                    className={`relative aspect-[5/4] md:aspect-[4/3] lg:aspect-[5/4] bg-gray-50 rounded-2xl overflow-hidden group border border-gray-100 ${isMobile ? 'cursor-auto' : 'cursor-zoom-in'}`}
+                    onMouseEnter={() => !isMobile && setIsZooming(true)}
+                    onMouseLeave={() => !isMobile && setIsZooming(false)}
                     onMouseMove={handleMouseMove}
                 >
                     <img 
