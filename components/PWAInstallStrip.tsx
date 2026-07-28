@@ -68,7 +68,7 @@ export default function PWAInstallStrip() {
   }
 
   return (
-    <div className="w-full bg-brand-blue text-white px-2 py-2 rounded-[5px]">
+    <div className="w-full bg-brand-blue text-white px-4 py-4 rounded-[5px]">
       <div className="mx-auto flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 flex-1">
           <Download className="w-5 h-5 flex-shrink-0" />
@@ -84,13 +84,13 @@ export default function PWAInstallStrip() {
           >
             Install
           </button>
-          <button
+          {/*<button
             onClick={handleDismiss}
             className="p-2 hover:bg-white/20 rounded-lg transition"
             aria-label="Dismiss"
           >
             <X className="w-5 h-5" />
-          </button>
+          </button>*/}
         </div>
       </div>
     </div>

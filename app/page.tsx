@@ -261,6 +261,10 @@ export default async function Home() {
             <OfferMarquee messages={offerMessages} />
           </section>
 
+          <section className="w-full">
+            <PWAInstallStrip />
+          </section>
+
           {homeAdvertisement && (
             <section className="w-full">
               <Link
@@ -283,10 +287,6 @@ export default async function Home() {
               </Link>
             </section>
           )}
-
-          <section className="w-full -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8">
-            <PWAInstallStrip />
-          </section>
 
           {categoriesToRender.map((cat, idx) => (
             <section key={idx} className="w-full">
