@@ -112,7 +112,7 @@ export default function ContactPage() {
 
                         {/* Company Details */}
                     <div className="flex gap-4">
-                        <div className="order-1 lg:order-2 p-3 bg-blue-50/50 text-[#0c4a9e] rounded-xl h-fit border border-blue-50">
+                        <div className=" p-3 bg-blue-50/50 text-[#0c4a9e] rounded-xl h-fit border border-blue-50">
                             <Building2 className="w-5 h-5" />
                         </div>
 
@@ -178,7 +178,7 @@ export default function ContactPage() {
                     </div>
 
                     {/* Contact Form (col-span-7) */}
-                    <div className="lg:col-span-7">
+                    <div className="order-1 lg:order-2 lg:col-span-7">
                         <div className="bg-gray-50/40 p-6 sm:p-8 rounded-3xl border border-gray-100 shadow-sm">
                             
                             {submitSuccess ? (
