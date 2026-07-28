@@ -242,6 +242,10 @@ export default async function Home() {
           </section>
 
           <section className="w-full">
+            <OfferMarquee messages={offerMessages} />
+          </section>
+
+          <section className="w-full">
             <BuyItAgainRow fallbackProducts={buyItAgainProducts} />
           </section>
 
@@ -255,10 +259,6 @@ export default async function Home() {
 
           <section className="w-full">
             <ProductRow title="Our latest products" products={latestProducts} viewAllLink="/products" />
-          </section>
-
-          <section className="w-full">
-            <OfferMarquee messages={offerMessages} />
           </section>
 
           <section className="w-full">
