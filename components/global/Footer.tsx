@@ -21,7 +21,7 @@ export default function Footer() {
     return (
         <footer className="bg-gray-950 text-gray-300 border-t border-gray-900 mt-auto">
             {/* Top Features Ribbon: Showcases key client capabilities with neutral, standardized branding */}
-            <div className="border-b border-gray-900 bg-gray-950 py-8 px-4 sm:px-6 lg:px-8">
+            <div className="border-b border-gray-900 bg-brand-green py-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
                         <div className="p-2 bg-gray-900 text-gray-400 rounded-lg">
@@ -29,34 +29,34 @@ export default function Footer() {
                         </div>
                         <div>
                             <h4 className="font-semibold text-white text-sm">Navigation & Easy Delivery</h4>
-                            <p className="text-[12px] text-gray-400 mt-0.5 font-medium">Integrated GPS tracking & optimal dispatch routes.</p>
+                            <p className="text-[12px] text-white mt-0.5 font-medium">Integrated GPS tracking & optimal dispatch routes.</p>
                         </div>
                     </div>
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
-                        <div className="p-2 bg-gray-900 text-gray-400 rounded-lg">
+                        <div className="p-2 bg-white text-gray-900 rounded-lg">
                             <Bell className="w-5 h-5" />
                         </div>
                         <div>
                             <h4 className="font-semibold text-white text-sm">Product Expiry Notification</h4>
-                            <p className="text-[12px] text-gray-400 mt-0.5 font-medium">Always fresh stock with advanced tracking safeguards.</p>
+                            <p className="text-[12px] text-white mt-0.5 font-medium">Always fresh stock with advanced tracking safeguards.</p>
                         </div>
                     </div>
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
-                        <div className="p-2 bg-gray-900 text-gray-400 rounded-lg">
+                        <div className="p-2 bg-white text-gray-900 rounded-lg">
                             <RefreshCw className="w-5 h-5" />
                         </div>
                         <div>
                             <h4 className="font-semibold text-white text-sm">Easy Refund & Return Options</h4>
-                            <p className="text-[12px] text-gray-400 mt-0.5 font-medium">Quick refunds and automated online returns support.</p>
+                            <p className="text-[12px] text-white mt-0.5 font-medium">Quick refunds and automated online returns support.</p>
                         </div>
                     </div>
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
-                        <div className="p-2 bg-gray-900 text-gray-400 rounded-lg">
+                        <div className="p-2 bg-white text-gray-900 rounded-lg">
                             <Star className="w-5 h-5" />
                         </div>
                         <div>
                             <h4 className="font-semibold text-white text-sm">My Last Purchase & Favorites</h4>
-                            <p className="text-[12px] text-gray-400 mt-0.5 font-medium">One-click re-ordering directly from your past buy list.</p>
+                            <p className="text-[12px] text-white mt-0.5 font-medium">One-click re-ordering directly from your past buy list.</p>
                         </div>
                     </div>
                 </div>
