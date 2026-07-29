@@ -41,7 +41,7 @@ export default function SubCategories({
         <section className={`w-full rounded-2xl p-4 sm:p-5 border border-white/10 shadow-sm`}>
             {/* Header Section: Title and View All Arrow */}
             <div className="flex items-center justify-between mb-4 sm:mb-5 px-1">
-                <h2 className="text-xl md:text-2xl font-semibold text-white tracking-tight">
+                <h2 className="text-xl md:text-2xl text-xl  font-extrabold text-gray-900 tracking-tight">
                     {sectionTitle}
                 </h2>
 

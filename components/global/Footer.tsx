@@ -24,7 +24,7 @@ export default function Footer() {
             <div className="border-b border-gray-900 bg-brand-green py-8 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center md:text-left">
                     <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3">
-                        <div className="p-2 bg-gray-900 text-gray-400 rounded-lg">
+                        <div className="p-2 bg-white text-gray-900 rounded-lg">
                             <Truck className="w-5 h-5" />
                         </div>
                         <div>
@@ -144,10 +144,10 @@ export default function Footer() {
 
 
                   {/* Contact Us Column */}
-<div className="col-span-2 flex justify-center md:border-l border-gray-900">
-    <div className="text-[12px] space-y-3 text-center">
-        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center justify-center gap-1.5">
-            <Mail className="w-3.5 h-3.5 text-gray-400" />
+<div className="lg:col-span-2 flex lg:justify-center md:border-l border-gray-900">
+    <div className="text-[12px] space-y-3 lg:text-center">
+        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center lg:justify-center gap-1.5">
+            {/*<Mail className="w-3.5 h-3.5 text-gray-400" />*/}
             Contact Us
         </h3>
 
@@ -175,10 +175,10 @@ export default function Footer() {
 </div>
 
 {/* About Company Column */}
-<div className="col-span-2 flex justify-center md:border-l border-gray-900">
-    <div className="text-[12px] space-y-3 text-center">
-        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center justify-center gap-1.5">
-            <Building2 className="w-3.5 h-3.5 text-gray-400" />
+<div className="lg:col-span-2 flex lg:justify-center md:border-l border-gray-900">
+    <div className="text-[12px] space-y-3 lg:text-center">
+        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center lg:justify-center gap-1.5">
+            {/*<Building2 className="w-3.5 h-3.5 text-gray-400" />*/}
             About Company
         </h3>
 
