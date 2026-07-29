@@ -53,7 +53,7 @@ export default function ContactPage() {
 
         setIsSubmitting(true);
         try {
-            const res = await fetch(apiUrl('/contact'), {
+            const res = await fetch(apiUrl('/api/contact'), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
