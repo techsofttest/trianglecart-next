@@ -1,20 +1,14 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
+import ProductCard, { Product } from './ProductCard';
 
-// 1. Define the TypeScript interface for a single subcategory item
-export interface SubCategoryItem {
-    imageUrl: string;
-    label1: string;
-    label2: string;
-    linkUrl: string;
-}
-
-// 2. Define the props the main component will accept to be reusable
 interface SubCategoriesProps {
     sectionTitle: string;
     mainLink?: string;
-    items: SubCategoryItem[];
+    products: Product[];
     sectionBgColor?: string;
     showViewAll?: boolean;
 }
@@ -22,18 +16,17 @@ interface SubCategoriesProps {
 export default function SubCategories({
     sectionTitle,
     mainLink = '#',
-    items,
+    products,
     sectionBgColor = 'bg-[#f44336]',
     showViewAll = true,
 }: SubCategoriesProps) {
 
-    // Return null if there are no items to display
-    if (!items || items.length === 0) {
+    if (!products || products.length === 0) {
         return null;
     }
 
     return (
-        <section className={`w-full ${sectionBgColor} rounded-2xl p-4 sm:p-5 border border-white/10`}>
+        <section className={`w-full ${sectionBgColor} rounded-2xl p-4 sm:p-5 border border-white/10 shadow-sm`}>
             {/* Header Section: Title and View All Arrow */}
             <div className="flex items-center justify-between mb-4 sm:mb-5 px-1">
                 <h2 className="text-xl md:text-2xl font-semibold text-white tracking-tight">
@@ -52,38 +45,35 @@ export default function SubCategories({
                 )}
             </div>
 
-            {/* Inner grid container: Seamless floating white cards directly on colored background */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
-
-                {/* Map through items to generate cards */}
-                {items.map((item, index) => (
-                    <Link
-                        key={index}
-                        href={item.linkUrl}
-                        className="group flex flex-col bg-white rounded-2xl p-2.5 sm:p-3 border border-gray-100/60 hover:border-[#0c4a9e]/30 transition duration-300"
+            {/* Inner horizontal scrollable track of ProductCards */}
+            <div className="flex gap-3 sm:gap-4 overflow-x-auto custom-scrollbar-featured pb-3 px-1">
+                {products.map((product, index) => (
+                    <div
+                        key={`${product.id}-${index}`}
+                        className="shrink-0 w-[78%] sm:w-[48%] md:w-[32%] lg:w-[20%] xl:w-[20%]"
                     >
-
-                        {/* Product Card: Full-bleed image wrapper */}
-                        <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-gray-50 relative">
-                            <img
-                                src={item.imageUrl}
-                                alt={item.label1}
-                                className="absolute inset-0 w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
-                            />
-                        </div>
-
-                        {/* Text Area: Minimalist labels using brand-colors on hover */}
-                        <div className="pt-2.5 text-center flex-1 flex flex-col justify-center">
-                            <span className="text-[12px] font-medium text-gray-500 uppercase tracking-wider mb-0.5 group-hover:text-[#0c4a9e] transition">
-                                {item.label1}
-                            </span>
-                            <span className="text-sm sm:text-base text-gray-900 font-semibold leading-snug">
-                                {item.label2}
-                            </span>
-                        </div>
-                    </Link>
+                        <ProductCard product={product} />
+                    </div>
                 ))}
             </div>
+
+            <style jsx global>{`
+                .custom-scrollbar-featured::-webkit-scrollbar {
+                    height: 6px;
+                }
+                .custom-scrollbar-featured::-webkit-scrollbar-track {
+                    background: rgba(255, 255, 255, 0.1);
+                    border-radius: 10px;
+                }
+                .custom-scrollbar-featured::-webkit-scrollbar-thumb {
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 10px;
+                    transition: background 0.2s;
+                }
+                .custom-scrollbar-featured::-webkit-scrollbar-thumb:hover {
+                    background: rgba(255, 255, 255, 0.6);
+                }
+            `}</style>
         </section>
     );
 }

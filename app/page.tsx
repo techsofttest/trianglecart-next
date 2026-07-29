@@ -2,7 +2,7 @@ import PromoSlider from "@/components/ui/PromoSlider";
 import OfferMarquee from "@/components/ui/OfferMarquee";
 import CategoryStrip from "@/components/ui/CategoryStrip";
 import CategoryGrid, { CategoryItem } from "@/components/product/CategoryGrid";
-import SubCategories, { SubCategoryItem } from "@/components/product/SubCategories";
+import SubCategories from "@/components/product/SubCategories";
 import ProductRow from "@/components/product/ProductRow";
 import { Product } from "@/components/product/ProductCard";
 import OurBrands, { BrandItem } from "@/components/product/OurBrands";
@@ -172,43 +172,15 @@ export default async function Home() {
           'Shop pantry staples with instant offers',
         ];
 
-    const premiumSpicesItems: SubCategoryItem[] = [
-      { label1: "Kashmiri Red Chilli", label2: "Vibrant & Fiery", imageUrl: "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=400&q=80", linkUrl: "/category/spices/red-chilli" },
-      { label1: "Aromatic Cardamom", label2: "Premium Quality", imageUrl: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=400&q=80", linkUrl: "/category/spices/cardamom" },
-      { label1: "Pure Turmeric Powder", label2: "Earthy & Healthy", imageUrl: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80", linkUrl: "/category/spices/turmeric" },
-      { label1: "Garam Masala Blend", label2: "Min. 15% Off", imageUrl: "https://images.unsplash.com/photo-1615485500704-8e990f9900f7?auto=format&fit=crop&w=400&q=80", linkUrl: "/category/spices/garam-masala" },
-    ];
-
-    const sweetsItems: SubCategoryItem[] = [
-      { label1: "Laddu Mix", label2: "Min. 20% Off", imageUrl: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=400&q=80", linkUrl: "/category/sweets/laddu" },
-      { label1: "Barfi Packs", label2: "Best Sellers", imageUrl: "https://images.unsplash.com/photo-1587314168485-3236d6710814?auto=format&fit=crop&w=400&q=80", linkUrl: "/category/sweets/barfi" },
-      { label1: "Rasgulla Tins", label2: "Special Offer", imageUrl: "https://images.unsplash.com/photo-1615485290382-441e4d049cb5?auto=format&fit=crop&w=400&q=80", linkUrl: "/category/sweets/rasgulla" },
-      { label1: "Halwa Gifting", label2: "Buy 1 Get 1", imageUrl: "https://images.unsplash.com/photo-1601050690597-df0568f70950?auto=format&fit=crop&w=400&q=80", linkUrl: "/category/sweets/halwa" },
-    ];
-
     const featuredCategories = homeData?.featured_categories || [];
-
-    const featuredCategoryFallbackImages = new Map<string, string>();
-    featuredCategories.forEach((category) => {
-      const fallbackImage = category.products.find((product) => product.featured_image)
-        ? resolveProductImageUrl(category.products.find((product) => product.featured_image)?.featured_image)
-        : (productImageByCategory.get(category.slug) || DEFAULT_PRODUCT_IMAGE);
-
-      featuredCategoryFallbackImages.set(category.slug, fallbackImage);
-    });
 
     const categoriesToRender = featuredCategories.length > 0
       ? featuredCategories.map((category, index) => {
-          const items: SubCategoryItem[] = category.products.map((p) => ({
-            label1: p.brand?.name || "Triangle Choice",
-            label2: p.name,
-            imageUrl: resolveProductImageUrl(p.featured_image) || featuredCategoryFallbackImages.get(category.slug) || DEFAULT_PRODUCT_IMAGE,
-            linkUrl: `/product/${p.slug}`
-          }));
+          const products: Product[] = category.products.map((p) => toProductCardModel(p));
           return {
             title: category.name,
             link: `/category/${category.slug}`,
-            items,
+            products,
             sectionBgColor: index % 2 === 0 ? "bg-green-700" : "bg-blue-700",
           };
         })
@@ -216,13 +188,17 @@ export default async function Home() {
           {
             title: "Aromatic Spices & Masalas",
             link: "/category/spices",
-            items: premiumSpicesItems,
+            products: suggestedProducts.filter(p => p.category === 'spices' || p.category === 'spice').length > 0
+              ? suggestedProducts.filter(p => p.category === 'spices' || p.category === 'spice').slice(0, 6)
+              : suggestedProducts.slice(0, 6),
             sectionBgColor: "bg-green-700",
           },
           {
             title: "Festival Sweet Packs",
             link: "/category/sweets",
-            items: sweetsItems,
+            products: suggestedProducts.filter(p => p.category === 'sweets' || p.category === 'sweet').length > 0
+              ? suggestedProducts.filter(p => p.category === 'sweets' || p.category === 'sweet').slice(0, 6)
+              : suggestedProducts.slice(6, 12),
             sectionBgColor: "bg-blue-700",
           }
         ];
@@ -293,7 +269,7 @@ export default async function Home() {
               <SubCategories
                 sectionTitle={cat.title}
                 mainLink={cat.link}
-                items={cat.items}
+                products={cat.products}
                 sectionBgColor={cat.sectionBgColor}
               />
             </section>
