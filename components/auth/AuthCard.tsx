@@ -117,11 +117,11 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
             if (res.ok) {
                 const data = await res.json();
                 persistUser(data);
-                setSuccessMessage("Account created successfully!");
-                setTimeout(() => {
-                    router.push('/');
-                    if (onSuccess) onSuccess();
-                }, 800);
+                setSuccessMessage('Account created. Please check your email to verify your account.');
+                setMode('login');
+                setPassword('');
+                setConfirmPassword('');
+                if (onSuccess) onSuccess();
                 return;
             }
 
@@ -135,7 +135,7 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
         }
     };
 
-    const handleForgotPasswordSubmit = (e: React.FormEvent) => {
+    const handleForgotPasswordSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMessage('');
         setSuccessMessage('');
@@ -151,10 +151,31 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
         }
 
         setIsLoading(true);
-        setTimeout(() => {
+        try {
+            const res = await fetch(apiUrl('/api/forgot-password'), {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+                credentials: 'include',
+            });
+
+            const data = await res.json().catch(() => ({}));
+
+            if (!res.ok) {
+                throw new Error(data.message || 'Unable to send reset link.');
+            }
+
+            setSuccessMessage('If the account exists, a password reset link has been sent to your email.');
+            setEmail('');
+        } catch (err: any) {
+            console.warn('Forgot password request failed', err);
+            setErrorMessage(err?.message || 'Unable to send reset link.');
+        } finally {
             setIsLoading(false);
-            setSuccessMessage("A password reset link will be be sent to your email if you have registered with us.");
-        }, 1000);
+        }
     };
 
     return (
@@ -272,7 +293,7 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0c4a9e]/10 focus:border-[#0c4a9e] transition-all text-[15px]"
-                                placeholder="John Smith"
+                                placeholder=""
                                 required
                             />
                         </div>

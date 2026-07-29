@@ -96,14 +96,22 @@ export function CustomerAuthProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     const originalFetch = window.fetch;
     window.fetch = async (...args) => {
-      const response = await originalFetch(...args);
-      if (response.status === 401 && customer) {
-        const urlStr = typeof args[0] === 'string' ? args[0] : (args[0] as any).url || '';
-        if (urlStr.includes('/api/')) {
-          logout();
+      try {
+        const response = await originalFetch(...args);
+        if (response.status === 401 && customer) {
+          const urlStr = typeof args[0] === 'string' ? args[0] : (args[0] as any).url || '';
+          if (urlStr.includes('/api/')) {
+            logout();
+          }
         }
+        return response;
+      } catch (error) {
+        const urlStr = typeof args[0] === 'string' ? args[0] : (args[0] as any)?.url || '';
+        if (customer && urlStr.includes('/api/')) {
+          console.warn('API request failed:', urlStr, error);
+        }
+        throw error;
       }
-      return response;
     };
     return () => {
       window.fetch = originalFetch;

@@ -91,9 +91,9 @@ export default function ContactPage() {
                 <Breadcrumbs items={breadcrumbItems} />
 
                 {/* Header Section */}
-                <div className="mt-6 mb-12 border-b border-gray-100 pb-10">
+                <div className="mt-2 mb:2 md:mt-6 md:mb-12 border-b border-gray-100 pb-2 md:pb-10">
                     <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 tracking-tight mb-4">Contact Us</h1>
-                    <p className="text-[16px] text-gray-500 font-medium max-w-xl leading-relaxed">
+                    <p className="text-[9px] md:text-[16px] text-gray-500 font-medium max-w-xl leading-relaxed">
                         Have a question, feedback, or need help with an order? Get in touch with our support team.
                     </p>
                 </div>
@@ -217,7 +217,7 @@ export default function ContactPage() {
                                                 name="name"
                                                 value={formData.name}
                                                 onChange={handleChange}
-                                                placeholder="John Doe"
+                                                placeholder=""
                                                 className={`w-full px-4 py-2.5 text-sm bg-white border rounded-xl outline-none transition ${errors.name ? 'border-red-400 focus:border-red-400' : 'border-gray-300 focus:border-[#0c4a9e]'}`}
                                             />
                                             {errors.name && <p className="text-xs text-red-500 font-medium">{errors.name}</p>}

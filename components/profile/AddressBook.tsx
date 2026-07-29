@@ -3,12 +3,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Plus, Edit2, Trash2, ArrowLeft, Save, MapPin, Check, Star, ShieldAlert, Loader2 } from 'lucide-react';
 import { apiUrl } from '@/lib/api';
+import { useCustomerAuth } from '@/context/CustomerAuthContext';
 
 interface Address {
     id: number;
     label?: string;
     contact_name: string;
     phone: string;
+    email?: string;
     address_line_1: string;
     address_line_2?: string;
     suburb?: string;
@@ -25,6 +27,7 @@ interface Address {
 }
 
 export default function AddressBook() {
+    const { customer } = useCustomerAuth();
     // 1. Core State
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
@@ -38,6 +41,7 @@ export default function AddressBook() {
         label: '',
         contact_name: '',
         phone: '',
+        email: '',
         address_line_1: '',
         address_line_2: '',
         suburb: '',
@@ -194,6 +198,7 @@ export default function AddressBook() {
             label: addr.label || '',
             contact_name: addr.contact_name || '',
             phone: addr.phone || '',
+            email: addr.email || '',
             address_line_1: addr.address_line_1 || '',
             address_line_2: addr.address_line_2 || '',
             suburb: addr.suburb || '',
@@ -220,6 +225,7 @@ export default function AddressBook() {
             label: '',
             contact_name: '',
             phone: '',
+            email: customer?.email || '',
             address_line_1: '',
             address_line_2: '',
             suburb: '',
@@ -240,6 +246,7 @@ export default function AddressBook() {
         const errors: Record<string, boolean> = {};
         if (!formData.contact_name) errors.contact_name = true;
         if (!formData.phone) errors.phone = true;
+        if (!formData.email) errors.email = true;
         if (!formData.address_line_1) errors.address_line_1 = true;
         if (!formData.city) errors.city = true;
         if (!formData.state) errors.state = true;
@@ -480,6 +487,18 @@ export default function AddressBook() {
                                 className={`w-full bg-gray-50 border rounded-2xl py-3.5 pl-[3.5rem] pr-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all ${fieldErrors.phone ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                             />
                         </div>
+                    </div>
+
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Email Address*</label>
+                        <input
+                            type="email"
+                            value={formData.email || ''}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            onFocus={() => setFieldErrors(prev => ({ ...prev, email: false }))}
+                            placeholder="name@example.com"
+                            className={`w-full bg-gray-50 border rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all ${fieldErrors.email ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
+                        />
                     </div>
 
                     <div className="space-y-2">
