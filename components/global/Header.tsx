@@ -11,7 +11,7 @@ import {
     Flame, Wheat, Carrot, Cookie, Cake, CupSoda,
     Bath, Home, FlameKindling, Milk, Snowflake, Fish, UtensilsCrossed, Baby,
     Leaf, Utensils, Mountain, Croissant, Popcorn, ChefHat, Zap, Candy, Soup, Droplets, Coffee,
-    LogOut, Briefcase
+    LogOut, Briefcase, Download, Check
 } from 'lucide-react';
 import { useRouter, useParams, usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
@@ -19,6 +19,7 @@ import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import LocationDrawer from './LocationDrawer';
 import { fetchStorefront } from '@/lib/storefront';
 import HeaderSearch from './HeaderSearch';
+import { usePWAInstall } from '@/hooks/usePWAInstall';
 
 type HeaderCategory = {
     id: number;
@@ -32,6 +33,7 @@ type HeaderCategory = {
 export default function Header() {
     const { cartCount } = useCart();
     const { customer, isAuthenticated, logout } = useCustomerAuth();
+    const { isInstalled, handleInstall } = usePWAInstall();
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isMoreOpen, setIsMoreOpen] = useState(false);
     const [isCategoryMoreOpen, setIsCategoryMoreOpen] = useState(false);
@@ -228,6 +230,23 @@ export default function Header() {
 
                 {/* Center: Search Bar with Suggestions */}
                 <HeaderSearch />
+
+                {/* PWA Install Button */}
+                <button
+                    onClick={handleInstall}
+                    disabled={isInstalled}
+                    className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-200 flex-shrink-0 ${
+                        isInstalled
+                            ? 'bg-green-600 text-white cursor-default'
+                            : 'bg-brand-green text-white hover:bg-green-700 active:scale-95'
+                    }`}
+                >
+                    {isInstalled ? (
+                        <><Check className="w-4 h-4" /> Installed</>
+                    ) : (
+                        <><Download className="w-4 h-4" /> Install</>
+                    )}
+                </button>
 
                 {/* Right: Actions (Login, More, Cart) */}
                 <div className="flex items-center gap-2 md:gap-6 flex-shrink-0">

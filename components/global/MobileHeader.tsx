@@ -4,11 +4,12 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { apiUrl } from '@/lib/api';
-import { MapPin, ChevronDown, Home, Briefcase, Package, Store } from 'lucide-react';
+import { MapPin, ChevronDown, Home, Briefcase, Package, Store, Download, Check } from 'lucide-react';
 import LocationDrawer from './LocationDrawer';
 import HeaderSearch from './HeaderSearch';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { fetchStorefront } from '@/lib/storefront';
+import { usePWAInstall } from '@/hooks/usePWAInstall';
 
 type HeaderCategory = {
     id: number;
@@ -26,6 +27,7 @@ export default function MobileHeader() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isLocationOpen, setIsLocationOpen] = useState(false);
     const { isAuthenticated } = useCustomerAuth();
+    const { isInstalled, handleInstall } = usePWAInstall();
     const [selectedLocation, setSelectedLocation] = useState<{ 
         title: string; 
         subtitle: string; 
@@ -119,11 +121,21 @@ export default function MobileHeader() {
                             </span>
                             <ChevronDown className="w-3.5 h-3.5 text-gray-400" />
                         </div>
-                        {!isAuthenticated && (
-                            <Link href="/login" className="text-sm font-semibold text-[#0c4a9e]">
-                                Login
-                            </Link>
-                        )}
+                        <button
+                            onClick={handleInstall}
+                            disabled={isInstalled}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${
+                                isInstalled
+                                    ? 'bg-green-600 text-white cursor-default'
+                                    : 'bg-brand-green text-white active:scale-95'
+                            }`}
+                        >
+                            {isInstalled ? (
+                                <><Check className="w-3.5 h-3.5" /> Installed</>
+                            ) : (
+                                <><Download className="w-3.5 h-3.5" /> Install</>
+                            )}
+                        </button>
                     </div>
                 )}
 
