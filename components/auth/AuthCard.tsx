@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { RefreshCw, ArrowLeft } from 'lucide-react';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { apiUrl } from '@/lib/api';
@@ -27,7 +27,26 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
     const [successMessage, setSuccessMessage] = useState('');
 
     const router = useRouter();
+    const searchParams = useSearchParams();
     const { login } = useCustomerAuth();
+    
+    useEffect(() => {
+        const verified = searchParams ? searchParams.get('verified') : null;
+        if (verified === 'success') {
+            const msg = 'Your email has been verified successfully! You can now log in.';
+            setSuccessMessage(msg);
+            import('@/utils/toast').then(({ showToast }) => showToast(msg, 'success'));
+        } else if (verified === 'already') {
+            const msg = 'Your email is already verified. Please log in.';
+            setSuccessMessage(msg);
+            import('@/utils/toast').then(({ showToast }) => showToast(msg, 'success'));
+        } else if (verified === 'error') {
+            const msg = 'Invalid or expired verification link.';
+            setErrorMessage(msg);
+            import('@/utils/toast').then(({ showToast }) => showToast(msg, 'error'));
+        }
+    }, [searchParams]);
+
     const persistUser = (data: Record<string, any>) => {
         login(data);
     };
@@ -116,12 +135,10 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
 
             if (res.ok) {
                 const data = await res.json();
-                persistUser(data);
-                setSuccessMessage('Account created. Please check your email to verify your account.');
+                setSuccessMessage(data.message || 'Account created successfully! Please check your email to verify your account.');
                 setMode('login');
                 setPassword('');
                 setConfirmPassword('');
-                if (onSuccess) onSuccess();
                 return;
             }
 
