@@ -277,6 +277,14 @@ function CheckoutContent() {
         }
     }, [checkoutErrors]);
 
+    // Scroll to top when switching to payment method
+    useEffect(() => {
+        if (paymentClientSecret) {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    }, [paymentClientSecret]);
+
+
     const updateQuantity = (id: string, delta: number) => {
         setCheckoutItems(prev => prev.map(item => {
             if (item.id === id) {
@@ -455,7 +463,7 @@ function CheckoutContent() {
     // Show Stripe Payment Element when client secret is available
     if (paymentClientSecret) {
         return (
-            <div className="max-w-2xl mx-auto px-2 sm:px-4 lg:px-6 pt-1 pb-8 animate-in fade-in duration-700 text-gray-700">
+            <div className="max-w-2xl mx-auto px-2 sm:px-4 lg:px-6 pt-1 pb-8 animate-in fade-in duration-700 text-gray-700 min-h-[60vh] flex flex-col justify-start">
                 <div className="flex items-center gap-3 mb-6">
                     <button
                         onClick={() => {

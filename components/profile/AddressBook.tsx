@@ -248,6 +248,7 @@ export default function AddressBook() {
         if (!formData.phone) errors.phone = true;
         if (!formData.email) errors.email = true;
         if (!formData.address_line_1) errors.address_line_1 = true;
+        if (!formData.address_line_2) errors.address_line_2 = true;
         if (!formData.city) errors.city = true;
         if (!formData.state) errors.state = true;
         if (!formData.postcode) errors.postcode = true;
@@ -501,6 +502,20 @@ export default function AddressBook() {
                         />
                     </div>
 
+
+                     <div className="space-y-2">
+                        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Apartment/Suite/Unit*</label>
+                        <input 
+                            type="text" 
+                            value={formData.address_line_2}
+                            onChange={(e) => setFormData({ ...formData, address_line_2: e.target.value })}
+                            onFocus={() => setFieldErrors(prev => ({ ...prev, address_line_2: false }))}
+                            placeholder="Suite, Apartment, etc."
+                            className={`w-full bg-gray-50 border rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all ${fieldErrors.address_line_2 ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
+                        />
+                    </div>
+
+
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Address Line 1*</label>
                         <input 
@@ -512,16 +527,7 @@ export default function AddressBook() {
                         />
                     </div>
 
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Address Line 2 (Optional)</label>
-                        <input 
-                            type="text" 
-                            value={formData.address_line_2}
-                            onChange={(e) => setFormData({ ...formData, address_line_2: e.target.value })}
-                            placeholder="Suite, Apartment, etc."
-                            className="w-full bg-gray-50 border border-gray-200 rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all"
-                        />
-                    </div>
+                    
 
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Suburb</label>
