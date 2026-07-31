@@ -91,9 +91,9 @@ export default function CategoryStrip({ categories }: CategoryStripProps) {
                             <Link
                                 key={cat.id}
                                 href={href}
-                                className="transition group flex-shrink-0 flex flex-col items-center justify-center px-2 md:px-4 pb-1 md:min-w-[100px] border-b-2 border-transparent hover:border-white"
+                                className="transition group flex-shrink-0 flex flex-row items-center gap-2 px-3 py-1.5 rounded-full border bg-gray-50/80 border-brand-blue text-brand-blue hover:text-brand-blue hover:border-brand-orange"
                             >
-                                <div className="transition p-2 rounded-xl text-brand-orange group-hover:text-green-800 group-hover:bg-white bg-white/10 mb-1">
+                               {/*} <div className="transition p-2 rounded-xl text-brand-orange group-hover:text-green-800 group-hover:bg-white bg-white/10 mb-1">
                                     {isAllProducts ? (
                                         <Store className="w-6 h-6 md:w-10 md:h-10" />
                                     ) : cat.icon_url ? (
@@ -101,7 +101,7 @@ export default function CategoryStrip({ categories }: CategoryStripProps) {
                                     ) : (
                                         <Package className="w-6 h-6 md:w-10 md:h-10" />
                                     )}
-                                </div>
+                                </div> */}
                                 <span className="tracking-tight transition whitespace-nowrap text-[9px] md:text-[12px] font-bold">
                                     {cat.name}
                                 </span>
