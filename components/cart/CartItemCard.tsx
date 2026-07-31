@@ -15,6 +15,7 @@ interface CartItemProps {
         brand: string;
         category: string;
         inStock: boolean;
+        selectedVariant?: any;
     };
     onUpdateQuantity: (id: string, delta: number) => void;
     onRemove: (id: string) => void;
@@ -55,8 +56,8 @@ export default function CartItemCard({ item, onUpdateQuantity, onRemove, isLast 
                             <span className="font-medium text-gray-900 w-4 text-center text-sm">{item.quantity}</span>
                             <button
                                 onClick={() => onUpdateQuantity(item.id, 1)}
-                                disabled={!item.inStock}
-                                className="p-1.5 hover:bg-white hover:shadow-sm rounded-lg transition-all text-gray-600 disabled:opacity-30"
+                                disabled={!item.inStock || item.quantity >= (item.selectedVariant?.stock ?? 9999)}
+                                className="p-1.5 hover:bg-white hover:shadow-sm rounded-lg transition-all text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
                             >
                                 <Plus className="w-3 h-3" />
                             </button>

@@ -43,7 +43,8 @@ export default function CheckoutItemsList({ items, onUpdateQuantity }: CheckoutI
                                 <span className="font-bold text-gray-900 text-sm w-4 text-center">{item.quantity}</span>
                                 <button
                                     onClick={() => onUpdateQuantity(item.id, 1)}
-                                    className="p-1 hover:bg-white hover:shadow-sm rounded transition-all text-gray-600"
+                                    disabled={item.quantity >= (item.selectedVariant?.stock ?? 9999)}
+                                    className="p-1 hover:bg-white hover:shadow-sm rounded transition-all text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
                                     <Plus className="w-3 h-3" />
                                 </button>

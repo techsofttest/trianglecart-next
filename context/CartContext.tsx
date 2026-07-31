@@ -66,13 +66,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         (item.selectedVariantId ?? item.variant_id ?? null) === selectedVariantId
       );
       if (existing) {
-        return prev.map(item =>
-          item.id === String(product.id) &&
-          (item.selectedVariantId ?? item.variant_id ?? null) === selectedVariantId
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
+        return prev.map(item => {
+          if (item.id === String(product.id) && (item.selectedVariantId ?? item.variant_id ?? null) === selectedVariantId) {
+            const maxStock = item.selectedVariant?.stock ?? 9999;
+            return { ...item, quantity: Math.min(item.quantity + quantity, maxStock) };
+          }
+          return item;
+        });
       }
+      const maxStock = product.selectedVariant?.stock ?? 9999;
       return [...prev, {
         id: String(product.id),
         product_id: String(product.id),
@@ -86,7 +88,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         weight: product.weight || 'N/A',
         category: product.category || 'General',
         inStock: product.inStock !== undefined ? product.inStock : true,
-        quantity: quantity
+        quantity: Math.min(quantity, maxStock)
       }];
     });
   };
@@ -101,7 +103,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     setCartItems(prev => 
-      prev.map(item => item.id === productId ? { ...item, quantity } : item)
+      prev.map(item => {
+        if (item.id === productId) {
+          const maxStock = item.selectedVariant?.stock ?? 9999;
+          return { ...item, quantity: Math.min(quantity, maxStock) };
+        }
+        return item;
+      })
     );
   };
 

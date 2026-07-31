@@ -143,19 +143,21 @@ function CheckoutContent() {
                     if (product) {
                         const variantIdParam = searchParams.get('variantId');
                         const variantId = variantIdParam ? Number(variantIdParam) : null;
+                        const selectedVariant = product.variants?.find((v: any) => v.id === variantId) || product.variants?.[0] || null;
                         setCheckoutItems([{
                             id: product.id,
                             product_id: product.id,
                             variant_id: variantId,
                             selectedVariantId: variantId,
+                            selectedVariant: selectedVariant,
                             name: product.name || product.title || '',
-                            price: (product.variants?.[0]?.price ?? product.price) || 0,
+                            price: (selectedVariant?.price ?? product.price) || 0,
                             image: product.featured_image || product.image || '',
-                            quantity: qty,
-                            weight: product.variants?.[0] ? `${product.variants[0].size || ''} ${product.variants[0].unit || ''}`.trim() : '1 unit',
+                            quantity: Math.min(qty, selectedVariant?.stock ?? 9999),
+                            weight: selectedVariant ? `${selectedVariant.size || ''} ${selectedVariant.unit || ''}`.trim() : '1 unit',
                             brand: product.brand?.name || '',
                             category: product.category?.slug || '',
-                            inStock: Boolean(product.variants && product.variants.some((v: any) => (v.stock ?? 0) > 0))
+                            inStock: Boolean(selectedVariant ? (selectedVariant.stock ?? 0) > 0 : true)
                         }]);
                         return;
                     }
@@ -276,9 +278,13 @@ function CheckoutContent() {
     }, [checkoutErrors]);
 
     const updateQuantity = (id: string, delta: number) => {
-        setCheckoutItems(prev => prev.map(item =>
-            item.id === id ? { ...item, quantity: Math.max(1, item.quantity + delta) } : item
-        ));
+        setCheckoutItems(prev => prev.map(item => {
+            if (item.id === id) {
+                const maxStock = item.selectedVariant?.stock ?? 9999;
+                return { ...item, quantity: Math.max(1, Math.min(item.quantity + delta, maxStock)) };
+            }
+            return item;
+        }));
     };
 
     const subtotal = checkoutItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);

@@ -31,6 +31,11 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(firstVariant);
     const [quantity, setQuantity] = useState(1);
 
+    const handleSelectVariant = (variant: ProductVariant) => {
+        setSelectedVariant(variant);
+        setQuantity(prev => Math.max(1, Math.min(prev, variant.stock)));
+    };
+
     const selectedPrice = selectedVariant?.price ?? product.price;
     const selectedStock = selectedVariant?.stock ?? 0;
     const selectedWeight = selectedVariant
@@ -80,7 +85,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                 <VariantSelector
                     variants={product.variants}
                     selectedVariantId={selectedVariant?.id || null}
-                    onSelectVariant={setSelectedVariant}
+                    onSelectVariant={handleSelectVariant}
                 />
 
                 <div className="space-y-4">
@@ -94,8 +99,9 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                         </button>
                         <span className="w-8 text-center font-bold text-gray-700 text-sm">{quantity}</span>
                         <button
-                            onClick={() => setQuantity(quantity + 1)}
-                            className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-lg font-bold hover:bg-[#0c4a9e] hover:text-white transition-all shadow-sm border border-gray-100"
+                            onClick={() => setQuantity(Math.min(selectedVariant?.stock ?? 9999, quantity + 1))}
+                            disabled={quantity >= (selectedVariant?.stock ?? 0)}
+                            className="w-8 h-8 rounded-lg bg-white flex items-center justify-center text-lg font-bold hover:bg-[#0c4a9e] hover:text-white transition-all shadow-sm border border-gray-100 disabled:opacity-30 disabled:cursor-not-allowed"
                         >
                             +
                         </button>

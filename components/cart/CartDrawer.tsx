@@ -114,7 +114,8 @@ export default function CartDrawer() {
                                                     <span className="w-4 text-center font-bold text-gray-700 text-sm">{item.quantity}</span>
                                                     <button 
                                                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                        className="w-6 h-6 rounded-md bg-white flex items-center justify-center text-sm font-bold hover:bg-gray-100 transition-all shadow-sm"
+                                                        disabled={item.quantity >= (item.selectedVariant?.stock ?? 9999)}
+                                                        className="w-6 h-6 rounded-md bg-white flex items-center justify-center text-sm font-bold hover:bg-gray-100 transition-all shadow-sm disabled:opacity-30 disabled:cursor-not-allowed"
                                                     >+</button>
                                                 </div>
                                                 <p className="font-bold text-gray-900 text-sm">${(item.price * item.quantity).toFixed(2)}</p>
