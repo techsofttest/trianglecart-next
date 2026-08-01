@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useStripe, useElements, PaymentElement } from '@stripe/react-stripe-js';
+import React, { useState, useEffect } from 'react';
+import { useStripe, useElements, PaymentElement, ExpressCheckoutElement } from '@stripe/react-stripe-js';
 import { Loader2, Lock, AlertCircle } from 'lucide-react';
 
 interface StripePaymentFormProps {
@@ -16,6 +16,19 @@ export default function StripePaymentForm({ orderNumber, totalAmount, onPaymentS
 
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isProcessing, setIsProcessing] = useState(false);
+    const [expressCheckoutReady, setExpressCheckoutReady] = useState(false);
+
+    useEffect(() => {
+        if (!elements) {
+            setExpressCheckoutReady(false);
+            return;
+        }
+
+        const expressElement = elements.getElement(ExpressCheckoutElement);
+        if (expressElement) {
+            setExpressCheckoutReady(true);
+        }
+    }, [elements]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -61,7 +74,58 @@ export default function StripePaymentForm({ orderNumber, totalAmount, onPaymentS
                     </div>
                 </div>
 
-                <PaymentElement options={{ layout: 'tabs' }} />
+                <div className="space-y-4">
+                    <div className="rounded-2xl border border-gray-200 p-3 bg-gray-50/60">
+                        <div className="mb-3">
+                            <h3 className="text-sm font-semibold text-gray-800">Quick Checkout</h3>
+                            <p className="text-xs text-gray-500">Use Apple Pay, Google Pay, or other supported options</p>
+                        </div>
+                        <ExpressCheckoutElement
+                            onReady={() => setExpressCheckoutReady(true)}
+                            onCancel={() => setErrorMessage('Express checkout was canceled.')}
+                            onConfirm={async (event) => {
+                                if (!stripe || !elements) {
+                                    event.reject?.();
+                                    return;
+                                }
+
+                                setIsProcessing(true);
+                                setErrorMessage(null);
+
+                                const { error } = await stripe.confirmPayment({
+                                    elements,
+                                    confirmParams: {
+                                        return_url: `${window.location.origin}/checkout/status?orderNumber=${orderNumber}`,
+                                    },
+                                });
+
+                                if (error) {
+                                    event.reject?.();
+                                    if (error.type === 'card_error' || error.type === 'validation_error') {
+                                        setErrorMessage(error.message ?? 'An error occurred.');
+                                    } else {
+                                        setErrorMessage('An unexpected error occurred.');
+                                    }
+                                }
+
+                                setIsProcessing(false);
+                            }}
+                            options={{
+                                paymentMethodType: 'card',
+                                buttonType: 'buy',
+                                layout: 'horizontal',
+                            }}
+                        />
+                    </div>
+
+                    <div className="relative flex items-center justify-center py-2">
+                        <div className="flex-grow border-t border-gray-200" />
+                        <span className="px-3 text-[11px] font-bold uppercase tracking-wider text-gray-400">Or pay with card</span>
+                        <div className="flex-grow border-t border-gray-200" />
+                    </div>
+
+                    <PaymentElement options={{ layout: 'tabs' }} />
+                </div>
 
                 {errorMessage && (
                     <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-2xl flex items-start gap-2.5 text-red-700 text-xs font-semibold">

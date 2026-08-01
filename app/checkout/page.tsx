@@ -107,6 +107,12 @@ function CheckoutContent() {
         label: 'Home'
     });
 
+    useEffect(() => {
+        if (isAuthenticated && customer?.email && !addressForm.email) {
+            setAddressForm(prev => ({ ...prev, email: customer.email || '' }));
+        }
+    }, [isAuthenticated, customer?.email, addressForm.email]);
+
     // Initialize checkout items from cart or buy-now
     useEffect(() => {
         setIsMounted(true);

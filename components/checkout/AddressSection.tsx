@@ -10,6 +10,7 @@ interface Address {
     label?: string;
     contact_name: string;
     phone: string;
+    email?: string;
     address_line_1: string;
     address_line_2?: string;
     suburb?: string;
@@ -143,10 +144,12 @@ export default function AddressSection({
 
     // Set checkout form address fields
     const selectAddressFields = (addr: Address) => {
+        const preferredEmail = addr.email || newAddress.email || customer?.email || addressForm.email || '';
+
         setAddressForm({
             name: addr.contact_name,
             phone: addr.phone,
-            email: addressForm.email || newAddress.email || customer?.email || '',
+            email: preferredEmail,
             address: `${addr.address_line_1}${addr.address_line_2 ? ', ' + addr.address_line_2 : ''}, ${addr.suburb ? addr.suburb + ', ' : ''}${addr.city}, ${addr.state} ${addr.postcode}, ${addr.country}`,
             type: addr.label || 'Home',
             contact_name: addr.contact_name,

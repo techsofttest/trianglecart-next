@@ -465,7 +465,7 @@ export default function AddressBook() {
                             value={formData.contact_name}
                             onChange={(e) => setFormData({ ...formData, contact_name: e.target.value })}
                             onFocus={() => setFieldErrors(prev => ({ ...prev, contact_name: false }))}
-                            placeholder="John Smith"
+                            placeholder=""
                             className={`w-full bg-gray-50 border rounded-2xl py-3.5 px-6 text-sm font-semibold text-gray-900 outline-none focus:bg-white focus:border-[#0c4a9e] transition-all ${fieldErrors.contact_name ? 'border-red-400 bg-red-50/30' : 'border-gray-200'}`}
                         />
                     </div>
@@ -643,9 +643,10 @@ export default function AddressBook() {
                                 </div>
 
                                 <div className="flex gap-2">
-                                    {(addr.is_default_shipping || addr.is_default_billing) && (
+                                    {Boolean(addr.is_default_shipping || addr.is_default_billing) && (
                                         <span className="text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-1 bg-green-50 text-green-700 rounded-lg border border-green-100 flex items-center gap-1">
-                                            <Check className="w-3 h-3" /> Default
+                                            <Check className="w-3 h-3" />
+                                            Default
                                         </span>
                                     )}
                                 </div>

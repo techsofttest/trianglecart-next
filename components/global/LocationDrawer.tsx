@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { X, MapPin, Search, Navigation, Home, Briefcase, Plus } from 'lucide-react';
+import { apiUrl } from '@/lib/api';
 
 // using live saved addresses from localStorage or API
 
@@ -54,7 +55,7 @@ export default function LocationDrawer({ isOpen, onClose, onSelectLocation }: Lo
 
             // fallback: try fetching from API
             try {
-                const res = await fetch('/api/customer/addresses', { credentials: 'include' });
+                const res = await fetch(apiUrl('/api/customer/addresses'), { credentials: 'include' });
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data)) {

@@ -16,7 +16,7 @@ import {
 import { useRouter, useParams, usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
-import LocationDrawer from './LocationDrawer';
+{/*import LocationDrawer from './LocationDrawer';*/}
 import { fetchStorefront } from '@/lib/storefront';
 import HeaderSearch from './HeaderSearch';
 import { usePWAInstall } from '@/hooks/usePWAInstall';
@@ -420,7 +420,7 @@ export default function Header() {
             )}
 
             {/* Location Selection Drawer */}
-            <LocationDrawer
+            {/*<LocationDrawer
                 isOpen={isLocationOpen}
                 onClose={() => setIsLocationOpen(false)}
                 onSelectLocation={(loc) => {
@@ -428,7 +428,7 @@ export default function Header() {
                     localStorage.setItem('selectedLocation', JSON.stringify(loc));
                     window.dispatchEvent(new Event('locationUpdate'));
                 }}
-            />
+            />*/}
         </header>
     );
 }

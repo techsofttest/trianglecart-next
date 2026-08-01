@@ -55,7 +55,7 @@ export default function MobileBottomNav() {
                                 <div className={`relative ${isActive ? 'text-brand-blue scale-110' : 'text-brand-green'}`}>
                                     {item.icon}
                                     {item.badge !== undefined && item.badge > 0 && (
-                                        <span className="absolute -top-1.5 -right-1.5 bg-red-600 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white animate-in zoom-in duration-300">
+                                        <span className="absolute -top-2.5 -right-2.5 bg-red-600 text-white text-[7px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white animate-in zoom-in duration-300">
                                             {item.badge}
                                         </span>
                                     )}
