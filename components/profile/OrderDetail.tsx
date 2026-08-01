@@ -118,7 +118,7 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
 
                 <div className="flex gap-3">
                     {order.status === 'Processing' && (
-                        <button 
+                        <button
                             onClick={() => setView('cancel')}
                             className="text-[11px] font-medium text-red-600 bg-red-50 border-2 border-red-300 hover:bg-red-100 px-4 py-2 rounded-xl transition-all uppercase tracking-widest"
                         >
@@ -126,7 +126,7 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                         </button>
                     )}
                     {order.status === 'Delivered' && (
-                        <button 
+                        <button
                             onClick={() => setView('return')}
                             className="text-[11px] font-bold text-[#0c4a9e] bg-blue-50 border-2 border-blue-200 hover:bg-blue-100 px-4 py-2 rounded-xl transition-all uppercase tracking-widest"
                         >
@@ -237,19 +237,19 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                                             <CheckCircle2 className="w-5 h-5 text-[#0c4a9e] shrink-0 mt-0.5" />
                                             <div>
                                                 <p className="text-sm text-[#0c4a9e] font-bold">Confirmed Delivery</p>
-                                                
+
                                                 <p className="text-sm text-blue-800 mt-1">
-                                                Date: {order.delivery_date
-                                                    ? new Intl.DateTimeFormat('en-GB', {
-                                                        day: '2-digit',
-                                                        month: 'short',
-                                                        year: 'numeric',
-                                                    }).format(new Date(order.delivery_date)).replace(/ /g, '-')
-                                                    : 'Standard Courier'}
-                                                <br />
-                                                Time Slot: {order.time_slot || 'Standard Business Hours'}
-                                            </p>
-                                               
+                                                    Date: {order.delivery_date
+                                                        ? new Intl.DateTimeFormat('en-GB', {
+                                                            day: '2-digit',
+                                                            month: 'short',
+                                                            year: 'numeric',
+                                                        }).format(new Date(order.delivery_date)).replace(/ /g, '-')
+                                                        : 'Standard Courier'}
+                                                    <br />
+                                                    Time Slot: {order.time_slot || 'Standard Business Hours'}
+                                                </p>
+
                                             </div>
                                         </div>
                                     </div>
@@ -302,13 +302,6 @@ export default function OrderDetail({ orderId, onBack }: OrderDetailProps) {
                     </h3>
 
                     <div className="pl-7 space-y-4">
-                        <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-600 font-medium">Payment Method</span>
-                            <span className="text-gray-900 font-bold flex items-center gap-2">
-                                <CreditCard className="w-4 h-4 text-gray-400" />
-                                {order.payment_method || 'Card'}
-                            </span>
-                        </div>
                         <div className="flex items-center justify-between text-sm">
                             <span className="text-gray-600 font-medium">Subtotal</span>
                             <span className="text-gray-900 font-medium">${order.subtotal.toFixed(2)}</span>
