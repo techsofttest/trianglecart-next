@@ -30,7 +30,7 @@ body {
 }
 
 html {
-    overflow-anchor: none;
+  overflow-anchor: none;
 }
 
 /* Custom scrollbar utilities */
@@ -75,6 +75,7 @@ html {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
@@ -86,11 +87,17 @@ html {
 
 /* Global Form Input Styles */
 @layer base {
-  input, textarea, select {
-    border-color: #9ca3af; /* Darker border (gray-400) */
+
+  input,
+  textarea,
+  select {
+    border-color: #9ca3af;
+    /* Darker border (gray-400) */
   }
 
-  input:focus, textarea:focus, select:focus {
+  input:focus,
+  textarea:focus,
+  select:focus {
     border-color: #0c4a9e;
   }
 }
@@ -98,5 +105,4 @@ html {
 /* Global Button Styles */
 button {
   white-space: nowrap !important;
-  min-width: max-content !important;
 }
