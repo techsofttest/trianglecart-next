@@ -15,10 +15,10 @@ import { useCart } from '@/context/CartContext';
 import { apiUrl } from '@/lib/api';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
+
 import StripePaymentForm from '@/components/checkout/StripePaymentForm';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
-
 
 function CheckoutContent() {
     const router = useRouter();
