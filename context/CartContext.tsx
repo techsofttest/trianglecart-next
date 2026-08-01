@@ -106,7 +106,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       prev.map(item => {
         if (item.id === productId) {
           const maxStock = item.selectedVariant?.stock ?? 9999;
-          return { ...item, quantity: Math.min(quantity, maxStock) };
+          return { ...item, quantity: Math.min(Math.max(1, quantity), maxStock) };
         }
         return item;
       })

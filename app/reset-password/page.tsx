@@ -19,6 +19,13 @@ function ResetPasswordContent() {
 
   const canSubmit = useMemo(() => Boolean(token && email), [token, email]);
 
+  const validatePassword = (value: string) => {
+    if (!value) return 'Please enter a password.';
+    if (value.length < 6) return 'Password must be at least 6 characters long.';
+    if (/\s/.test(value)) return 'Password cannot contain spaces.';
+    return '';
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setMessage(null);
@@ -26,6 +33,12 @@ function ResetPasswordContent() {
 
     if (!token || !email) {
       setError('This reset link is missing required information.');
+      return;
+    }
+
+    const passwordError = validatePassword(password);
+    if (passwordError) {
+      setError(passwordError);
       return;
     }
 
@@ -105,9 +118,10 @@ function ResetPasswordContent() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  minLength={8}
+                  minLength={6}
                   className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#0c4a9e] focus:bg-white focus:ring-2 focus:ring-[#0c4a9e]/10 transition-all"
                 />
+                <p className="text-xs text-gray-500">Minimum 6 characters. No spaces.</p>
               </div>
 
               <div className="space-y-2">
@@ -117,7 +131,7 @@ function ResetPasswordContent() {
                   value={passwordConfirmation}
                   onChange={(e) => setPasswordConfirmation(e.target.value)}
                   required
-                  minLength={8}
+                  minLength={6}
                   className="w-full rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm text-gray-900 outline-none focus:border-[#0c4a9e] focus:bg-white focus:ring-2 focus:ring-[#0c4a9e]/10 transition-all"
                 />
               </div>

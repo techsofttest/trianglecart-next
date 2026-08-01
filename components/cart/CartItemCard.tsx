@@ -23,6 +23,15 @@ interface CartItemProps {
 }
 
 export default function CartItemCard({ item, onUpdateQuantity, onRemove, isLast }: CartItemProps) {
+    const handleDecreaseQuantity = () => {
+        if (item.quantity <= 1) {
+            onRemove(item.id);
+            return;
+        }
+
+        onUpdateQuantity(item.id, -1);
+    };
+
     return (
         <div className={`p-4 flex flex-col sm:flex-row gap-4 ${!isLast ? 'border-b border-gray-50' : ''}`}>
             <div className={`w-full sm:w-28 h-28 bg-gray-50 rounded-2xl flex items-center justify-center p-3 relative group shrink-0 ${!item.inStock ? 'grayscale' : ''}`}>
@@ -47,8 +56,8 @@ export default function CartItemCard({ item, onUpdateQuantity, onRemove, isLast 
                     <div className="flex items-center gap-3 mt-4">
                         <div className="flex items-center gap-4 bg-gray-50 rounded-xl px-2 py-1 border border-gray-100">
                             <button
-                                onClick={() => onUpdateQuantity(item.id, -1)}
-                                disabled={!item.inStock}
+                                onClick={handleDecreaseQuantity}
+                                disabled={!item.inStock || item.quantity <= 1}
                                 className="p-1.5 hover:bg-white hover:shadow-sm rounded-lg transition-all text-gray-600 disabled:opacity-30"
                             >
                                 <Minus className="w-3 h-3" />

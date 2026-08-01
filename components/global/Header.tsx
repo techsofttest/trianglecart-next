@@ -110,26 +110,6 @@ export default function Header() {
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
-    const [isScrolledToTop, setIsScrolledToTop] = useState(true);
-    const prevScrollY = useRef(0);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            // Add hysteresis: only update if scrolled past 60px or back to 20px
-            // This prevents flickering when slowly scrolling near the threshold
-            if (currentScrollY > 60 && isScrolledToTop) {
-                setIsScrolledToTop(false);
-            } else if (currentScrollY < 20 && !isScrolledToTop) {
-                setIsScrolledToTop(true);
-            }
-            prevScrollY.current = currentScrollY;
-        };
-
-        handleScroll();
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [isScrolledToTop]);
 
     const handleMouseDown = (e: React.MouseEvent) => {
         if (!categoryNavRef.current) return;
@@ -378,29 +358,9 @@ export default function Header() {
                                     <Link
                                         key={cat.id}
                                         href={href}
-                                        className={`transition group flex-shrink-0 ${isScrolledToTop
-                                            ? 'flex flex-col items-center justify-center px-4 border-b-2 pb-1 min-w-[100px]'
-                                            : 'flex flex-row items-center gap-2 px-3 py-1.5 rounded-full border border-gray-200 bg-gray-50/80 text-brand-orange'
-                                            } ${isActive
-                                                ? 'border-[#0c4a9e] text-[#0c4a9e]'
-                                                : 'border-transparent text-white hover:text-brand-blue hover:border-brand-blue'
-                                            }`}
+                                        className={`transition group flex-shrink-0 flex items-center justify-center px-3 py-1.5 rounded-full border whitespace-nowrap bg-gray-50/80 border-brand-blue text-brand-blue hover:text-brand-blue hover:border-brand-orange ${isActive ? 'border-brand-orange text-brand-orange bg-white' : ''}`}
                                     >
-                                        {isScrolledToTop && (
-                                            <div className={`transition p-1.5 rounded-xl ${isActive ? 'bg-blue-50 text-[#0c4a9e]' : 'text-brand-orange group-hover:text-[#0c4a9e] group-hover:bg-blue-50/50'}`}>
-                                                {isAllProducts ? (
-                                                    <Store className="w-5 h-5 mb-1" />
-                                                ) : cat.icon_url ? (
-                                                    <img src={cat.icon_url} alt={cat.name} className="w-5 h-5 mb-1 object-contain" />
-                                                ) : (
-                                                    <Package className="w-5 h-5 mb-1" />
-                                                )}
-                                            </div>
-                                        )}
-                                        <span className={`tracking-tight transition whitespace-nowrap ${isScrolledToTop
-                                            ? `text-[11px] ${isActive ? 'font-extrabold text-brand-blue' : 'text-brand-blue font-semibold '}`
-                                            : `text-[11px] font-semibold ${isActive ? 'text-brand-blue' : 'text-brand-blue '}`
-                                            }`}>
+                                        <span className="text-[11px] md:text-[12px] font-bold tracking-tight">
                                             {cat.name}
                                         </span>
                                     </Link>

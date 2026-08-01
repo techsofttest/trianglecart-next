@@ -121,9 +121,15 @@ export default function CartPage() {
 
     const handleQuantityChange = (id: string, delta: number) => {
         const item = cartItems.find(i => String(i.id) === String(id));
-        if (item) {
-            updateQuantity(id, item.quantity + delta);
+        if (!item) return;
+
+        const nextQuantity = item.quantity + delta;
+        if (nextQuantity <= 0) {
+            removeFromCart(id);
+            return;
         }
+
+        updateQuantity(id, Math.max(1, nextQuantity));
     };
 
     const subtotal = cartTotal;
@@ -181,14 +187,6 @@ export default function CartPage() {
                         ))}
                     </div>
 
-                    <div className="flex items-center gap-4 p-3 bg-blue-50/50 rounded-2xl border border-blue-100">
-                        <Truck className="w-5 h-5 text-[#0c4a9e]" />
-                        <span className="text-[10px] text-gray-600 font-medium uppercase tracking-tight leading-tight max-w-[70px]">
-                            Secure Payments
-                        </span>
-
-
-                    </div>
                 </div>
 
                 <div className="space-y-4 sticky top-24 self-start">

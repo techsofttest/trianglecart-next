@@ -587,7 +587,7 @@ export default function AddressSection({
                                 )}
 
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Receiver Name*</label>
+                                    <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Full Name*</label>
                                     <input
                                         type="text"
                                         value={newAddress.contact_name}

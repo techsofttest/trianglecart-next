@@ -56,6 +56,13 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
         return /^[^\s@\/]+@[^\s@\/]+\.[^\s@\/]+$/.test(email);
     };
 
+    const validatePassword = (value: string) => {
+        if (!value) return 'Please enter a password.';
+        if (value.length < 6) return 'Password must be at least 6 characters long.';
+        if (/\s/.test(value)) return 'Password cannot contain spaces.';
+        return '';
+    };
+
     const handleLoginSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMessage('');
@@ -116,8 +123,14 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
             return;
         }
 
+        const passwordError = validatePassword(password);
+        if (passwordError) {
+            setErrorMessage(passwordError);
+            return;
+        }
+
         if (password !== confirmPassword) {
-            setErrorMessage("Passwords do not match");
+            setErrorMessage('Passwords do not match.');
             return;
         }
 
@@ -343,6 +356,7 @@ export default function AuthCard({ onSuccess }: AuthCardProps) {
                                 placeholder=""
                                 required
                             />
+                            <p className="text-[11px] text-gray-500">Minimum 6 characters. No spaces.</p>
                         </div>
 
                         <div className="space-y-1">

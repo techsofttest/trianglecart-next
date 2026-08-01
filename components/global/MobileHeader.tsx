@@ -147,25 +147,14 @@ export default function MobileHeader() {
                 {/* Bottom Row: Categories Carousel */}
                 {!isHome && !pathname.startsWith('/product/') && !hideHeaderCategories && (
                 <div className={`border-t border-gray-50 overflow-x-auto scrollbar-hide bg-white transition-all duration-300 ${isScrolled ? 'py-1.5' : 'py-3'}`}>
-                    <div className="flex items-center gap-6 px-4 min-w-max">
+                    <div className="flex items-center gap-2 px-4 min-w-max">
                         {navItems.map((cat) => (
                             <Link 
                                 key={cat.id} 
                                 href={cat.slug === 'products' ? '/products' : `/category/${cat.slug}`}
-                                className={`flex items-center transition-all ${isScrolled ? 'gap-2 px-3 py-1.5 rounded-full border border-gray-100 bg-gray-50/90' : 'flex-col gap-1'}`}
+                                className="flex items-center justify-center px-3 py-1.5 rounded-full border bg-gray-50/80 border-brand-blue text-brand-blue hover:text-brand-blue hover:border-brand-orange whitespace-nowrap"
                             >
-                                {!isScrolled && (
-                                    <div className="w-10 h-10 rounded-full bg-orange-50/50 flex items-center justify-center text-orange-400 animate-in zoom-in duration-300">
-                                        {cat.slug === 'products' ? (
-                                            <Store className="w-5 h-5 text-[#0c4a9e]" />
-                                        ) : cat.icon_url ? (
-                                            <img src={cat.icon_url} alt={cat.name} className="w-5 h-5 object-contain" />
-                                        ) : (
-                                            <Package className="w-5 h-5 text-[#0c4a9e]" />
-                                        )}
-                                    </div>
-                                )}
-                                <span className={`text-[12px] font-bold text-gray-700 whitespace-nowrap ${isScrolled ? 'text-[11px] font-semibold' : ''}`}>
+                                <span className="text-[11px] md:text-[12px] font-bold tracking-tight">
                                     {cat.name}
                                 </span>
                             </Link>

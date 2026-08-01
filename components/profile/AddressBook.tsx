@@ -475,7 +475,7 @@ export default function AddressBook() {
                     </div>
 
                     <div className="space-y-2">
-                        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Recipient Name*</label>
+                        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Full Name*</label>
                         <input 
                             type="text" 
                             value={formData.contact_name}
