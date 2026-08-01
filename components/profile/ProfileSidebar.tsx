@@ -43,9 +43,9 @@ export default function ProfileSidebar({
 
       try {
         const res = await fetch(apiUrl('/api/me'), {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
         });
 
         if (!res.ok) throw new Error('Failed to load /api/me');
@@ -121,74 +121,136 @@ export default function ProfileSidebar({
   }
 
   return (
-    <div className="w-full h-full py-8">
-      {/* Minimal User Profile Header */}
-      <div className="flex items-center gap-4 mb-10 px-8">
-        <div
-          className="w-12 h-12 rounded-full bg-[#0c4a9e] flex items-center justify-center text-white text-base font-semibold shadow-sm overflow-hidden"
-          aria-label="User avatar"
-        >
-          {avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={avatarUrl}
-              alt="User avatar"
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <span>{name.split(' ')[0]?.slice(0, 2).toUpperCase() || 'U'}</span>
-          )}
-        </div>
-        <div>
-          <h2 className="text-base font-semibold text-gray-900 tracking-tight">
-            {name}
-          </h2>
-          <p className="text-sm text-gray-600 font-medium">{email}</p>
+    <>
+      {/* Mobile */}
+      <div className="md:hidden border-b border-gray-100 bg-white">
+        <div className="px-4 py-4">
+
+          {/* User */}
+          <div className="flex items-center gap-3 mb-4">
+            <div
+              className="w-11 h-11 rounded-full bg-[#0c4a9e] flex items-center justify-center text-white font-semibold overflow-hidden"
+            >
+              {avatarUrl ? (
+                <img
+                  src={avatarUrl}
+                  alt="User avatar"
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span>{name.split(' ')[0]?.slice(0, 2).toUpperCase()}</span>
+              )}
+            </div>
+
+            <div className="min-w-0">
+              <div className="font-semibold truncate">{name}</div>
+              <div className="text-sm text-gray-500 truncate">
+                {email}
+              </div>
+            </div>
+          </div>
+
+          {/* Pills */}
+          <div className="flex gap-2 overflow-x-auto whitespace-nowrap no-scrollbar">
+            {menuItems.map((item) => (
+              <Link
+                key={item.id}
+                href={item.href}
+                onClick={() => setActiveTab?.(item.id)}
+                className={`flex-shrink-0 flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition
+            ${activeTab === item.id
+                    ? 'bg-[#0c4a9e] text-white'
+                    : 'bg-gray-100 text-gray-700'
+                  }`}
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </Link>
+            ))}
+
+            <button
+              onClick={() => {
+                logout();
+                router.push('/');
+              }}
+              className="flex-shrink-0 flex items-center gap-2 rounded-full px-4 py-2 bg-red-50 text-red-600 font-medium"
+            >
+              <LogOut className="w-4 h-4" />
+              Logout
+            </button>
+          </div>
+
         </div>
       </div>
 
-      {/* Navigation Menu */}
-      <nav className="space-y-1 px-4">
-        {menuItems.map((item) => (
-          <Link
-            key={item.id}
-            href={item.href}
-            onClick={() => setActiveTab && setActiveTab(item.id)}
-            className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 
-              ${
-                activeTab === item.id
+
+      <div className="hidden md:block w-full h-full py-8">
+        {/* Minimal User Profile Header */}
+        <div className="flex items-center gap-4 mb-10 px-8">
+          <div
+            className="w-12 h-12 rounded-full bg-[#0c4a9e] flex items-center justify-center text-white text-base font-semibold shadow-sm overflow-hidden"
+            aria-label="User avatar"
+          >
+            {avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={avatarUrl}
+                alt="User avatar"
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span>{name.split(' ')[0]?.slice(0, 2).toUpperCase() || 'U'}</span>
+            )}
+          </div>
+          <div>
+            <h2 className="text-base font-semibold text-gray-900 tracking-tight">
+              {name}
+            </h2>
+            <p className="text-sm text-gray-600 font-medium">{email}</p>
+          </div>
+        </div>
+
+        {/* Navigation Menu */}
+        <nav className="space-y-1 px-4">
+          {menuItems.map((item) => (
+            <Link
+              key={item.id}
+              href={item.href}
+              onClick={() => setActiveTab && setActiveTab(item.id)}
+              className={`w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 
+              ${activeTab === item.id
                   ? 'bg-[#0c4a9e] text-white shadow-lg shadow-[#0c4a9e]/20'
                   : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-              }`}
-          >
-            <span
-              className={`${
-                activeTab === item.id ? 'text-white' : 'text-gray-600'
-              }`}
+                }`}
             >
-              {item.icon}
-            </span>
-            <span className="font-semibold text-sm tracking-tight">
-              {item.label}
-            </span>
-          </Link>
-        ))}
+              <span
+                className={`${activeTab === item.id ? 'text-white' : 'text-gray-600'
+                  }`}
+              >
+                {item.icon}
+              </span>
+              <span className="font-semibold text-sm tracking-tight">
+                {item.label}
+              </span>
+            </Link>
+          ))}
 
-        <div className="pt-6 mt-6 border-t border-gray-100 px-4">
-          <button 
-            onClick={() => {
-              logout();
-              router.push('/');
-            }}
-            className="flex items-center gap-3 text-red-500 hover:text-red-600 transition-colors font-semibold text-sm tracking-tight group w-full text-left" 
-            type="button"
-          >
-            <LogOut className="w-[18px] h-[18px] group-hover:-translate-x-0.5 transition-transform" />
-            <span>Logout</span>
-          </button>
-        </div>
-      </nav>
-    </div>
+          <div className="pt-6 mt-6 border-t border-gray-100 px-4">
+            <button
+              onClick={() => {
+                logout();
+                router.push('/');
+              }}
+              className="flex items-center gap-3 text-red-500 hover:text-red-600 transition-colors font-semibold text-sm tracking-tight group w-full text-left"
+              type="button"
+            >
+              <LogOut className="w-[18px] h-[18px] group-hover:-translate-x-0.5 transition-transform" />
+              <span>Logout</span>
+            </button>
+          </div>
+        </nav>
+      </div>
+    </>
   );
 }
 

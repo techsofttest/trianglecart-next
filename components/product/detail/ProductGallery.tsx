@@ -85,26 +85,25 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
 
             {/* Thumbnails */}
             {images.length > 1 && (
-                <div className="flex flex-nowrap gap-2 overflow-x-auto pb-1">
+                <div
+                    className="flex flex-nowrap gap-2 overflow-x-auto pb-1"
+                    style={{ WebkitOverflowScrolling: 'touch' }}
+                >
                     {images.map((img, idx) => (
-                        <button 
+                        <button
                             key={idx}
                             onClick={() => setSelectedImage(idx)}
-                          className={`
-                            flex-none
-                            w-16 h-16
-                            sm:w-20 sm:h-20
-                            rounded-xl
-                            overflow-hidden
-                            border-2
-                            ${
+                            className={`flex-none w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 ${
                                 selectedImage === idx
                                     ? 'border-[#0c4a9e]'
                                     : 'border-gray-100 hover:border-gray-200'
-                            }
-                        `}
+                            }`}
                         >
-                            <img src={resolveProductImageUrl(img)} alt="" className="block w-full h-full object-cover" />
+                            <img
+                                src={resolveProductImageUrl(img)}
+                                alt=""
+                                className="block w-full h-full object-cover"
+                            />
                         </button>
                     ))}
                 </div>

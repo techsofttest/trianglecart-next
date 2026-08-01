@@ -428,7 +428,7 @@ export default function AddressBook() {
 
     if (isEditing) {
         return (
-            <div ref={addressBookSectionRef} className="p-8 md:p-12 animate-in fade-in duration-500">
+            <div ref={addressBookSectionRef} className="p-2 md:p-12 animate-in fade-in duration-500">
                 <div className="flex items-center justify-between mb-8">
                     <button 
                         onClick={() => setIsEditing(false)}
@@ -689,7 +689,7 @@ export default function AddressBook() {
                                 </button>
                                 <button 
                                     onClick={() => handleDelete(addr.id)}
-                                    className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-600 rounded-xl transition-colors font-bold text-xs flex items-center gap-1"
+                                    className="p-2 hover:bg-red-50 text-red-400 hover:text-red-600 rounded-xl transition-colors font-bold text-xs flex items-center gap-1"
                                     title="Delete"
                                 >
                                     <Trash2 className="w-4 h-4" /> Delete

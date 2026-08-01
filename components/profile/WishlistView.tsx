@@ -10,7 +10,7 @@ export default function WishlistView() {
 
     if (wishlist.length === 0) {
         return (
-            <div className="p-8 md:p-12 text-center py-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="p-2 md:p-12 text-center py-24 animate-in fade-in slide-in-from-bottom-4 duration-700">
                 <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-6">
                     <Heart className="w-8 h-8 text-gray-300" />
                 </div>

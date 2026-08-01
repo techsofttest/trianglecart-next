@@ -46,7 +46,7 @@ export default function ProfileInfo() {
 
     if (!isAuthenticated) {
         return (
-            <div className="p-8 md:p-12">
+            <div className="p-2 md:p-12">
                 <div className="rounded-3xl border border-gray-100 bg-gray-50 p-8">
                     <h3 className="text-2xl font-semibold text-gray-900 tracking-tight">Personal Information</h3>
                     <p className="text-sm text-gray-600 mt-2 font-medium">Sign in to view your account details.</p>

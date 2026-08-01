@@ -49,7 +49,7 @@ export default function OrderHistory() {
     }
 
     return (
-        <div className="p-6 md:p-10 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto">
+        <div className="p-2 md:p-10 animate-in fade-in slide-in-from-bottom-4 duration-700 max-w-5xl mx-auto">
             <div className="mb-12">
                 <h3 className="text-3xl font-bold text-gray-900 tracking-tight">Purchase History</h3>
                 <div className="flex items-center gap-4 mt-2">
