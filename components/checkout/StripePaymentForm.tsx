@@ -81,11 +81,7 @@ export default function StripePaymentForm({ orderNumber, totalAmount, onPaymentS
 
                 <div className="space-y-4">
                     <div className="rounded-2xl border border-gray-200 p-3 bg-gray-50/60">
-                        <div className="mb-3">
-                            <h3 className="text-sm font-semibold text-gray-800">Quick Checkout</h3>
-                            <p className="text-xs text-gray-500">Use Apple Pay, Google Pay, or other supported options</p>
-                        </div>
-
+                        
                         <ExpressCheckoutElement
                             onConfirm={async (event: any) => {
                                 try {
@@ -117,16 +113,6 @@ export default function StripePaymentForm({ orderNumber, totalAmount, onPaymentS
                             }}
                         />
 
-                        <div className="relative my-6">
-                            <div className="absolute inset-0 flex items-center">
-                                <div className="w-full border-t border-gray-200" />
-                            </div>
-                            <div className="relative flex justify-center">
-                                <span className="bg-white px-4 text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                                    Or pay with card
-                                </span>
-                            </div>
-                        </div>
 
                         <PaymentElement
                             options={{
