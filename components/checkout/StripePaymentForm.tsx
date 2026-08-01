@@ -85,7 +85,6 @@ export default function StripePaymentForm({ orderNumber, totalAmount, onPaymentS
                             onCancel={() => setErrorMessage('Express checkout was canceled.')}
                             onConfirm={async (event) => {
                                 if (!stripe || !elements) {
-                                    event.reject?.();
                                     return;
                                 }
 
@@ -100,7 +99,6 @@ export default function StripePaymentForm({ orderNumber, totalAmount, onPaymentS
                                 });
 
                                 if (error) {
-                                    event.reject?.();
                                     if (error.type === 'card_error' || error.type === 'validation_error') {
                                         setErrorMessage(error.message ?? 'An error occurred.');
                                     } else {
