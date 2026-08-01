@@ -12,6 +12,11 @@ import { apiUrl } from '@/lib/api';
 export default function OrderHistory() {
     const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
 
+    // Reset scroll position when switching between list and detail views
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [selectedOrderId]);
+
     const [loading, setLoading] = useState(true);
     const [orders, setOrders] = useState<
         {

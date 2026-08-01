@@ -21,7 +21,7 @@ export default function WishlistView() {
     }
 
     return (
-        <div className="p-8 md:p-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="p-4 md:p-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="flex items-center justify-between mb-10">
                 <div>
                     <h3 className="text-2xl font-semibold text-gray-900 tracking-tight">My Wishlist</h3>
@@ -31,10 +31,10 @@ export default function WishlistView() {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {wishlist.map((product) => (
-                    <ProductCard 
-                        key={product.id} 
-                        product={product} 
-                        showRemoveButton={true} 
+                    <ProductCard
+                        key={product.id}
+                        product={product}
+                        showRemoveButton={true}
                     />
                 ))}
             </div>

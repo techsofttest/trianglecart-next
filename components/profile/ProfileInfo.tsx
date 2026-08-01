@@ -69,7 +69,7 @@ export default function ProfileInfo() {
     };
 
     return (
-        <div className="p-8 md:p-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        <div className="p-4 md:p-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                 <div>
                     <h3 className="text-2xl font-semibold text-gray-900 tracking-tight">Personal Information</h3>

@@ -67,7 +67,7 @@ export default function AddressBook() {
         try {
             const res = await fetch(apiUrl('/api/customer/addresses'), {
                 method: 'GET',
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
@@ -280,7 +280,7 @@ export default function AddressBook() {
 
             const res = await fetch(url, {
                 method,
-                headers: { 
+                headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
@@ -430,7 +430,7 @@ export default function AddressBook() {
         return (
             <div ref={addressBookSectionRef} className="p-2 md:p-12 animate-in fade-in duration-500">
                 <div className="flex items-center justify-between mb-8">
-                    <button 
+                    <button
                         onClick={() => setIsEditing(false)}
                         className="flex items-center gap-2 text-gray-500 hover:text-[#0c4a9e] transition-colors font-semibold text-sm group"
                     >
@@ -454,7 +454,7 @@ export default function AddressBook() {
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Search Address (Google Places)*</label>
                         <div className="relative">
                             <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                            <input 
+                            <input
                                 type="text"
                                 ref={autocompleteInputRef}
                                 placeholder="Search for address or enter manually..."
@@ -465,8 +465,8 @@ export default function AddressBook() {
 
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Label (e.g. Home, Work)*</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.label}
                             onChange={(e) => setFormData({ ...formData, label: e.target.value })}
                             placeholder="Home / Work / Parents"
@@ -476,8 +476,8 @@ export default function AddressBook() {
 
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Full Name*</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.contact_name}
                             onChange={(e) => setFormData({ ...formData, contact_name: e.target.value })}
                             onFocus={() => setFieldErrors(prev => ({ ...prev, contact_name: false }))}
@@ -490,8 +490,8 @@ export default function AddressBook() {
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Contact Phone Number*</label>
                         <div className="relative">
                             <span className="absolute left-6 top-1/2 -translate-y-1/2 text-sm font-bold text-gray-600">+61</span>
-                            <input 
-                                type="tel" 
+                            <input
+                                type="tel"
                                 value={formData.phone.startsWith('+61') ? formData.phone.replace(/^\+61\s?/, '') : formData.phone}
                                 onChange={(e) => {
                                     const raw = e.target.value;
@@ -519,10 +519,10 @@ export default function AddressBook() {
                     </div>
 
 
-                     <div className="space-y-2">
+                    <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Apartment/Suite/Unit*</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.address_line_2}
                             onChange={(e) => setFormData({ ...formData, address_line_2: e.target.value })}
                             onFocus={() => setFieldErrors(prev => ({ ...prev, address_line_2: false }))}
@@ -534,8 +534,8 @@ export default function AddressBook() {
 
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Address Line 1*</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.address_line_1}
                             readOnly={true}
                             placeholder="Auto-filled via search"
@@ -543,12 +543,12 @@ export default function AddressBook() {
                         />
                     </div>
 
-                    
+
 
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Suburb</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.suburb}
                             readOnly={true}
                             placeholder="Auto-filled via search"
@@ -558,8 +558,8 @@ export default function AddressBook() {
 
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">City*</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.city}
                             readOnly={true}
                             placeholder="Auto-filled via search"
@@ -569,8 +569,8 @@ export default function AddressBook() {
 
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">State*</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.state}
                             readOnly={true}
                             placeholder="Auto-filled via search"
@@ -580,8 +580,8 @@ export default function AddressBook() {
 
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Postcode*</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.postcode}
                             readOnly={true}
                             placeholder="Auto-filled via search"
@@ -591,8 +591,8 @@ export default function AddressBook() {
 
                     <div className="space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Country*</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             value={formData.country}
                             readOnly={true}
                             placeholder="Auto-filled via search"
@@ -602,7 +602,7 @@ export default function AddressBook() {
 
                     <div className="md:col-span-2 space-y-2">
                         <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Delivery Notes (Optional)</label>
-                        <textarea 
+                        <textarea
                             value={formData.delivery_notes}
                             onChange={(e) => setFormData({ ...formData, delivery_notes: e.target.value })}
                             rows={3}
@@ -619,7 +619,7 @@ export default function AddressBook() {
                     )}
 
                     <div className="md:col-span-2 pt-4">
-                        <button 
+                        <button
                             onClick={handleSave}
                             className="w-full md:w-auto flex items-center justify-center gap-2 bg-[#0c4a9e] text-white font-bold py-4 px-12 rounded-2xl hover:bg-blue-800 transition-all shadow-xl shadow-[#0c4a9e]/10 active:scale-95 text-sm"
                         >
@@ -632,13 +632,13 @@ export default function AddressBook() {
     }
 
     return (
-        <div ref={addressBookSectionRef} className="p-8 md:p-12 animate-in fade-in duration-500">
+        <div ref={addressBookSectionRef} className="p-4 md:p-12 animate-in fade-in duration-500">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                 <div>
                     <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Delivery Address Book</h3>
                     <p className="text-sm text-gray-500 mt-2 font-medium">Your saved locations for faster checkout (max 20).</p>
                 </div>
-                <button 
+                <button
                     onClick={handleAddNew}
                     className="flex items-center justify-center gap-2 bg-[#0c4a9e] text-white font-bold py-3.5 px-8 rounded-2xl hover:bg-blue-800 transition-all shadow-lg shadow-[#0c4a9e]/15 active:scale-95 text-sm"
                 >
@@ -680,14 +680,14 @@ export default function AddressBook() {
 
                         <div className="border-t border-gray-50 mt-6 pt-4 flex flex-wrap gap-2 justify-between items-center">
                             <div className="flex gap-1">
-                                <button 
+                                <button
                                     onClick={() => handleEdit(addr)}
                                     className="p-2 hover:bg-gray-50 text-gray-600 hover:text-gray-900 rounded-xl transition-colors font-bold text-xs flex items-center gap-1"
                                     title="Edit"
                                 >
                                     <Edit2 className="w-4 h-4" /> Edit
                                 </button>
-                                <button 
+                                <button
                                     onClick={() => handleDelete(addr.id)}
                                     className="p-2 hover:bg-red-50 text-red-400 hover:text-red-600 rounded-xl transition-colors font-bold text-xs flex items-center gap-1"
                                     title="Delete"
@@ -698,7 +698,7 @@ export default function AddressBook() {
 
                             <div className="flex gap-1.5">
                                 {!addr.is_default_shipping && !addr.is_default_billing && (
-                                    <button 
+                                    <button
                                         onClick={() => handleSetDefaultShipping(addr.id)}
                                         className="px-3 py-1.5 bg-gray-50 hover:bg-[#0c4a9e]/5 text-gray-600 hover:text-[#0c4a9e] rounded-xl transition-colors text-xs font-bold"
                                     >

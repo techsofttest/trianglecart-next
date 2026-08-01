@@ -151,7 +151,7 @@ export default function ProfileSidebar({
           </div>
 
           {/* Pills */}
-          <div className="flex gap-2 overflow-x-auto whitespace-nowrap no-scrollbar">
+          <div className="py-4 my-2 flex gap-2 overflow-x-auto whitespace-nowrap no-scrollbar">
             {menuItems.map((item) => (
               <Link
                 key={item.id}
