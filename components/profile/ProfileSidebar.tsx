@@ -156,6 +156,7 @@ export default function ProfileSidebar({
               <Link
                 key={item.id}
                 href={item.href}
+                scroll={false}
                 onClick={() => setActiveTab?.(item.id)}
                 className={`flex-shrink-0 flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition
             ${activeTab === item.id
