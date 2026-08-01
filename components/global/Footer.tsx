@@ -217,15 +217,15 @@ export default function Footer() {
                     {/* Payment Gateways Badges (Clean Neutral Styled) */}
                     <div className="flex flex-wrap items-center justify-center gap-2">
                         <span className="text-[12px] uppercase tracking-wider font-semibold text-gray-500 mr-1 hidden sm:inline">Secure Payments</span>
-                        <div className="px-2 py-1 bg-black border border-black rounded text-[12px] font-semibold text-white tracking-wider">
+                        <div className="px-2 py-1 bg-[#0F766E] border border-[#0F766E] rounded text-[12px] font-semibold text-white tracking-wider">
     Apple Pay
 </div>
 
-<div className="px-2 py-1 bg-[#4285F4] border border-[#4285F4] rounded text-[12px] font-semibold text-white tracking-wider">
+<div className="px-2 py-1 bg-[#0F766E] border border-[#0F766E] rounded text-[12px] font-semibold text-white tracking-wider">
     Google Pay
 </div>
 
-<div className="px-2 py-1 bg-[#1E40AF] border border-[#1E40AF] rounded text-[12px] font-semibold text-white tracking-wider">
+<div className="px-2 py-1 bg-[#0F766E] border border-[#0F766E] rounded text-[12px] font-semibold text-white tracking-wider">
     Credit Card
 </div>
 
