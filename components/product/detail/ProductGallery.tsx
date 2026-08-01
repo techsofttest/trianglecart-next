@@ -94,20 +94,30 @@ export default function ProductGallery({ images, title, id, product }: ProductGa
                 >
                     {images.map((img, idx) => (
                         <button
-                            key={idx}
-                            onClick={() => setSelectedImage(idx)}
-                            className={`shrink-0 w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden border-2 ${
-                                selectedImage === idx
-                                    ? 'border-[#0c4a9e]'
-                                    : 'border-gray-100 hover:border-gray-200'
-                            }`}
-                        >
-                            <img
-                                src={resolveProductImageUrl(img)}
-                                alt=""
-                                className="block w-full h-full object-cover"
-                            />
-                        </button>
+                        key={idx}
+                        type="button"
+                        onClick={() => setSelectedImage(idx)}
+                        style={{
+                            flex: '0 0 64px',
+                            width: '64px',
+                            height: '64px',
+                            minWidth: '64px',
+                            minHeight: '64px',
+                            maxWidth: '64px',
+                            maxHeight: '64px',
+                        }}
+                        className={`rounded-xl overflow-hidden border-2 ${
+                            selectedImage === idx
+                                ? 'border-[#0c4a9e]'
+                                : 'border-gray-100 hover:border-gray-200'
+                        }`}
+                    >
+                        <img
+                            src={resolveProductImageUrl(img)}
+                            alt=""
+                            className="w-full h-full object-cover"
+                        />
+                    </button>
                     ))}
                 </div>
             )}
