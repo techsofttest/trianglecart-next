@@ -58,6 +58,7 @@ export default function AddressBook() {
     // Refs for Google Places Autocomplete
     const autocompleteInputRef = useRef<HTMLInputElement>(null);
     const autocompleteRef = useRef<any>(null);
+    const addressBookSectionRef = useRef<HTMLDivElement>(null);
 
     // Fetch addresses from backend
     const loadAddresses = async () => {
@@ -242,6 +243,19 @@ export default function AddressBook() {
         setIsEditing(true);
     };
 
+    const scrollToAddressBookTop = () => {
+        requestAnimationFrame(() => {
+            const target = addressBookSectionRef.current;
+            if (!target) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            const top = window.scrollY + target.getBoundingClientRect().top - 24;
+            window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        });
+    };
+
     const handleSave = async () => {
         const errors: Record<string, boolean> = {};
         if (!formData.contact_name) errors.contact_name = true;
@@ -278,7 +292,8 @@ export default function AddressBook() {
 
             if (res.ok) {
                 setIsEditing(false);
-                loadAddresses();
+                await loadAddresses();
+                scrollToAddressBookTop();
             } else if (res.status === 401) {
                 throw new Error('Unauthenticated');
             } else {
@@ -306,6 +321,7 @@ export default function AddressBook() {
             localStorage.setItem('triangle-saved-addresses', JSON.stringify(updated));
             window.dispatchEvent(new Event('addressUpdate'));
             setIsEditing(false);
+            scrollToAddressBookTop();
         }
     };
 
@@ -412,7 +428,7 @@ export default function AddressBook() {
 
     if (isEditing) {
         return (
-            <div className="p-8 md:p-12 animate-in fade-in duration-500">
+            <div ref={addressBookSectionRef} className="p-8 md:p-12 animate-in fade-in duration-500">
                 <div className="flex items-center justify-between mb-8">
                     <button 
                         onClick={() => setIsEditing(false)}
@@ -616,7 +632,7 @@ export default function AddressBook() {
     }
 
     return (
-        <div className="p-8 md:p-12 animate-in fade-in duration-500">
+        <div ref={addressBookSectionRef} className="p-8 md:p-12 animate-in fade-in duration-500">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                 <div>
                     <h3 className="text-2xl font-bold text-gray-900 tracking-tight">Delivery Address Book</h3>

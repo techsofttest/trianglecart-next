@@ -56,6 +56,7 @@ export default function AddressSection({
     const [isSavingNewAddress, setIsSavingNewAddress] = useState(false);
     const [errorMsg, setErrorMsg] = useState<string | null>(null);
     const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
+    const addressSectionRef = useRef<HTMLDivElement>(null);
 
     // New Address Form State
     const [newAddress, setNewAddress] = useState({
@@ -283,6 +284,19 @@ export default function AddressSection({
         }
     }, [showNewAddressForm, isConfirmed]);
 
+    const scrollToAddressSectionTop = () => {
+        requestAnimationFrame(() => {
+            const target = addressSectionRef.current;
+            if (!target) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            const top = window.scrollY + target.getBoundingClientRect().top - 24;
+            window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+        });
+    };
+
     // Save new address from checkout
     const handleSaveNewAddress = async () => {
         const errors: Record<string, boolean> = {};
@@ -319,6 +333,7 @@ export default function AddressSection({
                 await loadAddresses();
                 setSelectedAddressId(savedAddr.id);
                 selectAddressFields(savedAddr);
+                scrollToAddressSectionTop();
             } else if (res.status === 401) {
                 throw new Error('Unauthenticated');
             } else {
@@ -343,6 +358,7 @@ export default function AddressSection({
             setShowNewAddressForm(false);
             setSelectedAddressId(mockId);
             selectAddressFields(newAddrWithId);
+            scrollToAddressSectionTop();
         } finally {
             setIsSavingNewAddress(false);
         }
@@ -392,6 +408,7 @@ export default function AddressSection({
             setSelectedAddressId(null);
         }
         setIsConfirmed(true);
+        scrollToAddressSectionTop();
     };
 
     if (isLoading) {
@@ -404,7 +421,7 @@ export default function AddressSection({
     }
 
     return (
-        <div className={`bg-white p-6 rounded-[32px] border shadow-sm space-y-6 transition-all duration-500 ${isConfirmed ? 'border-green-100 bg-green-50/5' : 'border-gray-100'}`}>
+        <div ref={addressSectionRef} className={`bg-white p-6 rounded-[32px] border shadow-sm space-y-6 transition-all duration-500 ${isConfirmed ? 'border-green-100 bg-green-50/5' : 'border-gray-100'}`}>
             {/* Header */}
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
