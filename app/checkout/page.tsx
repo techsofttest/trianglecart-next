@@ -619,18 +619,22 @@ function CheckoutContent() {
                                                         key={slot.id}
                                                         type="button"
                                                         onClick={() => setSelectedSlotId(slot.id)}
-                                                        className={`p-3 rounded-xl border-2 text-center transition-all duration-200 ${selectedSlotId === slot.id
-                                                            ? 'border-[#0c4a9e] bg-blue-50/30 ring-2 ring-[#0c4a9e]/10'
-                                                            : 'border-gray-100 hover:border-gray-200 bg-white'
+                                                        className={`p-3 rounded-xl border-2 text-center transition-all duration-200 ${
+                                                            selectedSlotId === slot.id
+                                                                ? 'border-[#0c4a9e] bg-white'
+                                                                : 'border-gray-900 bg-white hover:border-gray-900'
                                                             }`}
                                                     >
                                                         <Clock className={`w-4 h-4 mx-auto mb-1.5 ${selectedSlotId === slot.id ? 'text-[#0c4a9e]' : 'text-gray-400'}`} />
-                                                        <span className={`text-xs font-bold block ${selectedSlotId === slot.id ? 'text-[#0c4a9e]' : 'text-gray-600'}`}>
+                                                        <span
+                                                            className={`text-xs font-bold block ${
+                                                                selectedSlotId === slot.id
+                                                                    ? 'text-[#0c4a9e]'
+                                                                    : 'text-gray-900'
+                                                                }`}
+                                                        >
                                                             {slot.formatted_slot}
                                                         </span>
-                                                        {selectedSlotId === slot.id && (
-                                                            <CheckCircle2 className="w-3.5 h-3.5 text-[#0c4a9e] mx-auto mt-1" />
-                                                        )}
                                                     </button>
                                                 ))}
                                             </div>

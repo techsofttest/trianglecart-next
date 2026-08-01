@@ -177,7 +177,7 @@ export default function MobileHeader() {
             {/* Spacer to prevent content overlap */}
             <div className={`lg:hidden ${(isHome || pathname.startsWith('/product/'))
                 ? (isScrolled ? 'h-[60px]' : 'h-[120px]') 
-                : (isScrolled ? 'h-[100px]' : 'h-[180px]')}`} />
+                : (isScrolled ? 'h-[100px]' : 'h-[120px]')}`} />
         </>
     );
 }
