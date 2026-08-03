@@ -153,7 +153,7 @@ export default function Header() {
     ];
 
     return (
-        <header className="hidden lg:block bg-white shadow-sm border-b border-gray-200 sticky top-0 z-50" ref={headerRef}>
+        <header className="hidden lg:block bg-gray-700 shadow-sm border-b border-gray-200 sticky top-0 z-50" ref={headerRef}>
 
             {/* Top Row: Logo, Search, Actions */}
             <div className="mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-6">
@@ -174,7 +174,7 @@ export default function Header() {
                         <div className="flex items-center gap-2.5">
                             {selectedLocation ? (
                                 <>
-                                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-[#0c4a9e] group-hover:bg-white transition-colors">
+                                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-white group-hover:bg-white transition-colors">
                                         {selectedLocation.title?.toUpperCase() === 'HOME' ? (
                                             <Home className="w-4 h-4" />
                                         ) : selectedLocation.title?.toUpperCase() === 'WORK' ? (
@@ -185,11 +185,11 @@ export default function Header() {
                                     </div>
                                     <div className="flex flex-col overflow-hidden max-w-[240px]">
                                         {selectedLocation.title?.toUpperCase() !== 'OTHER' && (
-                                            <span className="text-[11px] font-black text-[#0c4a9e] uppercase tracking-wider leading-tight">
+                                            <span className="text-[11px] font-black text-white uppercase tracking-wider leading-tight">
                                                 {selectedLocation.title}
                                             </span>
                                         )}
-                                        <span className="text-[13px] text-gray-600 font-medium truncate leading-tight mt-0.5">
+                                        <span className="text-[13px] text-gray-300 font-medium truncate leading-tight mt-0.5">
                                             {selectedLocation.subtitle}
                                         </span>
                                     </div>
@@ -231,7 +231,7 @@ export default function Header() {
                 {/* Right: Actions (Login, More, Cart) */}
                 <div className="flex items-center gap-2 md:gap-6 flex-shrink-0">
 
-                    <Link href="/" className="flex items-center gap-1.5 text-green-800 hover:text-[#0c4a9e] px-4 py-2 rounded-md transition font-semibold text-sm">
+                    <Link href="/" className="flex items-center gap-1.5 text-white hover:text-brand-green px-4 py-2 rounded-md transition font-semibold text-sm">
                         <Home className="w-5 h-5" />
                         <span>Home</span>
                     </Link>
@@ -240,7 +240,7 @@ export default function Header() {
                     {isAuthenticated ? (
                         <div className="relative">
                             <button
-                                className="flex items-center gap-1.5 hover:bg-[#0c4a9e] hover:text-white text-green-800 px-4 py-2 rounded-md transition duration-200 group"
+                                className="flex items-center gap-1.5 hover:bg-[#0c4a9e] hover:text-brand-green text-white px-4 py-2 rounded-md transition duration-200 group"
                                 onMouseEnter={() => setIsLoginOpen(true)}
                                 onClick={() => setIsLoginOpen(!isLoginOpen)}
                             >
@@ -279,7 +279,7 @@ export default function Header() {
                         </div>
                     ) : (
                         <div className="flex items-center gap-2">
-                            <Link href="/login" className="flex items-center gap-1.5 text-green-800 hover:text-[#0c4a9e] px-4 py-2 rounded-md transition font-semibold text-sm">
+                            <Link href="/login" className="flex items-center gap-1.5 text-white hover:text-brand-green px-4 py-2 rounded-md transition font-semibold text-sm">
                                 <User className="w-5 h-5" />
                                 <span>Login</span>
                             </Link>
@@ -310,7 +310,7 @@ export default function Header() {
                     </div> */}
 
                     {/* Cart */}
-                    <Link href="/cart" className="flex items-center gap-2 text-green-800 hover:text-[#0c4a9e] transition font-semibold text-sm relative group">
+                    <Link href="/cart" className="flex items-center gap-2 text-white hover:text-brand-green transition font-semibold text-sm relative group">
                         <div className="relative">
                             <ShoppingCart className="w-5 h-5" />
                             {cartCount > 0 && (

@@ -13,6 +13,7 @@ import CheckoutItemsList from '@/components/checkout/CheckoutItemsList';
 import OrderSummarySidebar from '@/components/checkout/OrderSummarySidebar';
 import { useCart } from '@/context/CartContext';
 import { apiUrl } from '@/lib/api';
+import { getLowestPriceVariant } from '@/lib/product';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 
@@ -149,7 +150,7 @@ function CheckoutContent() {
                     if (product) {
                         const variantIdParam = searchParams.get('variantId');
                         const variantId = variantIdParam ? Number(variantIdParam) : null;
-                        const selectedVariant = product.variants?.find((v: any) => v.id === variantId) || product.variants?.[0] || null;
+                        const selectedVariant = product.variants?.find((v: any) => v.id === variantId) || getLowestPriceVariant(product.variants) || product.variants?.[0] || null;
                         setCheckoutItems([{
                             id: product.id,
                             product_id: product.id,

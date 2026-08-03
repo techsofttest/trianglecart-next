@@ -3,7 +3,7 @@ import { ChevronRight } from 'lucide-react';
 import ProductCard from '@/components/product/ProductCard';
 import ProductDetailClient from '@/components/product/detail/ProductDetailClient';
 import { fetchStorefront } from '@/lib/storefront';
-import { DEFAULT_PRODUCT_IMAGE, StorefrontProduct, resolveProductImageUrl, toProductCardModel } from '@/lib/product';
+import { DEFAULT_PRODUCT_IMAGE, StorefrontProduct, getLowestPriceVariant, resolveProductImageUrl, toProductCardModel } from '@/lib/product';
 
 type ProductResponse = StorefrontProduct;
 
@@ -82,16 +82,19 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
         ? (homeData?.products ?? []).filter((item) => item.slug !== product.slug).slice(0, 10).map((item) => toProductCardModel(item))
         : suggestedProducts;
 
-    const variants = (product.variants ?? []).map((variant) => ({
-        id: variant.id,
-        sku: variant.sku,
-        unit: variant.unit,
-        size: variant.size,
-        price: variant.price,
-        stock: variant.stock,
-    }));
+    const variants = [...(product.variants ?? [])]
+        .sort((a, b) => a.price - b.price)
+        .map((variant) => ({
+            id: variant.id,
+            sku: variant.sku,
+            unit: variant.unit,
+            size: variant.size,
+            price: variant.price,
+            stock: variant.stock,
+        }));
 
-    const selectedPrice = variants[0]?.price ?? product.price ?? 0;
+    const defaultVariant = getLowestPriceVariant(variants);
+    const selectedPrice = defaultVariant?.price ?? product.price ?? 0;
     const originalPrice = product.max_price && product.max_price > selectedPrice
         ? product.max_price
         : Math.round(selectedPrice * 1.15 * 100) / 100;

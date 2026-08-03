@@ -8,6 +8,7 @@ import ProductGallery from './ProductGallery';
 import ProductInfo from './ProductInfo';
 import ProductDeliveryReturnsInfo from './ProductDeliveryReturnsInfo';
 import ProductNotice from './ProductNotice';
+import { getLowestPriceVariant } from '@/lib/product';
 
 type ProductDetailClientProps = {
     product: {
@@ -27,8 +28,8 @@ type ProductDetailClientProps = {
 };
 
 export default function ProductDetailClient({ product }: ProductDetailClientProps) {
-    const firstVariant = product.variants[0] ?? null;
-    const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(firstVariant);
+    const defaultVariant = getLowestPriceVariant(product.variants) ?? null;
+    const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(defaultVariant);
     const [quantity, setQuantity] = useState(1);
 
     const handleSelectVariant = (variant: ProductVariant) => {

@@ -8,7 +8,7 @@ import { useWishlist } from '@/context/WishlistContext';
 import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import { useRouter } from 'next/navigation';
 import VariantSelector, { ProductVariant } from './VariantSelector';
-import { resolveProductImageUrl } from '@/lib/product';
+import { getLowestPriceVariant, resolveProductImageUrl } from '@/lib/product';
 import { showLoginRequiredToast } from '@/utils/toast';
 
 interface ProductQuickAddModalProps {
@@ -19,7 +19,7 @@ interface ProductQuickAddModalProps {
 
 export default function ProductQuickAddModal({ product, isOpen, onClose }: ProductQuickAddModalProps) {
     const [quantity, setQuantity] = useState(1);
-    const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(product.variants?.[0] ?? null);
+    const [selectedVariant, setSelectedVariant] = useState<ProductVariant | null>(getLowestPriceVariant(product.variants) ?? null);
     const { addToCart } = useCart();
     const { toggleWishlist, isInWishlist } = useWishlist();
     const { isAuthenticated } = useCustomerAuth();

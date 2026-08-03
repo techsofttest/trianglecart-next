@@ -98,8 +98,20 @@ export function hasInStockVariant(product: StorefrontProduct): boolean {
     return product.variants.some((variant) => (variant.stock ?? 0) > 0);
 }
 
+export function getLowestPriceVariant<T extends { price: number; stock?: number }>(variants?: T[] | null): T | null {
+    if (!variants?.length) return null;
+
+    const availableVariants = variants.filter((variant) => (variant.stock ?? 0) > 0);
+    const sourceVariants = availableVariants.length > 0 ? availableVariants : variants;
+
+    return sourceVariants.reduce<T | null>((lowest, current) => {
+        if (!lowest) return current;
+        return current.price < lowest.price ? current : lowest;
+    }, null);
+}
+
 export function toProductCardModel(product: StorefrontProduct): ProductCardModel {
-    const variant = product.variants?.[0];
+    const variant = getLowestPriceVariant(product.variants);
     const activePrice = variant?.price ?? product.price ?? 0;
     const weight = variant ? `${variant.size || ''} ${variant.unit || ''}`.trim() : '1 unit';
     const originalPrice = product.max_price && product.max_price > activePrice
