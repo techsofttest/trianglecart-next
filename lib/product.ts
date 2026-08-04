@@ -10,7 +10,7 @@ export interface StorefrontProduct {
     featured_image: string | null;
     gallery?: string[];
     price: number;
-    strikedPrice?: number | null;
+    strikedPrice?: number;
     min_price?: number;
     max_price?: number;
     rating?: number;
@@ -22,7 +22,7 @@ export interface StorefrontProduct {
         unit: string | null;
         size: string | null;
         price: number;
-        strikedPrice?: number | null;
+        strikedPrice?: number;
         stock: number;
     }>;
     description?: string | null;

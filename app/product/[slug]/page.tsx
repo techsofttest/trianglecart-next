@@ -90,7 +90,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             unit: variant.unit,
             size: variant.size,
             price: variant.price,
-            strikedPrice: variant.strikedPrice,
+            strikedPrice: variant.strikedPrice ?? undefined,
             stock: variant.stock,
         }));
 
