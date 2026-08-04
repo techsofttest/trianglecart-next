@@ -168,9 +168,11 @@ export default function MobileHeader() {
             />
 
             {/* Spacer to prevent content overlap */}
+            
             <div className={`lg:hidden ${(isHome || pathname.startsWith('/product/'))
-                ? (isScrolled ? 'h-[60px]' : 'h-[160px]')
+                ? (isScrolled ? 'h-[60px]' : 'h-[110px]')
                 : (isScrolled ? 'h-[100px]' : 'h-[160px]')}`} />
+            
         </>
     );
 }
