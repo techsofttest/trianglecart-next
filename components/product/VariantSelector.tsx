@@ -8,6 +8,7 @@ export type ProductVariant = {
     unit: string | null;
     size: string | null;
     price: number;
+    strikedPrice?: number;
     stock: number;
 };
 

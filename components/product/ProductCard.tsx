@@ -19,6 +19,7 @@ export interface Product {
     weight: string;
     price: number;
     originalPrice: number;
+    strikedPrice?: number;
     discount?: string;
     rating?: number;
     reviews?: number;
@@ -34,6 +35,7 @@ export interface Product {
         unit: string | null;
         size: string | null;
         price: number;
+        strikedPrice?: number;
         stock: number;
     }>;
 }
@@ -108,9 +110,16 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
 
                     <div className="mt-auto pt-2 border-t border-gray-50">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-sm sm:text-base font-semibold text-[#008446] leading-none">
-                                ${product.price.toFixed(2)}
-                            </span>
+                            <div className="flex items-center gap-2">
+                                {product.strikedPrice && product.strikedPrice > product.price && (
+                                    <span className="text-sm sm:text-base font-medium text-gray-400 line-through leading-none">
+                                        ${product.strikedPrice.toFixed(2)}
+                                    </span>
+                                )}
+                                <span className="text-sm sm:text-base font-semibold text-[#008446] leading-none">
+                                    ${product.price.toFixed(2)}
+                                </span>
+                            </div>
                             <span className="inline-flex items-center rounded-full bg-green-50 px-2 py-0.5 text-[10px] font-semibold text-green-700">
                                 In Stock
                             </span>

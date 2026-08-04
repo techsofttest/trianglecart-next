@@ -90,11 +90,13 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             unit: variant.unit,
             size: variant.size,
             price: variant.price,
+            strikedPrice: variant.strikedPrice,
             stock: variant.stock,
         }));
 
     const defaultVariant = getLowestPriceVariant(variants);
     const selectedPrice = defaultVariant?.price ?? product.price ?? 0;
+    const selectedStrikedPrice = defaultVariant?.strikedPrice ?? product.strikedPrice ?? undefined;
     const originalPrice = product.max_price && product.max_price > selectedPrice
         ? product.max_price
         : Math.round(selectedPrice * 1.15 * 100) / 100;
@@ -122,6 +124,7 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
                         brand: product.brand?.name || 'Triangle Cart',
                         price: selectedPrice,
                         originalPrice,
+                        strikedPrice: selectedStrikedPrice,
                         rating: product.rating || 0,
                         reviews: product.review_count || 0,
                         description: product.description?.trim() ? product.description : '',

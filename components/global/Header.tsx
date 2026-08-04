@@ -82,7 +82,7 @@ export default function Header() {
     }, []);
 
     const [categories, setCategories] = useState<HeaderCategory[]>([]);
-    const [brandLogo, setBrandLogo] = useState<string>(apiUrl('/images/logo/brand-logo-nobg.png?v1'));
+    const [brandLogo, setBrandLogo] = useState<string>(apiUrl('/images/logo/brand-logo-nobg.png?v1.1'));
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -164,7 +164,7 @@ export default function Header() {
                         <img
                             src={brandLogo}
                             alt="Triangle Cart Logo"
-                            className="h-10 w-auto object-contain"
+                            className="h-14 w-auto object-contain"
                         />
                     </Link>
                     <div

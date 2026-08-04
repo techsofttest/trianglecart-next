@@ -90,7 +90,7 @@ export default function PromoSlider({ banners }: PromoSliderProps) {
 
     return (
         <div
-            className="relative w-full sm:aspect-[16/8] md:aspect-[25/8] overflow-hidden shadow-md group"
+            className="relative w-full overflow-hidden shadow-md group"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >

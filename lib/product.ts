@@ -10,6 +10,7 @@ export interface StorefrontProduct {
     featured_image: string | null;
     gallery?: string[];
     price: number;
+    strikedPrice?: number | null;
     min_price?: number;
     max_price?: number;
     rating?: number;
@@ -21,6 +22,7 @@ export interface StorefrontProduct {
         unit: string | null;
         size: string | null;
         price: number;
+        strikedPrice?: number | null;
         stock: number;
     }>;
     description?: string | null;
@@ -38,6 +40,7 @@ export interface ProductCardModel {
     weight: string;
     price: number;
     originalPrice: number;
+    strikedPrice?: number;
     discount?: string;
     rating?: number;
     reviews?: number;
@@ -53,6 +56,7 @@ export interface ProductCardModel {
         unit: string | null;
         size: string | null;
         price: number;
+        strikedPrice?: number;
         stock: number;
     }>;
 }
@@ -113,6 +117,7 @@ export function getLowestPriceVariant<T extends { price: number; stock?: number 
 export function toProductCardModel(product: StorefrontProduct): ProductCardModel {
     const variant = getLowestPriceVariant(product.variants);
     const activePrice = variant?.price ?? product.price ?? 0;
+    const strikedPrice = variant?.strikedPrice ?? product.strikedPrice ?? undefined;
     const weight = variant ? `${variant.size || ''} ${variant.unit || ''}`.trim() : '1 unit';
     const originalPrice = product.max_price && product.max_price > activePrice
         ? product.max_price
@@ -126,6 +131,7 @@ export function toProductCardModel(product: StorefrontProduct): ProductCardModel
         image: resolveProductImageUrl(product.featured_image),
         weight: weight || '1 unit',
         price: activePrice,
+        strikedPrice,
         originalPrice,
         discount: originalPrice > activePrice
             ? `${Math.max(1, Math.round((1 - (activePrice / originalPrice)) * 100))}%`

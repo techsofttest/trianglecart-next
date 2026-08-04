@@ -10,10 +10,11 @@ interface ProductInfoProps {
     reviews: number;
     price: number;
     originalPrice: number;
+    strikedPrice?: number;
     discount: string;
 }
 
-export default function ProductInfo({ brand, title, rating, reviews, price, originalPrice, discount }: ProductInfoProps) {
+export default function ProductInfo({ brand, title, rating, reviews, price, originalPrice, strikedPrice, discount }: ProductInfoProps) {
     return (
         <div className="space-y-4">
             <div>
@@ -25,6 +26,9 @@ export default function ProductInfo({ brand, title, rating, reviews, price, orig
                 </h3>
 
                 <div className="flex items-center flex-wrap gap-2">
+                    {strikedPrice && strikedPrice > price && (
+                        <span className="text-lg font-medium text-gray-400 line-through tracking-tight">$ {strikedPrice}</span>
+                    )}
                     <span className="text-2xl font-semibold text-gray-900 tracking-tight">$ {price}</span>
                     <span className="inline-flex items-center rounded-full bg-green-50 px-2.5 py-1 text-xs font-semibold text-green-700">
                         In Stock

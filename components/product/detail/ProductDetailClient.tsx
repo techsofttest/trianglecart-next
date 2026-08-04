@@ -18,6 +18,7 @@ type ProductDetailClientProps = {
         brand: string;
         price: number;
         originalPrice: number;
+        strikedPrice?: number;
         rating: number;
         reviews: number;
         description: string;
@@ -38,6 +39,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     };
 
     const selectedPrice = selectedVariant?.price ?? product.price;
+    const selectedStrikedPrice = selectedVariant?.strikedPrice ?? product.strikedPrice;
     const selectedStock = selectedVariant?.stock ?? 0;
     const selectedWeight = selectedVariant
         ? [selectedVariant.size, selectedVariant.unit].filter(Boolean).join(' ')
@@ -80,6 +82,7 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
                     reviews={product.reviews}
                     price={selectedPrice}
                     originalPrice={product.originalPrice}
+                    strikedPrice={selectedStrikedPrice}
                     discount={discount}
                 />
 
