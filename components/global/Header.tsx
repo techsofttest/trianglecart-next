@@ -82,7 +82,7 @@ export default function Header() {
     }, []);
 
     const [categories, setCategories] = useState<HeaderCategory[]>([]);
-    const [brandLogo, setBrandLogo] = useState<string>(apiUrl('/images/logo/brand-logo-nobg.png?v1.1'));
+    const [brandLogo, setBrandLogo] = useState<string>(apiUrl('/images/logo/brand-logo-nobg.png?v2'));
 
     useEffect(() => {
         const fetchCategories = async () => {
