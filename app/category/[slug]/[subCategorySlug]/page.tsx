@@ -162,7 +162,7 @@ export default async function SubCategoryPage({ params }: { params: Promise<{ sl
                 <div className="flex items-center justify-between gap-4 mb-8">
                     <div>
                         <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight">{subCategoryTitle}</h1>
-                        <p className="text-sm text-gray-500 mt-1">{totalProductsCount} products found in this category</p>
+                        {/*<p className="text-sm text-gray-500 mt-1">{totalProductsCount} products found in this category</p>*/}
                     </div>
                     <Link
                         href="/products"
