@@ -84,17 +84,60 @@ export default async function SubCategoryPage({ params }: { params: Promise<{ sl
 
     const filteredProducts = allProducts
         .filter((p: any) => {
-            const cand = [p.subCategory, p.sub_category, p.subcategory, p.sub_category_name, p.subcategory_name, p.sub_category_slug, p.subcategory_slug];
-            for (const c of cand) {
-                if (!c) continue;
-                const s = typeof c === 'string' ? slugify(c) : slugify(String(c));
-                if (s === subCategorySlug) return true;
-            }
+            const candidates = [
+                p?.subCategory,
+                p?.sub_category,
+                p?.subcategory,
+                p?.subCategorySlug,
+                p?.sub_category_slug,
+                p?.subcategory_slug,
+                p?.sub_category_name,
+                p?.subcategory_name,
+                p?.sub_category_label,
+                p?.subcategory_label,
+                p?.category?.subCategory,
+                p?.category?.sub_category,
+                p?.category?.subcategory,
+                p?.category?.subCategorySlug,
+                p?.category?.sub_category_slug,
+                p?.category?.subcategory_slug,
+                p?.category?.sub_category_name,
+                p?.category?.subcategory_name,
+                p?.category?.name,
+                p?.category?.title,
+                p?.category?.slug,
+            ];
 
-            if (p.category && typeof p.category === 'object') {
-                const nestedName = p.category.name || p.category.title || p.category.slug;
-                if (nestedName && slugify(nestedName) === subCategorySlug) return true;
-            }
+            const normalized = candidates
+                .filter((value): value is string | number => typeof value === 'string' || typeof value === 'number')
+                .map((value) => slugify(String(value)));
+
+            if (normalized.includes(subCategorySlug)) return true;
+
+            const nestedCandidates = [
+                p?.category?.sub_categories,
+                p?.category?.subcategories,
+                p?.category?.children,
+                p?.category?.sub_category,
+                p?.category?.subcategory,
+            ];
+
+            const nestedNames = nestedCandidates.flatMap((value) => {
+                if (Array.isArray(value)) {
+                    return value
+                        .map((item: any) => typeof item === 'string' ? item : item?.name || item?.title || item?.slug)
+                        .filter(Boolean)
+                        .map((item) => slugify(String(item)));
+                }
+
+                if (typeof value === 'string' || typeof value === 'number') {
+                    return [slugify(String(value))];
+                }
+
+                return [];
+            });
+
+            if (nestedNames.includes(subCategorySlug)) return true;
 
             return false;
         })
