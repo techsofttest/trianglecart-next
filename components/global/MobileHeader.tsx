@@ -34,11 +34,10 @@ export default function MobileHeader() {
     } | null>(null);
 
     const [categories, setCategories] = useState<HeaderCategory[]>([]);
-    const [brandLogo, setBrandLogo] = useState<string>(apiUrl('/images/logo/brand-logo-nobg.png?v2'));
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const data = await fetchStorefront<{ brand: { logo: string }; categories: { main: HeaderCategory[]; all: HeaderCategory[] } }>('/api/storefront/header');
+            const data = await fetchStorefront<{ categories: { main: HeaderCategory[]; all: HeaderCategory[] } }>('/api/storefront/header');
             if (data?.categories) {
                 // Combine main categories first, then all categories
                 const mainCategories = data.categories.main || [];
@@ -49,9 +48,6 @@ export default function MobileHeader() {
                 const additionalCategories = allCategories.filter(c => !mainIds.has(c.id));
 
                 setCategories([...mainCategories, ...additionalCategories]);
-            }
-            if (data?.brand?.logo) {
-                setBrandLogo(data.brand.logo);
             }
         };
         fetchCategories();
@@ -97,7 +93,7 @@ export default function MobileHeader() {
                     <div className="flex items-center bg-gray-700 justify-between px-4 py-3 animate-in fade-in slide-in-from-top-2 duration-300">
                         <Link href="/" className="flex-shrink-0">
                             <img
-                                src={brandLogo}
+                                src={apiUrl('/images/logo/brand-logo-nobg.png?v2')}
                                 alt="Logo"
                                 className="h-8 md:h-8 w-auto object-contain"
                             />

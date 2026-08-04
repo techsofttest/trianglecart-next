@@ -82,11 +82,10 @@ export default function Header() {
     }, []);
 
     const [categories, setCategories] = useState<HeaderCategory[]>([]);
-    const [brandLogo, setBrandLogo] = useState<string>(apiUrl('/images/logo/brand-logo-nobg.png?v2'));
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const data = await fetchStorefront<{ brand: { logo: string }; categories: { main: HeaderCategory[]; all: HeaderCategory[] } }>('/api/storefront/header');
+            const data = await fetchStorefront<{ categories: { main: HeaderCategory[]; all: HeaderCategory[] } }>('/api/storefront/header');
             if (data?.categories) {
                 // Combine main categories first, then all categories (subcategories)
                 const mainCategories = data.categories.main || [];
@@ -98,9 +97,6 @@ export default function Header() {
 
                 // API returns them in correct order: main first, then alphabetically sorted subcategories
                 setCategories([...mainCategories, ...additionalCategories]);
-            }
-            if (data?.brand?.logo) {
-                setBrandLogo(data.brand.logo);
             }
         };
         fetchCategories();
@@ -162,7 +158,7 @@ export default function Header() {
                 <div className="flex items-center gap-6 flex-shrink-0">
                     <Link href="/" className="flex items-center">
                         <img
-                            src={brandLogo}
+                            src={apiUrl('/images/logo/brand-logo-nobg.png?v2')}
                             alt="Triangle Cart Logo"
                             className="h-14 w-auto object-contain"
                         />
