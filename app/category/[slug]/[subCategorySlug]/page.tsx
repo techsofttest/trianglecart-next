@@ -84,7 +84,7 @@ export default async function SubCategoryPage({ params }: { params: Promise<{ sl
 
     const filteredProducts = allProducts
         .filter((p: any) => {
-            const candidates = [
+            const subCategoryCandidates = [
                 p?.subCategory,
                 p?.sub_category,
                 p?.subcategory,
@@ -103,43 +103,15 @@ export default async function SubCategoryPage({ params }: { params: Promise<{ sl
                 p?.category?.subcategory_slug,
                 p?.category?.sub_category_name,
                 p?.category?.subcategory_name,
-                p?.category?.name,
-                p?.category?.title,
-                p?.category?.slug,
+                p?.category?.sub_category_label,
+                p?.category?.subcategory_label,
             ];
 
-            const normalized = candidates
+            const normalized = subCategoryCandidates
                 .filter((value): value is string | number => typeof value === 'string' || typeof value === 'number')
                 .map((value) => slugify(String(value)));
 
-            if (normalized.includes(subCategorySlug)) return true;
-
-            const nestedCandidates = [
-                p?.category?.sub_categories,
-                p?.category?.subcategories,
-                p?.category?.children,
-                p?.category?.sub_category,
-                p?.category?.subcategory,
-            ];
-
-            const nestedNames = nestedCandidates.flatMap((value) => {
-                if (Array.isArray(value)) {
-                    return value
-                        .map((item: any) => typeof item === 'string' ? item : item?.name || item?.title || item?.slug)
-                        .filter(Boolean)
-                        .map((item) => slugify(String(item)));
-                }
-
-                if (typeof value === 'string' || typeof value === 'number') {
-                    return [slugify(String(value))];
-                }
-
-                return [];
-            });
-
-            if (nestedNames.includes(subCategorySlug)) return true;
-
-            return false;
+            return normalized.includes(subCategorySlug);
         })
         .filter((item: any) => hasInStockVariant(item))
         .map((item: any) => toProductCardModel(item));
