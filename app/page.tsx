@@ -91,6 +91,7 @@ export default async function Home() {
       id: number;
       name: string;
       slug: string;
+      parent_id?: number | null;
       image_url: string | null;
       icon_url: string | null;
     }>>('/api/storefront/categories'),
