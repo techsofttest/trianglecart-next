@@ -95,6 +95,7 @@ export default async function SubCategoryPage({ params }: { params: Promise<{ sl
                 p?.subcategory_name,
                 p?.sub_category_label,
                 p?.subcategory_label,
+                p?.category?.slug,
                 p?.category?.subCategory,
                 p?.category?.sub_category,
                 p?.category?.subcategory,
