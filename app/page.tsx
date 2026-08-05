@@ -214,7 +214,22 @@ export default async function Home() {
 
         <div className="px-2 sm:px-6 lg:px-8 w-full flex flex-col gap-4 md:gap-6 mx-auto">
           <section className="w-full relative z-10 sm:-mt-[55px] md:-mt-[65px]">
-            <CategoryStrip categories={categoriesData || []} />
+            {
+              (() => {
+                const mainCategoriesList = (categoriesData || []).filter(c => c.parent_id === null);
+                const mainIds = new Set(mainCategoriesList.map(c => c.id));
+                const extraFeatured = (featuredCategories || []).filter(fc => !mainIds.has(fc.id)).map(fc => ({
+                  id: fc.id,
+                  name: fc.name,
+                  slug: fc.slug,
+                  image_url: (fc as any).image_url ?? null,
+                  icon_url: (fc as any).icon_url ?? null,
+                }));
+
+                const homepageStripCategories = [...mainCategoriesList, ...extraFeatured];
+                return <CategoryStrip categories={homepageStripCategories} />;
+              })()
+            }
           </section>
 
           <section className="w-full">

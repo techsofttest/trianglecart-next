@@ -85,18 +85,26 @@ export default function Header() {
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const data = await fetchStorefront<{ categories: { main: HeaderCategory[]; all: HeaderCategory[] } }>('/api/storefront/header');
-            if (data?.categories) {
-                // Combine main categories first, then all categories (subcategories)
-                const mainCategories = data.categories.main || [];
-                const allCategories = data.categories.all || [];
+            const [headerData, homeData] = await Promise.all([
+                fetchStorefront<{ categories: { main: HeaderCategory[]; all: HeaderCategory[] } }>('/api/storefront/header'),
+                fetchStorefront<any>('/api/storefront/home'),
+            ]);
 
-                // Remove duplicates: filter out any subcategories that are already in main
-                const mainIds = new Set(mainCategories.map(c => c.id));
-                const additionalCategories = allCategories.filter(c => !mainIds.has(c.id));
+            if (headerData?.categories) {
+                const mainCategories = headerData.categories.main || [];
 
-                // API returns them in correct order: main first, then alphabetically sorted subcategories
-                setCategories([...mainCategories, ...additionalCategories]);
+                // Add featured non-main categories from home payload if present
+                const mainIds = new Set(mainCategories.map((c) => c.id));
+                const featured = (homeData?.featured_categories || []).filter((fc: any) => !mainIds.has(fc.id)).map((fc: any) => ({
+                    id: fc.id,
+                    name: fc.name,
+                    slug: fc.slug,
+                    href: `/category/${fc.slug}`,
+                    image_url: fc.image_url ?? null,
+                    icon_url: fc.icon_url ?? null,
+                }));
+
+                setCategories([...mainCategories, ...featured]);
             }
         };
         fetchCategories();

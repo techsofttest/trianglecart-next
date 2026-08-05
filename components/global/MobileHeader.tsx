@@ -37,17 +37,24 @@ export default function MobileHeader() {
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const data = await fetchStorefront<{ categories: { main: HeaderCategory[]; all: HeaderCategory[] } }>('/api/storefront/header');
-            if (data?.categories) {
-                // Combine main categories first, then all categories
-                const mainCategories = data.categories.main || [];
-                const allCategories = data.categories.all || [];
+            const [headerData, homeData] = await Promise.all([
+                fetchStorefront<{ categories: { main: HeaderCategory[]; all: HeaderCategory[] } }>('/api/storefront/header'),
+                fetchStorefront<any>('/api/storefront/home'),
+            ]);
 
-                // Remove duplicates: keep main categories, then add any from all that aren't already included
-                const mainIds = new Set(mainCategories.map(c => c.id));
-                const additionalCategories = allCategories.filter(c => !mainIds.has(c.id));
+            if (headerData?.categories) {
+                const mainCategories = headerData.categories.main || [];
+                const mainIds = new Set(mainCategories.map((c) => c.id));
+                const featured = (homeData?.featured_categories || []).filter((fc: any) => !mainIds.has(fc.id)).map((fc: any) => ({
+                    id: fc.id,
+                    name: fc.name,
+                    slug: fc.slug,
+                    href: `/category/${fc.slug}`,
+                    image_url: fc.image_url ?? null,
+                    icon_url: fc.icon_url ?? null,
+                }));
 
-                setCategories([...mainCategories, ...additionalCategories]);
+                setCategories([...mainCategories, ...featured]);
             }
         };
         fetchCategories();
