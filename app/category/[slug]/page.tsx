@@ -19,7 +19,7 @@ function titleFromSlug(slug: string) {
         .join(' ');
 }
 
-async function loadSubCategoriesFromApi(categorySlug: string, categoriesList: any[] | null | undefined, productsPayload: any) {
+async function loadSubCategoriesFromApi(categorySlug: string, categoriesList: any[] | null | undefined, productsPayload: any): Promise<{ name: string; slug: string; href?: string }[]> {
     // Try to read subcategories from the categories API object (common shapes)
     const categoryObj = categoriesList?.find((c: any) => c.slug === categorySlug || slugify(c.name) === categorySlug) || null;
 
@@ -28,29 +28,59 @@ async function loadSubCategoriesFromApi(categorySlug: string, categoriesList: an
     ) : null;
 
     if (Array.isArray(possible) && possible.length > 0) {
-        return possible.map((s: any) => (typeof s === 'string' ? s : s.name || s.title || s.label || s.slug || ''))
-            .filter(Boolean);
+        return possible.map((s: any) => {
+            if (typeof s === 'string') {
+                const name = s;
+                const slug = slugify(name);
+                return { name, slug, href: `/category/${categorySlug}/${slug}` };
+            }
+
+            const name = s.name || s.title || s.label || null;
+            const slug = s.slug || (name ? slugify(name) : null) || '';
+            const href = s.href || s.url || (slug ? `/category/${categorySlug}/${slug}` : undefined);
+
+            return { name: name ?? slug, slug, href };
+        }).filter((it) => it && it.slug && it.name);
     }
 
     // Try a dedicated subcategories endpoint if present
     try {
         const remote = await fetchStorefront<any>(`/api/storefront/subcategories?category=${categorySlug}`);
         if (Array.isArray(remote) && remote.length > 0) {
-            return remote.map((s: any) => (typeof s === 'string' ? s : s.name || s.title || s.label || s.slug || '')).filter(Boolean);
+            return remote.map((s: any) => {
+                if (typeof s === 'string') {
+                    const name = s;
+                    const slug = slugify(name);
+                    return { name, slug, href: `/category/${categorySlug}/${slug}` };
+                }
+
+                const name = s.name || s.title || s.label || null;
+                const slug = s.slug || (name ? slugify(name) : null) || '';
+                const href = s.href || s.url || (slug ? `/category/${categorySlug}/${slug}` : undefined);
+
+                return { name: name ?? slug, slug, href };
+            }).filter((it) => it && it.slug && it.name);
         }
     } catch (e) {
         // ignore and try deriving from products
     }
 
     // Fallback: derive subcategories from returned products payload
-    const derived = new Set<string>();
+    const derived = new Map<string, { name: string; slug: string }>();
     const products = productsPayload?.data || [];
     products.forEach((p: any) => {
-        const candidates = [p.subCategory, p.sub_category, p.subcategory, p.sub_category_slug, p.sub_category_name, p.sub_category_label];
-        for (const c of candidates) {
-            if (typeof c === 'string' && c.trim()) {
-                derived.add(c.trim());
-                break;
+        const candidateName = (p.subCategory || p.sub_category || p.subcategory || p.sub_category_name || p.sub_category_label || null);
+        const candidateSlug = (p.sub_category_slug || p.subCategorySlug || p.sub_category_slug_value || null);
+
+        if (typeof candidateSlug === 'string' && candidateSlug.trim()) {
+            const slug = candidateSlug.trim();
+            const name = (typeof candidateName === 'string' && candidateName.trim()) ? candidateName.trim() : slug.replace(/-/g, ' ');
+            derived.set(slug, { name, slug });
+        } else if (typeof candidateName === 'string' && candidateName.trim()) {
+            const name = candidateName.trim();
+            const slug = slugify(name);
+            if (!derived.has(slug)) {
+                derived.set(slug, { name, slug });
             }
         }
 
@@ -59,14 +89,21 @@ async function loadSubCategoriesFromApi(categorySlug: string, categoriesList: an
             const nested = p.category.sub_categories || p.category.subcategories || p.category.children || p.category.sub_category;
             if (Array.isArray(nested)) {
                 nested.forEach((n: any) => {
-                    if (typeof n === 'string' && n.trim()) derived.add(n.trim());
-                    else if (n && (n.name || n.title)) derived.add((n.name || n.title).toString());
+                    if (typeof n === 'string' && n.trim()) {
+                        const name = n.trim();
+                        const slug = slugify(name);
+                        if (!derived.has(slug)) derived.set(slug, { name, slug });
+                    } else if (n && (n.name || n.title || n.slug)) {
+                        const name = n.name || n.title || n.label || n.slug;
+                        const slug = n.slug || slugify(name);
+                        if (!derived.has(slug)) derived.set(slug, { name: String(name), slug });
+                    }
                 });
             }
         }
     });
 
-    return Array.from(derived);
+    return Array.from(derived.values()).map((it) => ({ name: it.name, slug: it.slug, href: `/category/${categorySlug}/${it.slug}` }));
 }
 
 export default async function CategoryPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -123,15 +160,15 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                             >
                                 All
                             </Link>
-                            {subCategories.map((subCategory) => (
-                                <Link
-                                    key={subCategory}
-                                    href={`/category/${slug}/${slugify(subCategory)}`}
-                                    className="whitespace-nowrap rounded-xl border border-gray-100 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:border-[#0c4a9e] hover:text-[#0c4a9e]"
-                                >
-                                    {subCategory}
-                                </Link>
-                            ))}
+                                        {subCategories.map((subCategory) => (
+                                            <Link
+                                                key={subCategory.slug}
+                                                href={subCategory.href ?? `/category/${slug}/${subCategory.slug}`}
+                                                className="whitespace-nowrap rounded-xl border border-gray-100 bg-white px-4 py-2 text-sm font-semibold text-gray-700 transition hover:border-[#0c4a9e] hover:text-[#0c4a9e]"
+                                            >
+                                                {subCategory.name}
+                                            </Link>
+                                        ))}
                         </div>
                     </div>
                 )}
