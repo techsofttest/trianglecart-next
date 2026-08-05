@@ -111,11 +111,10 @@ export default async function SubCategoryPage({ params }: { params: Promise<{ sl
         fetchStorefront<{ data: StorefrontProduct[]; meta?: unknown }>(`/api/storefront/products?category=${categorySlug}&per_page=48`),
     ]);
 
-    const category = categories?.find((item) => item.slug === categorySlug);
-    const categoryTitle = category?.name || titleFromSlug(categorySlug);
-    const subCategoryTitle = subCategorySlug ? titleFromSlug(subCategorySlug) : 'Subcategory';
-
+    const category = categories?.find((item) => item.slug === categorySlug || slugify(item.name) === categorySlug);
     const subCategories = await loadSubCategoriesFromApi(categorySlug, categories, productsPayload) || [];
+    const categoryTitle = category?.name ?? titleFromSlug(categorySlug);
+    const subCategoryTitle = subCategories.find((sc) => sc.slug === subCategorySlug)?.name ?? (subCategorySlug ? titleFromSlug(subCategorySlug) : 'Subcategory');
 
     const allProducts = (productsPayload?.data ?? []);
 

@@ -114,9 +114,9 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         fetchStorefront<{ data: StorefrontProduct[]; meta?: unknown }>(`/api/storefront/products?category=${slug}&per_page=48`),
     ]);
 
-    const category = categories?.find((item) => item.slug === slug);
-    const categoryTitle = category?.name || titleFromSlug(slug);
+    const category = categories?.find((item) => item.slug === slug || slugify(item.name) === slug);
     const subCategories = await loadSubCategoriesFromApi(slug, categories, productsPayload) || [];
+    const categoryTitle = category?.name ?? subCategories.find((sc) => sc.slug === slug)?.name ?? titleFromSlug(slug);
     const products = (productsPayload?.data ?? [])
         .filter((item) => hasInStockVariant(item))
         .map((item) => toProductCardModel(item));
