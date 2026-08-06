@@ -253,7 +253,7 @@ export default async function Home() {
             <ProductRow title="Our latest products" products={latestProducts} viewAllLink="/products" />
           </section>
 
-          <!-- Home PWA install strip removed to avoid duplicate install CTA with header -->
+          {/* Home PWA install strip removed to avoid duplicate install CTA with header */}
 
           {homeAdvertisement && (
             <section className="w-full">
