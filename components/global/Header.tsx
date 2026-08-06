@@ -33,7 +33,7 @@ type HeaderCategory = {
 export default function Header() {
     const { cartCount } = useCart();
     const { customer, isAuthenticated, logout } = useCustomerAuth();
-    const { isInstalled, handleInstall } = usePWAInstall();
+    const { isInstalled, isSupported, handleInstall } = usePWAInstall();
     const [isLoginOpen, setIsLoginOpen] = useState(false);
     const [isMoreOpen, setIsMoreOpen] = useState(false);
     const [isCategoryMoreOpen, setIsCategoryMoreOpen] = useState(false);

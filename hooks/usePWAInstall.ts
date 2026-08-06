@@ -20,14 +20,21 @@ export function usePWAInstall() {
 
     setIsInstalled(standalone);
 
+    // Initialize from pre-captured event if available
+    if ((window as any).deferredPrompt) {
+      setDeferredPrompt((window as any).deferredPrompt);
+    }
+
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
+      (window as any).deferredPrompt = e;
     };
 
     const handleAppInstalled = () => {
       setIsInstalled(true);
       setDeferredPrompt(null);
+      (window as any).deferredPrompt = null;
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -54,5 +61,7 @@ export function usePWAInstall() {
     );
   };
 
-  return { isInstalled, handleInstall };
+  const isSupported = deferredPrompt !== null;
+
+  return { isInstalled, isSupported, handleInstall };
 }

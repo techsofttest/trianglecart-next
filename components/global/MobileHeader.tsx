@@ -27,7 +27,7 @@ export default function MobileHeader() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isLocationOpen, setIsLocationOpen] = useState(false);
     const { isAuthenticated } = useCustomerAuth();
-    const { isInstalled, handleInstall } = usePWAInstall();
+    const { isInstalled, isSupported, handleInstall } = usePWAInstall();
     const [selectedLocation, setSelectedLocation] = useState<{
         title: string;
         subtitle: string;

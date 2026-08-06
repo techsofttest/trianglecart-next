@@ -8,6 +8,7 @@ import { CartProvider } from "@/context/CartContext";
 import ScrollToTop from "@/components/ui/ScrollToTop";
 import RegisterSW from "@/components/ui/RegisterSW";
 import { CookieConsentProvider } from "@/components/CookieConsentProvider";
+import { OG_TITLE, OG_DESCRIPTION, OG_IMAGE, SITE_URL } from "@/lib/config";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,9 +20,25 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+
+
 export const metadata: Metadata = {
-  title: "Triangle Cart | Indian Groceries in Australia",
-  description: "Shop premium Indian and South Asian groceries, fresh produce, and spices. Delivering across Australia.",
+  title: OG_TITLE,
+  description: OG_DESCRIPTION,
+  openGraph: {
+    title: OG_TITLE,
+    description: OG_DESCRIPTION,
+    images: [{ url: OG_IMAGE }],
+    url: SITE_URL,
+    siteName: "Triangle Cart",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: OG_TITLE,
+    description: OG_DESCRIPTION,
+    images: [OG_IMAGE],
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -40,6 +57,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                window.deferredPrompt = e;
+              });
+            `,
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col bg-white">
         <ScrollToTop />
         <RegisterSW />
