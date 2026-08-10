@@ -72,6 +72,11 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                             </button>
                         )}
                     </div>
+                    {product.strikedPrice && product.strikedPrice > product.price && (
+                        <div className="bg-red-600 text-white text-[10px] sm:text-[11px] font-bold px-2 py-1 rounded-lg shadow-sm uppercase tracking-wider animate-in fade-in zoom-in duration-300 pointer-events-auto">
+                            SALE
+                        </div>
+                    )}
                 </div>
 
                 <Link
@@ -104,7 +109,7 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
 
                     {product.promoText && (
                         <span className="text-sm font-medium text-green-700 mb-2 text-left leading-tight block">
-                            • {product.promoText}
+                             • {product.promoText}
                         </span>
                     )}
 
@@ -112,7 +117,7 @@ export default function ProductCard({ product, showRemoveButton = false }: { pro
                         <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
                                 {product.strikedPrice && product.strikedPrice > product.price && (
-                                    <span className="text-sm sm:text-base font-medium text-gray-400 line-through leading-none">
+                                    <span className="text-sm sm:text-base font-medium text-red-600 line-through leading-none">
                                         ${product.strikedPrice.toFixed(2)}
                                     </span>
                                 )}
