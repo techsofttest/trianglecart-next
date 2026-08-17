@@ -59,6 +59,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [cartItems]);
 
   const addToCart = (product: any, quantity: number = 1) => {
+    if (!product) return;
+    const selectedVariant = product.selectedVariant ?? (
+      product.variants && Array.isArray(product.variants)
+        ? product.variants.find((v: any) => v.id === (product.selectedVariantId ?? product.variant_id))
+        : null
+    );
+    const stock = selectedVariant?.stock ?? product.stock ?? (product.inStock === false ? 0 : 9999);
+    if (product.is_active === false || product.inStock === false || stock <= 0) {
+      return;
+    }
+
     setCartItems(prev => {
       const selectedVariantId = product.selectedVariantId ?? product.variant_id ?? null;
       const existing = prev.find(item =>

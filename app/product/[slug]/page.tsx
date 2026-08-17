@@ -16,7 +16,11 @@ type CategoryResponse = {
 
 function splitHighlights(value?: string | null): string[] {
     if (!value) return [];
-    return value.split(/\r?\n|•|;/).map((item) => item.trim()).filter(Boolean);
+    const cleanStr = value.replace(/<p>\s*(?:&nbsp;|<br\s*\/?>)?\s*<\/p>/gi, '');
+    const items = cleanStr.split(/<\/p>|<br\s*\/?>|\r?\n|•|;/);
+    return items
+        .map((item) => item.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim())
+        .filter(Boolean);
 }
 
 function deriveSuggestionCategorySlug(categories: CategoryResponse[] | null, categorySlug?: string | null): string | undefined {

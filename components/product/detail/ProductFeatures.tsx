@@ -9,8 +9,15 @@ interface ProductFeaturesProps {
 }
 
 export default function ProductFeatures({ highlights, description }: ProductFeaturesProps) {
-    const normalizedHighlights = (highlights || []).filter(Boolean);
-    const normalizedDescription = description?.trim() || '';
+    const normalizedHighlights = (highlights || [])
+        .map((h) => (typeof h === 'string' ? h.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim() : ''))
+        .filter(Boolean);
+
+    let cleanDesc = (description || '').replace(/<p>\s*(?:&nbsp;|<br\s*\/?>)?\s*<\/p>/gi, '').trim();
+    const plainTextDesc = cleanDesc.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim();
+    if (!plainTextDesc) {
+        cleanDesc = '';
+    }
 
     return (
         <div className="space-y-8">
@@ -28,12 +35,19 @@ export default function ProductFeatures({ highlights, description }: ProductFeat
                 </section>
             )}
 
-            {normalizedDescription && (
+            {cleanDesc && (
                 <section>
                     <h3 className="text-lg font-semibold text-gray-900 mb-3 tracking-tight">About the Product</h3>
-                    <p className="text-[13px] text-gray-500 font-medium leading-relaxed max-w-3xl">
-                        {normalizedDescription}
-                    </p>
+                    {cleanDesc.includes('<') && cleanDesc.includes('>') ? (
+                        <div
+                            className="text-[13px] text-gray-500 font-medium leading-relaxed max-w-3xl prose prose-sm"
+                            dangerouslySetInnerHTML={{ __html: cleanDesc }}
+                        />
+                    ) : (
+                        <p className="text-[13px] text-gray-500 font-medium leading-relaxed max-w-3xl">
+                            {cleanDesc}
+                        </p>
+                    )}
                 </section>
             )}
 
