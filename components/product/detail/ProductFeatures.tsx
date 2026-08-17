@@ -21,10 +21,7 @@ export default function ProductFeatures({ highlights, description }: ProductFeat
                         {normalizedHighlights.map((item, idx) => (
                             <li key={idx} className="flex items-start gap-3 text-[13px] text-gray-600 font-medium">
                                 <div className="w-1.5 h-1.5 rounded-full bg-[#0c4a9e] mt-1.5 flex-shrink-0 opacity-60" />
-                                <div 
-                                    className="html-content-inline [&_p]:inline [&_p]:m-0"
-                                    dangerouslySetInnerHTML={{ __html: item }}
-                                />
+                                {item}
                             </li>
                         ))}
                     </ul>
@@ -34,10 +31,9 @@ export default function ProductFeatures({ highlights, description }: ProductFeat
             {normalizedDescription && (
                 <section>
                     <h3 className="text-lg font-semibold text-gray-900 mb-3 tracking-tight">About the Product</h3>
-                    <div 
-                        className="text-[13px] text-gray-500 font-medium leading-relaxed max-w-3xl space-y-2 html-content [&_p]:mb-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1"
-                        dangerouslySetInnerHTML={{ __html: normalizedDescription }}
-                    />
+                    <p className="text-[13px] text-gray-500 font-medium leading-relaxed max-w-3xl">
+                        {normalizedDescription}
+                    </p>
                 </section>
             )}
 
