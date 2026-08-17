@@ -304,7 +304,6 @@ export default function AddressSection({
         if (!newAddress.phone) errors.phone = true;
         if (!newAddress.email || !isValidEmail(newAddress.email)) errors.email = true;
         if (!newAddress.address_line_1) errors.address_line_1 = true;
-        if (!newAddress.address_line_2) errors.address_line_2 = true;
         if (!newAddress.city) errors.city = true;
         if (!newAddress.state) errors.state = true;
         if (!newAddress.postcode) errors.postcode = true;
@@ -370,7 +369,6 @@ export default function AddressSection({
         if (!newAddress.phone) errors.phone = true;
         if (!newAddress.email || !isValidEmail(newAddress.email)) errors.email = true;
         if (!newAddress.address_line_1) errors.address_line_1 = true;
-        if (!newAddress.address_line_2) errors.address_line_2 = true;
         if (!newAddress.city) errors.city = true;
         if (!newAddress.state) errors.state = true;
         if (!newAddress.postcode) errors.postcode = true;
@@ -632,7 +630,7 @@ export default function AddressSection({
 
 
                                 <div className="space-y-1.5">
-                                    <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Apartment/Suite/Unit*</label>
+                                    <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Apartment/Suite/Unit (Optional)</label>
                                     <input
                                         type="text"
                                         value={newAddress.address_line_2}

@@ -262,7 +262,6 @@ export default function AddressBook() {
         if (!formData.phone) errors.phone = true;
         if (!formData.email) errors.email = true;
         if (!formData.address_line_1) errors.address_line_1 = true;
-        if (!formData.address_line_2) errors.address_line_2 = true;
         if (!formData.city) errors.city = true;
         if (!formData.state) errors.state = true;
         if (!formData.postcode) errors.postcode = true;
@@ -520,7 +519,7 @@ export default function AddressBook() {
 
 
                     <div className="space-y-2">
-                        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Apartment/Suite/Unit*</label>
+                        <label className="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">Apartment/Suite/Unit (Optional)</label>
                         <input
                             type="text"
                             value={formData.address_line_2}
