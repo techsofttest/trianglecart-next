@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Lock, AlertTriangle, ShieldCheck, Loader2 } from 'lucide-react';
+import { Lock, AlertTriangle, ShieldCheck, Loader2, Truck } from 'lucide-react';
 import CouponSection from '@/components/cart/CouponSection';
 
 interface OrderSummarySidebarProps {
@@ -17,6 +17,8 @@ interface OrderSummarySidebarProps {
     onPlaceOrder: () => void;
     checkoutErrors?: string[];
     isPlacingOrder?: boolean;
+    amountUntilFreeDelivery?: number | null;
+    isFreeDelivery?: boolean;
 }
 
 export default function OrderSummarySidebar({
@@ -31,7 +33,9 @@ export default function OrderSummarySidebar({
     onRemoveCoupon,
     onPlaceOrder,
     checkoutErrors = [],
-    isPlacingOrder = false
+    isPlacingOrder = false,
+    amountUntilFreeDelivery = null,
+    isFreeDelivery = false
 }: OrderSummarySidebarProps) {
     return (
         <div className="space-y-4">
@@ -69,6 +73,21 @@ export default function OrderSummarySidebar({
                         <span className="text-[#0c4a9e] tracking-tight">${total.toFixed(2)}</span>
                     </div>
                 </div>
+
+                {/* Free Delivery Suggestion Banner (above Pay Now button) */}
+                {isFreeDelivery || shipping === 0 ? (
+                    <div className="mb-4 rounded-2xl bg-green-50 border border-green-200 p-3 text-center text-sm font-bold text-green-700 flex items-center justify-center gap-2">
+                        <Truck className="w-4 h-4 text-green-600 flex-shrink-0" />
+                        <span>Free delivery applied</span>
+                    </div>
+                ) : (amountUntilFreeDelivery !== null && amountUntilFreeDelivery > 0) ? (
+                    <div className="mb-4 rounded-2xl bg-green-50 border border-green-200 p-3 text-center text-sm font-bold text-green-700 flex items-center justify-center gap-2">
+                        <Truck className="w-4 h-4 text-green-600 flex-shrink-0" />
+                        <span>
+                            Purchase for ${amountUntilFreeDelivery % 1 === 0 ? amountUntilFreeDelivery : amountUntilFreeDelivery.toFixed(2)} more for free delivery
+                        </span>
+                    </div>
+                ) : null}
 
                 <button
                     onClick={onPlaceOrder}

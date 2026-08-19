@@ -562,20 +562,11 @@ function CheckoutContent() {
                                         ) : (
                                             <Package className="w-5 h-5 text-green-600 flex-shrink-0" />
                                         )}
-                                        <div className="flex-1">
-                                            <div className="flex items-center gap-2">
-                                                <span className="text-sm font-bold text-green-700">{eligibilityMessage}</span>
-                                                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-green-100 text-green-700">
-                                                    {deliveryType === 'direct' || deliveryType === 'postcode' ? 'Direct' : 'Courier'}
-                                                </span>
-                                            </div>
-                                            {isFreeDelivery || shipping === 0 ? (
-                                                <p className="text-xs font-semibold text-green-600 mt-0.5">Free delivery applied</p>
-                                            ) : (amountUntilFreeDelivery !== null && amountUntilFreeDelivery > 0) ? (
-                                                <p className="text-xs font-semibold text-green-600 mt-0.5">
-                                                    Purchase for ${amountUntilFreeDelivery % 1 === 0 ? amountUntilFreeDelivery : amountUntilFreeDelivery.toFixed(2)} more for free delivery
-                                                </p>
-                                            ) : null}
+                                        <div>
+                                            <span className="text-sm font-bold text-green-700">{eligibilityMessage}</span>
+                                            <span className="text-[10px] font-bold uppercase tracking-wider ml-2 px-2 py-0.5 rounded bg-green-100 text-green-700">
+                                                {deliveryType === 'direct' || deliveryType === 'postcode' ? 'Direct' : 'Courier'}
+                                            </span>
                                         </div>
                                     </>
                                 ) : isEligible === false ? (
@@ -702,6 +693,8 @@ function CheckoutContent() {
                         appliedCoupon={appliedCoupon}
                         checkoutErrors={checkoutErrors}
                         isPlacingOrder={isPlacingOrder}
+                        amountUntilFreeDelivery={amountUntilFreeDelivery}
+                        isFreeDelivery={isFreeDelivery}
                         onApplyCoupon={(code, discount) => {
                             setAppliedCoupon(code);
                             setCouponDiscount(discount ?? 0);
