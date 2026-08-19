@@ -418,8 +418,9 @@ function CheckoutContent() {
                 label: addressForm.label || addressForm.type || 'Home'
             },
             selected_address_id: selectedAddressId || null,
-            delivery_date: deliveryType === 'direct' ? selectedDateString : null,
-            delivery_slot_id: deliveryType === 'direct' ? selectedSlotId : null,
+            delivery_type: (deliveryType === 'direct' || deliveryType === 'postcode') ? 'direct' : 'courier',
+            delivery_date: (deliveryType === 'direct' || deliveryType === 'postcode') ? selectedDateString : null,
+            delivery_slot_id: (deliveryType === 'direct' || deliveryType === 'postcode') ? selectedSlotId : null,
             payment_method: 'card',
             notes: addressForm.delivery_notes || '',
             coupon_code: appliedCoupon || null
