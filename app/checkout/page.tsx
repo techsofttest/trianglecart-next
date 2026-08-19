@@ -46,13 +46,16 @@ function CheckoutContent() {
     const [isCheckingEligibility, setIsCheckingEligibility] = useState(false);
     const [isEligible, setIsEligible] = useState<boolean | null>(null);
     const [eligibilityMessage, setEligibilityMessage] = useState<string>('');
-    const [deliveryType, setDeliveryType] = useState<'direct' | 'courier' | null>(null);
+    const [deliveryType, setDeliveryType] = useState<'direct' | 'postcode' | 'courier' | null>(null);
 
     // Dynamic Slots and Shipping Cost States
     const [availableDates, setAvailableDates] = useState<any[]>([]);
     const [selectedDateString, setSelectedDateString] = useState<string | null>(null);
     const [selectedSlotId, setSelectedSlotId] = useState<number | null>(null);
     const [shipping, setShipping] = useState<number | null>(null);
+    const [freeShippingThreshold, setFreeShippingThreshold] = useState<number | null>(null);
+    const [amountUntilFreeDelivery, setAmountUntilFreeDelivery] = useState<number | null>(null);
+    const [isFreeDelivery, setIsFreeDelivery] = useState<boolean>(false);
 
     const [isPlacingOrder, setIsPlacingOrder] = useState(false);
     const { customer, isAuthenticated } = useCustomerAuth();
@@ -221,6 +224,9 @@ function CheckoutContent() {
                 setDeliveryType(null);
                 setEligibilityMessage('');
                 setShipping(null);
+                setFreeShippingThreshold(null);
+                setAmountUntilFreeDelivery(null);
+                setIsFreeDelivery(false);
                 return;
             }
 
@@ -241,10 +247,22 @@ function CheckoutContent() {
 
                 const data = await res.json();
                 if (res.ok && data.valid) {
+                    const deliveryCharge = data.delivery_charge ?? data.shipping_cost ?? 0;
+                    const freeThreshold = data.free_shipping_threshold !== undefined ? data.free_shipping_threshold : null;
+                    const amountUntilFree = data.amount_until_free_delivery !== undefined ? data.amount_until_free_delivery : null;
+                    const isFree = data.is_free_delivery ?? data.is_free_shipping ?? false;
+
                     setIsEligible(true);
                     setDeliveryType(data.delivery_type);
-                    setEligibilityMessage(data.delivery_type === 'direct' ? 'Fast Delivery Eligible!' : 'Courier Delivery Eligible');
-                    setShipping(data.shipping_cost ?? 0);
+                    setEligibilityMessage(
+                        data.delivery_type === 'direct' || data.delivery_type === 'postcode'
+                            ? 'Fast Delivery Eligible!'
+                            : 'Courier Delivery Eligible'
+                    );
+                    setShipping(deliveryCharge);
+                    setFreeShippingThreshold(freeThreshold);
+                    setAmountUntilFreeDelivery(amountUntilFree);
+                    setIsFreeDelivery(isFree);
                     setAvailableDates(data.available_dates || []);
                     if (data.available_dates && data.available_dates.length > 0) {
                         setSelectedDateString(data.available_dates[0].date);
@@ -256,6 +274,9 @@ function CheckoutContent() {
                     setDeliveryType(null);
                     setEligibilityMessage(data.message || 'Delivery not available for this postcode.');
                     setShipping(null);
+                    setFreeShippingThreshold(null);
+                    setAmountUntilFreeDelivery(null);
+                    setIsFreeDelivery(false);
                     setAvailableDates([]);
                     setSelectedDateString(null);
                 }
@@ -264,6 +285,9 @@ function CheckoutContent() {
                 setDeliveryType(null);
                 setEligibilityMessage('Unable to check delivery eligibility at this time.');
                 setShipping(null);
+                setFreeShippingThreshold(null);
+                setAmountUntilFreeDelivery(null);
+                setIsFreeDelivery(false);
                 setAvailableDates([]);
                 setSelectedDateString(null);
             } finally {
@@ -341,7 +365,7 @@ function CheckoutContent() {
         addressForm.phone &&
         addressForm.email &&
         isEligible === true &&
-        (deliveryType !== 'direct' || (selectedDateString && selectedSlotId))
+        (deliveryType !== 'direct' && deliveryType !== 'postcode' || (selectedDateString && selectedSlotId))
     );
 
     const handlePlaceOrder = async () => {
@@ -353,7 +377,7 @@ function CheckoutContent() {
         if (!addressForm.phone) validationErrors.push('Phone number is missing.');
         if (!addressForm.email) validationErrors.push('Email is missing or invalid.');
         if (isEligible === false) validationErrors.push(eligibilityMessage || 'Delivery is not available for this postcode.');
-        if (deliveryType === 'direct') {
+        if (deliveryType === 'direct' || deliveryType === 'postcode') {
             if (!selectedDateString) validationErrors.push('Please select a delivery date.');
             if (!selectedSlotId) validationErrors.push('Please select a delivery slot.');
         }
@@ -533,21 +557,30 @@ function CheckoutContent() {
                                     </>
                                 ) : isEligible === true ? (
                                     <>
-                                        {deliveryType === 'direct' ? (
-                                            <Truck className="w-5 h-5 text-green-600" />
+                                        {deliveryType === 'direct' || deliveryType === 'postcode' ? (
+                                            <Truck className="w-5 h-5 text-green-600 flex-shrink-0" />
                                         ) : (
-                                            <Package className="w-5 h-5 text-green-600" />
+                                            <Package className="w-5 h-5 text-green-600 flex-shrink-0" />
                                         )}
-                                        <div>
-                                            <span className="text-sm font-bold text-green-700">{eligibilityMessage}</span>
-                                            <span className="text-[10px] font-bold uppercase tracking-wider ml-2 px-2 py-0.5 rounded bg-green-100 text-green-700">
-                                                {deliveryType === 'direct' ? 'Direct' : 'Courier'}
-                                            </span>
+                                        <div className="flex-1">
+                                            <div className="flex items-center gap-2">
+                                                <span className="text-sm font-bold text-green-700">{eligibilityMessage}</span>
+                                                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-green-100 text-green-700">
+                                                    {deliveryType === 'direct' || deliveryType === 'postcode' ? 'Direct' : 'Courier'}
+                                                </span>
+                                            </div>
+                                            {isFreeDelivery || shipping === 0 ? (
+                                                <p className="text-xs font-semibold text-green-600 mt-0.5">Free delivery applied</p>
+                                            ) : (amountUntilFreeDelivery !== null && amountUntilFreeDelivery > 0) ? (
+                                                <p className="text-xs font-semibold text-green-600 mt-0.5">
+                                                    Purchase for ${amountUntilFreeDelivery % 1 === 0 ? amountUntilFreeDelivery : amountUntilFreeDelivery.toFixed(2)} more for free delivery
+                                                </p>
+                                            ) : null}
                                         </div>
                                     </>
                                 ) : isEligible === false ? (
                                     <>
-                                        <AlertTriangle className="w-5 h-5 text-red-500" />
+                                        <AlertTriangle className="w-5 h-5 text-red-500 flex-shrink-0" />
                                         <span className="text-sm font-bold text-red-600">{eligibilityMessage}</span>
                                     </>
                                 ) : null}
@@ -555,8 +588,8 @@ function CheckoutContent() {
                         </div>
                     )}
 
-                    {/* Delivery Slot Selection (only for direct delivery) */}
-                    {isAddressConfirmed && deliveryType === 'direct' && isEligible && (
+                    {/* Delivery Slot Selection (only for direct/postcode delivery) */}
+                    {isAddressConfirmed && (deliveryType === 'direct' || deliveryType === 'postcode') && isEligible && (
                         <div className="bg-white rounded-2xl border border-gray-100 p-5 shadow-sm animate-in fade-in slide-in-from-bottom-2 duration-500 space-y-4">
                             {/* Date Selection */}
                             <div>

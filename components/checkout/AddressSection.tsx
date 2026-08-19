@@ -489,7 +489,7 @@ export default function AddressSection({
                                                 <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 bg-gray-100 text-gray-500 rounded">
                                                     {item.label || 'Other'}
                                                 </span>
-                                                {(item.is_default_shipping || item.is_default_billing) && (
+                                                {Boolean(item.is_default_shipping || item.is_default_billing) && (
                                                     <span className="text-[9px] font-bold uppercase tracking-wider px-1 bg-green-50 text-green-600 rounded border border-green-100">
                                                         Default
                                                     </span>
