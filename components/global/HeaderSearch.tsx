@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import { Search } from 'lucide-react';
 import { fetchStorefront } from '@/lib/storefront';
@@ -24,6 +24,7 @@ function HeaderSearchInner() {
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
+    const inputRef = useRef<HTMLInputElement>(null);
     const [query, setQuery] = useState('');
     const [focused, setFocused] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -125,18 +126,30 @@ function HeaderSearchInner() {
 
     const navigateToSearchPage = () => {
         if (!searchQuery) return;
+        if (inputRef.current) {
+            inputRef.current.blur();
+        }
+        setFocused(false);
         router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
     };
 
     return (
-        <div className="flex-1 max-w-xl relative">
+        <form
+            onSubmit={(e) => {
+                e.preventDefault();
+                navigateToSearchPage();
+            }}
+            className="flex-1 max-w-xl relative"
+        >
             <div className={`flex items-center w-full bg-white rounded-md transition-all duration-200 border border-brand-green ${focused ? 'shadow-md ring-2 ring-brand-green/10' : ''}`}>
                 <div className="relative flex-1 group">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                         <Search className="h-4 w-4 text-brand-green transition-colors" />
                     </div>
                     <input
-                        type="text"
+                        ref={inputRef}
+                        type="search"
+                        enterKeyHint="search"
                         value={query}
                         placeholder="Search for groceries, spices, brands..."
                         className="w-full bg-transparent py-2.5 pl-10 pr-4 outline-none text-sm text-white-800 placeholder-gray-500"
@@ -152,7 +165,7 @@ function HeaderSearchInner() {
                     />
                 </div>
                 <button
-                    type="button"
+                    type="submit"
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={navigateToSearchPage}
                     disabled={!searchQuery}
@@ -175,7 +188,13 @@ function HeaderSearchInner() {
                                     <button
                                         type="button"
                                         onMouseDown={(e) => e.preventDefault()}
-                                        onClick={() => router.push(item.href)}
+                                        onClick={() => {
+                                            if (inputRef.current) {
+                                                inputRef.current.blur();
+                                            }
+                                            setFocused(false);
+                                            router.push(item.href);
+                                        }}
                                         className="w-full px-4 py-2 hover:bg-gray-50 cursor-pointer flex items-start gap-3 text-sm text-gray-700 text-left"
                                     >
                                         <Search className="w-4 h-4 text-gray-500 mt-0.5" />
@@ -192,7 +211,7 @@ function HeaderSearchInner() {
                     ) : null}
                 </div>
             )}
-        </div>
+        </form>
     );
 }
 
