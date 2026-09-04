@@ -16,7 +16,7 @@ export default function ProductFeatures({ highlights, description }: ProductFeat
     let cleanDesc = (description || '').replace(/<p>\s*(?:&nbsp;|<br\s*\/?>)?\s*<\/p>/gi, '').trim();
     const plainTextDesc = cleanDesc.replace(/<[^>]*>/g, '').replace(/&nbsp;/gi, ' ').trim();
     if (!plainTextDesc) {
-        cleanDesc = '';
+        cleanDesc = '';           
     }
 
     return (

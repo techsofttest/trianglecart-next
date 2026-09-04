@@ -84,23 +84,27 @@ export default function StripePaymentForm({ orderNumber, totalAmount, onPaymentS
                         
                         <ExpressCheckoutElement
                             onConfirm={async (event: any) => {
-                                try {
-                                    if (!stripe || !elements) {
-                                        throw new Error('Stripe is not ready.');
-                                    }
+                                if (!stripe || !elements) {
+                                    return;
+                                }
 
-                                    setErrorMessage(null);
+                                setIsProcessing(true);
+                                setErrorMessage(null);
 
-                                    // Keep wallet checkout separate from the card payment flow.
-                                    // Resolve the wallet event after any required validation succeeds.
-                                    if (typeof event?.resolve === 'function') {
-                                        event.resolve();
+                                const { error } = await stripe.confirmPayment({
+                                    elements,
+                                    confirmParams: {
+                                        return_url: `${window.location.origin}/checkout/status?orderNumber=${orderNumber}`,
+                                    },
+                                });
+
+                                if (error) {
+                                    if (error.type === "card_error" || error.type === "validation_error") {
+                                        setErrorMessage(error.message ?? 'An error occurred.');
+                                    } else {
+                                        setErrorMessage("An unexpected error occurred during express checkout.");
                                     }
-                                } catch (error) {
-                                    if (typeof event?.reject === 'function') {
-                                        event.reject();
-                                    }
-                                    setErrorMessage('Express checkout could not be completed.');
+                                    setIsProcessing(false);
                                 }
                             }}
                             options={{
