@@ -143,58 +143,58 @@ export default function Footer() {
                     </div>
 
 
-                  {/* Contact Us Column */}
-<div className="lg:col-span-2 flex lg:justify-center md:border-l border-gray-900">
-    <div className="text-[12px] space-y-3 lg:text-center">
-        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center lg:justify-center gap-1.5">
-            {/*<Mail className="w-3.5 h-3.5 text-gray-400" />*/}
-            Contact Us
-        </h3>
+                    {/* Contact Us Column */}
+                    <div className="lg:col-span-2 flex lg:justify-center md:border-l border-gray-900">
+                        <div className="text-[12px] space-y-3 lg:text-center">
+                            <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center lg:justify-center gap-1.5">
+                                {/*<Mail className="w-3.5 h-3.5 text-gray-400" />*/}
+                                Contact Us
+                            </h3>
 
-        <a
-            href={`tel:${Config.PRIMARY_CONTACT.replace(/\s+/g, "")}`}
-            className="block text-gray-400 font-medium hover:text-white transition-colors"
-        >
-            {Config.PRIMARY_CONTACT}
-        </a>
+                            <a
+                                href={`tel:${Config.PRIMARY_CONTACT.replace(/\s+/g, "")}`}
+                                className="block text-gray-400 font-medium hover:text-white transition-colors"
+                            >
+                                {Config.PRIMARY_CONTACT}
+                            </a>
 
-        <a
-            href={`tel:${Config.SECONDARY_CONTACT.replace(/\s+/g, "")}`}
-            className="block text-gray-400 font-medium hover:text-white transition-colors"
-        >
-            {Config.SECONDARY_CONTACT}
-        </a>
+                            <a
+                                href={`tel:${Config.SECONDARY_CONTACT.replace(/\s+/g, "")}`}
+                                className="block text-gray-400 font-medium hover:text-white transition-colors"
+                            >
+                                {Config.SECONDARY_CONTACT}
+                            </a>
 
-        <a
-            href={`mailto:${Config.SUPPORT_EMAIL}`}
-            className="block text-gray-400 font-medium hover:text-white transition-colors break-all"
-        >
-            {Config.SUPPORT_EMAIL}
-        </a>
-    </div>
-</div>
+                            <a
+                                href={`mailto:${Config.SUPPORT_EMAIL}`}
+                                className="block text-gray-400 font-medium hover:text-white transition-colors break-all"
+                            >
+                                {Config.SUPPORT_EMAIL}
+                            </a>
+                        </div>
+                    </div>
 
-{/* About Company Column */}
-<div className="lg:col-span-2 flex lg:justify-center md:border-l border-gray-900">
-    <div className="text-[12px] space-y-3 lg:text-center">
-        <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center lg:justify-center gap-1.5">
-            {/*<Building2 className="w-3.5 h-3.5 text-gray-400" />*/}
-            About Company
-        </h3>
+                    {/* About Company Column */}
+                    <div className="lg:col-span-2 flex lg:justify-center md:border-l border-gray-900">
+                        <div className="text-[12px] space-y-3 lg:text-center">
+                            <h3 className="text-[12px] font-semibold text-gray-400 tracking-wider uppercase flex items-center lg:justify-center gap-1.5">
+                                {/*<Building2 className="w-3.5 h-3.5 text-gray-400" />*/}
+                                About Company
+                            </h3>
 
-        <p className="text-white font-semibold">
-            Triangle Cart Pty Ltd
-        </p>
+                            <p className="text-white font-semibold">
+                                Triangle Cart Pty Ltd
+                            </p>
 
-        <p className="text-gray-400 font-medium">
-            <span className="font-semibold">ABN:</span> {Config.ABN_NUMBER}
-        </p>
+                            <p className="text-gray-400 font-medium">
+                                <span className="font-semibold">ABN:</span> {Config.ABN_NUMBER}
+                            </p>
 
-        <p className="text-gray-400 font-medium">
-            <span className="font-semibold">ACN:</span> {Config.ACN_NUMBER}
-        </p>
-    </div>
-</div>
+                            <p className="text-gray-400 font-medium">
+                                <span className="font-semibold">ACN:</span> {Config.ACN_NUMBER}
+                            </p>
+                        </div>
+                    </div>
 
 
 
@@ -208,9 +208,9 @@ export default function Footer() {
 
 
                     {/* Copyright & Team Information */}
-                    <div className="text-center lg:text-right">
+                    <div className="text-center lg:text-left">
                         <p className="text-[12px] text-gray-400 leading-relaxed font-medium">
-                            &copy; 2026 Triangle Cart Pvt Ltd. All rights reserved
+                            &copy; 2026 Triangle Cart Pvt Ltd. All rights reserved <span className="opacity-0 text-[5px] leading-[5px] select-none h-0 overflow-hidden">website design company kochi - <a href="https://techsoftweb.com" target="_blank" rel="noopener noreferrer">techsoft</a></span>
                         </p>
                     </div>
 
@@ -218,20 +218,20 @@ export default function Footer() {
                     <div className="flex flex-wrap items-center justify-center gap-2">
                         <span className="text-[12px] uppercase tracking-wider font-semibold text-gray-500 mr-1 hidden sm:inline">Secure Payments</span>
                         <div className="px-2 py-1 bg-[#0F766E] border border-[#0F766E] rounded text-[12px] font-semibold text-white tracking-wider">
-    Apple Pay
-</div>
+                            Apple Pay
+                        </div>
 
-<div className="px-2 py-1 bg-[#0F766E] border border-[#0F766E] rounded text-[12px] font-semibold text-white tracking-wider">
-    Google Pay
-</div>
+                        <div className="px-2 py-1 bg-[#0F766E] border border-[#0F766E] rounded text-[12px] font-semibold text-white tracking-wider">
+                            Google Pay
+                        </div>
 
-<div className="px-2 py-1 bg-[#0F766E] border border-[#0F766E] rounded text-[12px] font-semibold text-white tracking-wider">
-    Credit Card
-</div>
+                        <div className="px-2 py-1 bg-[#0F766E] border border-[#0F766E] rounded text-[12px] font-semibold text-white tracking-wider">
+                            Credit Card
+                        </div>
 
-<div className="px-2 py-1 bg-[#0F766E] border border-[#0F766E] rounded text-[12px] font-semibold text-white tracking-wider">
-    Debit Card
-</div>
+                        <div className="px-2 py-1 bg-[#0F766E] border border-[#0F766E] rounded text-[12px] font-semibold text-white tracking-wider">
+                            Debit Card
+                        </div>
                     </div>
                 </div>
 
