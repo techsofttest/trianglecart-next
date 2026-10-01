@@ -39,7 +39,8 @@ export default function ProductDetailClient({ product }: ProductDetailClientProp
     };
 
     const selectedPrice = selectedVariant?.price ?? product.price;
-    const selectedStrikedPrice = selectedVariant?.strikedPrice ?? product.strikedPrice;
+    const rawStriked = selectedVariant?.strikedPrice ?? product.strikedPrice;
+    const selectedStrikedPrice = rawStriked && rawStriked > 0 ? rawStriked : undefined;
     const selectedStock = selectedVariant?.stock ?? 0;
     const selectedWeight = selectedVariant
         ? [selectedVariant.size, selectedVariant.unit].filter(Boolean).join(' ')

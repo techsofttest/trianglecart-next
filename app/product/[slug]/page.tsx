@@ -94,13 +94,14 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             unit: variant.unit,
             size: variant.size,
             price: variant.price,
-            strikedPrice: variant.strikedPrice ?? undefined,
+            strikedPrice: variant.strikedPrice && variant.strikedPrice > 0 ? variant.strikedPrice : undefined,
             stock: variant.stock,
         }));
 
     const defaultVariant = getLowestPriceVariant(variants);
     const selectedPrice = defaultVariant?.price ?? product.price ?? 0;
-    const selectedStrikedPrice = defaultVariant?.strikedPrice ?? product.strikedPrice ?? undefined;
+    const rawStriked = defaultVariant?.strikedPrice ?? product.strikedPrice;
+    const selectedStrikedPrice = rawStriked && rawStriked > 0 ? rawStriked : undefined;
     const originalPrice = product.max_price && product.max_price > selectedPrice
         ? product.max_price
         : Math.round(selectedPrice * 1.15 * 100) / 100;

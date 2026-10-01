@@ -84,6 +84,7 @@ export default function ProductListingTemplate({
                             weight: pc.weight,
                             price: pc.price,
                             originalPrice: pc.originalPrice,
+                            strikedPrice: pc.strikedPrice,
                             discount: pc.discount,
                             rating: pc.rating,
                             reviews: pc.reviews,

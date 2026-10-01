@@ -117,7 +117,8 @@ export function getLowestPriceVariant<T extends { price: number; stock?: number 
 export function toProductCardModel(product: StorefrontProduct): ProductCardModel {
     const variant = getLowestPriceVariant(product.variants);
     const activePrice = variant?.price ?? product.price ?? 0;
-    const strikedPrice = variant?.strikedPrice ?? product.strikedPrice ?? undefined;
+    const rawStriked = variant?.strikedPrice ?? product.strikedPrice;
+    const strikedPrice = rawStriked && rawStriked > 0 ? rawStriked : undefined;
     const weight = variant ? `${variant.size || ''} ${variant.unit || ''}`.trim() : '1 unit';
     const originalPrice = product.max_price && product.max_price > activePrice
         ? product.max_price
