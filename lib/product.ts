@@ -84,14 +84,22 @@ export function resolveProductImageUrl(image?: string | null, fallback = DEFAULT
         if (trimmed.startsWith('/storage/') || trimmed.startsWith('/uploads/') || trimmed.startsWith('/media/')) {
             return `${baseUrl}${trimmed}`;
         }
-        return trimmed;
+        // If it starts with a leading slash and is a relative path (not starting with known web root static folders), check if it's storage or static
+        if (trimmed.startsWith('/logo/') || trimmed.startsWith('/promo-banner/') || trimmed.startsWith('/images/')) {
+            return trimmed;
+        }
+        return `${baseUrl}/storage${trimmed}`;
     }
 
     if (trimmed.startsWith('storage/') || trimmed.startsWith('uploads/') || trimmed.startsWith('media/') || trimmed.startsWith('api/')) {
         return `${baseUrl}/${trimmed}`;
     }
 
-    return `${baseUrl}/${trimmed}`;
+    if (trimmed.startsWith('logo/') || trimmed.startsWith('promo-banner/') || trimmed.startsWith('images/')) {
+        return `/${trimmed}`;
+    }
+
+    return `${baseUrl}/storage/${trimmed}`;
 }
 
 export function hasInStockVariant(product: StorefrontProduct): boolean {

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useCart, FreeGiftOption } from '@/context/CartContext';
+import { resolveProductImageUrl } from '@/lib/product';
 import Image from 'next/image';
 
 interface FreeGiftSectionProps {
@@ -58,7 +59,7 @@ export const FreeGiftSection: React.FC<FreeGiftSectionProps> = ({ compact = fals
               >
                 {gift.featured_image ? (
                   <img
-                    src={gift.featured_image}
+                    src={resolveProductImageUrl(gift.featured_image)}
                     alt={gift.name}
                     className="w-10 h-10 object-cover rounded"
                   />
@@ -86,7 +87,7 @@ export const FreeGiftSection: React.FC<FreeGiftSectionProps> = ({ compact = fals
               <div className="flex items-center gap-3">
                 {selected_gift.featured_image ? (
                   <img
-                    src={selected_gift.featured_image}
+                    src={resolveProductImageUrl(selected_gift.featured_image)}
                     alt={selected_gift.name}
                     className="w-12 h-12 object-cover rounded-md border border-gray-100"
                   />
@@ -140,7 +141,7 @@ export const FreeGiftSection: React.FC<FreeGiftSectionProps> = ({ compact = fals
                       <div className="flex items-center gap-2.5 min-w-0">
                         {gift.featured_image ? (
                           <img
-                            src={gift.featured_image}
+                            src={resolveProductImageUrl(gift.featured_image)}
                             alt={gift.name}
                             className="w-10 h-10 object-cover rounded"
                           />
