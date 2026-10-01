@@ -13,10 +13,12 @@ import CartItemCard from '@/components/cart/CartItemCard';
 import CartSummary from '@/components/cart/CartSummary';
 import CouponSection from '@/components/cart/CouponSection';
 import { useCart } from '@/context/CartContext';
+import { FreeGiftSection } from '@/components/FreeGiftSection';
 import { apiUrl } from '@/lib/api';
+import { Gift, Sparkles } from 'lucide-react';
 
 export default function CartPage() {
-    const { cartItems, updateQuantity, removeFromCart, clearCart, cartTotal, cartCount } = useCart();
+    const { cartItems, updateQuantity, removeFromCart, clearCart, cartTotal, cartCount, promotionInfo } = useCart();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
     const [selectedLocation, setSelectedLocation] = useState<{
@@ -169,11 +171,7 @@ export default function CartPage() {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
                 <div className="lg:col-span-2 space-y-3">
 
-                    {/* Temporarily hidden location banner */}
-                    {/* <LocationBanner
-                        selectedLocation={selectedLocation}
-                        onOpenDrawer={() => setIsLocationOpen(true)}
-                    /> */}
+                    <FreeGiftSection />
 
                     <div className="bg-white rounded-3xl border border-gray-100 overflow-hidden shadow-sm">
                         {cartItems.map((item, idx) => (

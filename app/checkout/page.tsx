@@ -11,6 +11,7 @@ import { useCustomerAuth } from '@/context/CustomerAuthContext';
 import AddressSection from '@/components/checkout/AddressSection';
 import CheckoutItemsList from '@/components/checkout/CheckoutItemsList';
 import OrderSummarySidebar from '@/components/checkout/OrderSummarySidebar';
+import { FreeGiftSection } from '@/components/FreeGiftSection';
 import { useCart } from '@/context/CartContext';
 import { apiUrl } from '@/lib/api';
 import { getLowestPriceVariant } from '@/lib/product';
@@ -675,6 +676,8 @@ function CheckoutContent() {
                             )}
                         </div>
                     )}
+
+                    <FreeGiftSection />
 
                     <CheckoutItemsList
                         items={checkoutItems}

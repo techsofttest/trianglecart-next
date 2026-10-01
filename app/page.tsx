@@ -86,6 +86,11 @@ export default async function Home() {
         id: number;
         text: string;
       }>;
+      promotions?: Array<{
+        id: number;
+        name: string;
+        offer_image: string | null;
+      }>;
     }>('/api/storefront/home'),
     fetchStorefront<Array<{
       id: number;
@@ -108,11 +113,11 @@ export default async function Home() {
   ]);
 
   const bgColors = [
-      "bg-red-50/60", "bg-yellow-50/60", "bg-green-50/60", "bg-orange-50/60",
-      "bg-pink-50/60", "bg-blue-50/60", "bg-purple-50/60", "bg-gray-50/60",
-    ];
+    "bg-red-50/60", "bg-yellow-50/60", "bg-green-50/60", "bg-orange-50/60",
+    "bg-pink-50/60", "bg-blue-50/60", "bg-purple-50/60", "bg-gray-50/60",
+  ];
 
-    const productImageByCategory = new Map<string, string>();
+  const productImageByCategory = new Map<string, string>();
 
   (homeData?.products ?? []).forEach((product) => {
     const categorySlug = product.category?.slug;
@@ -123,7 +128,7 @@ export default async function Home() {
         resolveProductImageUrl(product.featured_image)
       );
     }
-    });
+  });
 
   const prominentCategories: CategoryItem[] =
     categoriesData?.map((cat, index) => ({
@@ -143,162 +148,187 @@ export default async function Home() {
       ) : undefined,
     })) ?? [];
 
-    const suggestedProducts: Product[] = homeData?.products.map((p) => toProductCardModel(p)) ?? [];
-    const latestProducts: Product[] = latestProductsData?.data.map((p) => toProductCardModel(p)) ?? [];
+  const suggestedProducts: Product[] = homeData?.products.map((p) => toProductCardModel(p)) ?? [];
+  const latestProducts: Product[] = latestProductsData?.data.map((p) => toProductCardModel(p)) ?? [];
 
-    const featuredBrands: BrandItem[] = homeData?.brands.map((brand) => ({
-      id: brand.id,
-      name: brand.name,
-      logoUrl: brand.logo_url || '/logo/mock-logo.png',
-      productImageUrl: brand.product_image_url || '/logo/mock-logo.png',
-      bgGradient: 'from-slate-100 to-slate-200/60',
-      link: brand.link,
-    })) ?? [];
+  const featuredBrands: BrandItem[] = homeData?.brands.map((brand) => ({
+    id: brand.id,
+    name: brand.name,
+    logoUrl: brand.logo_url || '/logo/mock-logo.png',
+    productImageUrl: brand.product_image_url || '/logo/mock-logo.png',
+    bgGradient: 'from-slate-100 to-slate-200/60',
+    link: brand.link,
+  })) ?? [];
 
-    const topOffers: OfferItem[] = topOffersData?.map((offer) => ({
-      id: offer.id,
-      categoryName: offer.title,
-      discountText: offer.label,
-      imageUrl: offer.image_url || '/promo-banner/pr1.jpg',
-      link: offer.href,
-    })) ?? [];
+  const topOffers: OfferItem[] = topOffersData?.map((offer) => ({
+    id: offer.id,
+    categoryName: offer.title,
+    discountText: offer.label,
+    imageUrl: offer.image_url || '/promo-banner/pr1.jpg',
+    link: offer.href,
+  })) ?? [];
 
-    const offerMessages: string[] = homeData?.announcements?.length
-      ? homeData.announcements.map((announcement) => announcement.text)
-      : [
-          'Save up to 40% on fresh spices today',
-          'Free delivery on orders over $150',
-          'New season essentials just landed',
-          'Limited-time festival bundles available now',
-          'Shop pantry staples with instant offers',
-        ];
+  const offerMessages: string[] = homeData?.announcements?.length
+    ? homeData.announcements.map((announcement) => announcement.text)
+    : [
+      'Save up to 40% on fresh spices today',
+      'Free delivery on orders over $150',
+      'New season essentials just landed',
+      'Limited-time festival bundles available now',
+      'Shop pantry staples with instant offers',
+    ];
 
-    const featuredCategories = homeData?.featured_categories || [];
+  const featuredCategories = homeData?.featured_categories || [];
 
-    const categoriesToRender = featuredCategories.length > 0
-      ? featuredCategories.map((category, index) => {
-          const products: Product[] = category.products.map((p) => toProductCardModel(p));
-          return {
-            title: category.name,
-            link: `/category/${category.slug}`,
-            products,
-            sectionBgColor: index % 2 === 0 ? "bg-green-700" : "bg-blue-700",
-          };
-        })
-      : [
+  const categoriesToRender = featuredCategories.length > 0
+    ? featuredCategories.map((category, index) => {
+      const products: Product[] = category.products.map((p) => toProductCardModel(p));
+      return {
+        title: category.name,
+        link: `/category/${category.slug}`,
+        products,
+        sectionBgColor: index % 2 === 0 ? "bg-green-700" : "bg-blue-700",
+      };
+    })
+    : [
+      {
+        title: "Aromatic Spices & Masalas",
+        link: "/category/spices",
+        products: suggestedProducts.filter(p => p.category === 'spices' || p.category === 'spice').length > 0
+          ? suggestedProducts.filter(p => p.category === 'spices' || p.category === 'spice').slice(0, 6)
+          : suggestedProducts.slice(0, 6),
+        sectionBgColor: "bg-green-700",
+      },
+      {
+        title: "Festival Sweet Packs",
+        link: "/category/sweets",
+        products: suggestedProducts.filter(p => p.category === 'sweets' || p.category === 'sweet').length > 0
+          ? suggestedProducts.filter(p => p.category === 'sweets' || p.category === 'sweet').slice(0, 6)
+          : suggestedProducts.slice(6, 12),
+        sectionBgColor: "bg-blue-700",
+      }
+    ];
+
+  const buyItAgainProducts: Product[] = suggestedProducts.slice(0, 6);
+  const homeAdvertisement = homeData?.home_advertisement;
+
+  return (
+    <div className="flex flex-col gap-4 md:gap-10 pb-12 bg-[#fff]">
+      <section className="w-full">
+        <PromoSlider banners={homeData?.banners} />
+      </section>
+
+      <div className="px-2 sm:px-6 lg:px-8 w-full flex flex-col gap-4 md:gap-6 mx-auto">
+        <section className="w-full relative z-10 sm:-mt-[55px] md:-mt-[65px]">
           {
-            title: "Aromatic Spices & Masalas",
-            link: "/category/spices",
-            products: suggestedProducts.filter(p => p.category === 'spices' || p.category === 'spice').length > 0
-              ? suggestedProducts.filter(p => p.category === 'spices' || p.category === 'spice').slice(0, 6)
-              : suggestedProducts.slice(0, 6),
-            sectionBgColor: "bg-green-700",
-          },
-          {
-            title: "Festival Sweet Packs",
-            link: "/category/sweets",
-            products: suggestedProducts.filter(p => p.category === 'sweets' || p.category === 'sweet').length > 0
-              ? suggestedProducts.filter(p => p.category === 'sweets' || p.category === 'sweet').slice(0, 6)
-              : suggestedProducts.slice(6, 12),
-            sectionBgColor: "bg-blue-700",
+            (() => {
+              const mainCategoriesList = (categoriesData || []).filter(c => c.parent_id === null);
+              const mainIds = new Set(mainCategoriesList.map(c => c.id));
+              const extraFeatured = (featuredCategories || []).filter(fc => !mainIds.has(fc.id)).map(fc => ({
+                id: fc.id,
+                name: fc.name,
+                slug: fc.slug,
+                image_url: (fc as any).image_url ?? null,
+                icon_url: (fc as any).icon_url ?? null,
+              }));
+
+              const homepageStripCategories = [...mainCategoriesList, ...extraFeatured];
+              return <CategoryStrip categories={homepageStripCategories} />;
+            })()
           }
-        ];
-
-    const buyItAgainProducts: Product[] = suggestedProducts.slice(0, 6);
-    const homeAdvertisement = homeData?.home_advertisement;
-
-    return (
-      <div className="flex flex-col gap-4 md:gap-10 pb-12 bg-[#fff]">
-        <section className="w-full">
-          <PromoSlider banners={homeData?.banners} />
         </section>
 
-        <div className="px-2 sm:px-6 lg:px-8 w-full flex flex-col gap-4 md:gap-6 mx-auto">
-          <section className="w-full relative z-10 sm:-mt-[55px] md:-mt-[65px]">
-            {
-              (() => {
-                const mainCategoriesList = (categoriesData || []).filter(c => c.parent_id === null);
-                const mainIds = new Set(mainCategoriesList.map(c => c.id));
-                const extraFeatured = (featuredCategories || []).filter(fc => !mainIds.has(fc.id)).map(fc => ({
-                  id: fc.id,
-                  name: fc.name,
-                  slug: fc.slug,
-                  image_url: (fc as any).image_url ?? null,
-                  icon_url: (fc as any).icon_url ?? null,
-                }));
+        <section className="w-full">
+          <OfferMarquee messages={offerMessages} />
+        </section>
 
-                const homepageStripCategories = [...mainCategoriesList, ...extraFeatured];
-                return <CategoryStrip categories={homepageStripCategories} />;
-              })()
-            }
-          </section>
+        <section className="w-full">
+          <BuyItAgainRow fallbackProducts={buyItAgainProducts} />
+        </section>
 
-          <section className="w-full">
-            <OfferMarquee messages={offerMessages} />
-          </section>
-
-          <section className="w-full">
-            <BuyItAgainRow fallbackProducts={buyItAgainProducts} />
-          </section>
-
-          {/*<section className="w-full">
+        {/*<section className="w-full">
             <CategoryGrid title="Explore Categories" categories={prominentCategories} />
           </section>*/}
 
+        <section className="w-full">
+          <ProductRow title="Featured products" products={suggestedProducts} viewAllLink="/products" />
+        </section>
+
+        <section className="w-full">
+          <ProductRow title="Our latest products" products={latestProducts} viewAllLink="/products" />
+        </section>
+
+        {/* Home PWA install strip removed to avoid duplicate install CTA with header */}
+
+        {homeAdvertisement && (
           <section className="w-full">
-            <ProductRow title="Featured products" products={suggestedProducts} viewAllLink="/products" />
+            <Link
+              href={homeAdvertisement.url || '#'}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group block overflow-hidden rounded-2xl md:rounded-3xl border border-gray-100 shadow-sm transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+            >
+              {homeAdvertisement.banner_url ? (
+                <img
+                  src={homeAdvertisement.banner_url}
+                  alt={homeAdvertisement.title || homeAdvertisement.name}
+                  className="w-full h-auto object-cover block max-h-[320px]"
+                />
+              ) : (
+                <div className="relative min-h-[120px] bg-gradient-to-r from-[#0c4a9e] to-[#0f7bd7] flex items-center justify-center p-6 text-center text-white font-bold text-lg md:text-xl">
+                  {homeAdvertisement.title || homeAdvertisement.name}
+                </div>
+              )}
+            </Link>
           </section>
+        )}
 
+        {homeData?.promotions && homeData.promotions.length > 0 && (
+          <section className="w-full flex justify-center">
+            <div className="flex flex-wrap justify-center gap-4 w-full max-w-7xl">
+              {homeData.promotions.map((promo: any) => (
+                <div
+                  key={promo.id}
+                  className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 flex flex-col items-center justify-center p-3 w-full sm:w-[calc(50%-0.5rem)] md:w-[calc(33.333%-0.67rem)] lg:w-[calc(25%-0.75rem)] max-w-sm"
+                >
+                  {promo.offer_image ? (
+                    <img
+                      src={promo.offer_image}
+                      alt={promo.name}
+                      className="w-full h-auto object-contain rounded-xl block mx-auto"
+                    />
+                  ) : (
+                    <div className="w-full min-h-[120px] bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center p-4 text-center text-white font-semibold text-base">
+                      {promo.name}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {categoriesToRender.map((cat, idx) => (
+          <section key={idx} className="w-full">
+            <SubCategories
+              sectionTitle={cat.title}
+              mainLink={cat.link}
+              products={cat.products}
+              sectionBgColor={cat.sectionBgColor}
+            />
+          </section>
+        ))}
+
+        {false && (
           <section className="w-full">
-            <ProductRow title="Our latest products" products={latestProducts} viewAllLink="/products" />
+            <OurBrands title="Top Brands" brands={featuredBrands} />
           </section>
+        )}
 
-          {/* Home PWA install strip removed to avoid duplicate install CTA with header */}
-
-          {homeAdvertisement && (
-            <section className="w-full">
-              <Link
-                href={homeAdvertisement.url || '#'}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group block overflow-hidden rounded-3xl border border-gray-100 shadow-sm transition-transform duration-300 hover:-translate-y-0.5 hover:shadow-lg"
-              >
-                {homeAdvertisement.banner_url ? (
-                  <img
-                    src={homeAdvertisement.banner_url}
-                    alt={homeAdvertisement.title || homeAdvertisement.name}
-                    className="w-full h-auto object-cover block"
-                  />
-                ) : (
-                  <div className="relative min-h-[120px] bg-gradient-to-r from-[#0c4a9e] to-[#0f7bd7] flex items-center justify-center p-6 text-center text-white font-bold text-lg md:text-xl">
-                    {homeAdvertisement.title || homeAdvertisement.name}
-                  </div>
-                )}
-              </Link>
-            </section>
-          )}
-
-          {categoriesToRender.map((cat, idx) => (
-            <section key={idx} className="w-full">
-              <SubCategories
-                sectionTitle={cat.title}
-                mainLink={cat.link}
-                products={cat.products}
-                sectionBgColor={cat.sectionBgColor}
-              />
-            </section>
-          ))}
-
-          {false && (
-            <section className="w-full">
-              <OurBrands title="Top Brands" brands={featuredBrands} />
-            </section>
-          )}
-
-          <section className="w-full">
-            <ProductRow title="Top Trending Essentials" products={suggestedProducts.slice(12, 24)} viewAllLink="/products" />
-          </section>
-        </div>
+        <section className="w-full">
+          <ProductRow title="Top Trending Essentials" products={suggestedProducts.slice(12, 24)} viewAllLink="/products" />
+        </section>
       </div>
-    );
-  }
+    </div>
+  );
+}

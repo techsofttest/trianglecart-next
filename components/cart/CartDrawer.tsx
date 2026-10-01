@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { X, ShoppingBag, Trash2, ChevronRight, Plus, Minus, ShoppingCart, ArrowRight } from 'lucide-react';
+import { X, ShoppingBag, Trash2, ChevronRight, ShoppingCart, ArrowRight, Gift, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 import { resolveProductImageUrl } from '@/lib/product';
+import { FreeGiftSection } from '@/components/FreeGiftSection';
 
 export default function CartDrawer() {
     const { 
@@ -14,7 +15,8 @@ export default function CartDrawer() {
         removeFromCart, 
         updateQuantity, 
         cartTotal, 
-        cartCount 
+        cartCount,
+        promotionInfo
     } = useCart();
     
     const [isMounted, setIsMounted] = useState(false);
@@ -71,6 +73,7 @@ export default function CartDrawer() {
 
                     {/* Cart Items List */}
                     <div className="flex-1 overflow-y-auto p-5 scrollbar-hide">
+                        <FreeGiftSection compact />
                         {cartItems.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
                                 <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
@@ -90,35 +93,52 @@ export default function CartDrawer() {
                         ) : (
                             <div className="space-y-6">
                                 {cartItems.map((item) => (
-                                    <div key={item.id} className="flex gap-4 group">
-                                        <div className="w-20 h-20 bg-gray-50 rounded-2xl p-2 flex items-center justify-center shrink-0 border border-transparent group-hover:border-[#0c4a9e]/20 transition-all">
+                                    <div key={item.id} className={`flex gap-4 group p-2 rounded-xl ${item.is_free ? 'bg-amber-50/40 border border-amber-100' : ''}`}>
+                                        <div className="w-20 h-20 bg-gray-50 rounded-2xl p-2 flex items-center justify-center shrink-0 border border-transparent group-hover:border-[#0c4a9e]/20 transition-all relative">
                                             <img src={resolveProductImageUrl(item.image)} alt={item.name} className="max-w-full max-h-full object-contain" />
+                                            {item.is_free && (
+                                                <span className="absolute -top-1.5 -left-1.5 bg-amber-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-0.5 shadow-sm">
+                                                    <Gift className="w-2.5 h-2.5" /> FREE
+                                                </span>
+                                            )}
                                         </div>
                                         <div className="flex-1 min-w-0 py-1">
                                             <div className="flex justify-between items-start">
                                                 <h4 className="font-semibold text-gray-900 text-sm line-clamp-1 leading-tight group-hover:text-[#0c4a9e] transition-colors">{item.name}</h4>
-                                                <button 
-                                                    onClick={() => removeFromCart(item.id)}
-                                                    className="p-1 hover:text-red-500 transition-colors"
-                                                >
-                                                    <Trash2 className="w-3.5 h-3.5" />
-                                                </button>
+                                                {!item.is_free && (
+                                                    <button 
+                                                        onClick={() => removeFromCart(item.id)}
+                                                        className="p-1 hover:text-red-500 transition-colors"
+                                                    >
+                                                        <Trash2 className="w-3.5 h-3.5" />
+                                                    </button>
+                                                )}
                                             </div>
-                                            <p className="text-sm text-gray-600 mt-0.5">{item.brand} • {item.weight}</p>
+                                            <p className="text-sm text-gray-600 mt-0.5">
+                                                {item.is_free ? <span className="font-bold text-amber-700">Promotional Free Item</span> : `${item.brand} • ${item.weight}`}
+                                            </p>
                                             <div className="flex items-center justify-between mt-3">
-                                                <div className="flex items-center gap-3 bg-gray-50 p-1 rounded-lg border border-gray-100">
-                                                    <button 
-                                                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                                                        className="w-6 h-6 rounded-md bg-white flex items-center justify-center text-sm font-bold hover:bg-gray-100 transition-all shadow-sm"
-                                                    >-</button>
-                                                    <span className="w-4 text-center font-bold text-gray-700 text-sm">{item.quantity}</span>
-                                                    <button 
-                                                        onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                        disabled={item.quantity >= (item.selectedVariant?.stock ?? 9999)}
-                                                        className="w-6 h-6 rounded-md bg-white flex items-center justify-center text-sm font-bold hover:bg-gray-100 transition-all shadow-sm disabled:opacity-30 disabled:cursor-not-allowed"
-                                                    >+</button>
-                                                </div>
-                                                <p className="font-bold text-gray-900 text-sm">${(item.price * item.quantity).toFixed(2)}</p>
+                                                {item.is_free ? (
+                                                    <span className="text-xs font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">Qty: 1</span>
+                                                ) : (
+                                                    <div className="flex items-center gap-3 bg-gray-50 p-1 rounded-lg border border-gray-100">
+                                                        <button 
+                                                            onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                                                            className="w-6 h-6 rounded-md bg-white flex items-center justify-center text-sm font-bold hover:bg-gray-100 transition-all shadow-sm"
+                                                        >-</button>
+                                                        <span className="w-4 text-center font-bold text-gray-700 text-sm">{item.quantity}</span>
+                                                        <button 
+                                                            onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                                                            disabled={item.quantity >= (item.selectedVariant?.stock ?? 9999)}
+                                                            className="w-6 h-6 rounded-md bg-white flex items-center justify-center text-sm font-bold hover:bg-gray-100 transition-all shadow-sm disabled:opacity-30 disabled:cursor-not-allowed"
+                                                        >+</button>
+                                                    </div>
+                                                )}
+                                                {item.is_free ? (
+                                                    <p className="font-bold text-emerald-600 text-sm">FREE</p>
+                                                ) : (
+                                                    <p className="font-bold text-gray-900 text-sm">${(item.price * item.quantity).toFixed(2)}</p>
+                                                )}
                                             </div>
                                         </div>
                                     </div>
